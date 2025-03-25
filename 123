@@ -1,0 +1,3 @@
+if table.find({"GaladonT"}, game.Players.LocalPlayer.Name) then
+  	print(1)
+end
