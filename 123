@@ -1,3 +1,0 @@
-if table.find({}, game.Players.LocalPlayer.Name) then
-   game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer("kru gtay", "All")
-end
