@@ -852,7 +852,7 @@ local Components = {
     DisableAura = Tabs.Usual:AddToggle("Auto Disable Aura", {Title = "Auto Disable Aura", Default = false}),
     Quests = Tabs.Usual:AddToggle("Auto Claim Quests", {Title = "Auto Claim Quests", Default = false}),
     AntiAura = Tabs.Usual:AddToggle("Anti Killing Intent Aura", {Title = "Anti Killing Intent Aura", Default = false}),
-    Animations = Tabs.Usual:AddDropdown("Animations", {Title = "Animations", Values = {"None","Bubbly","Astronaut","Cartoony","Elder","Knight","Levitation","Mage","Ninja","Pirate","Robot","Stylish","Superhero","Toy","Vampire","Werewolf","Zombie","Ghost"}, Default = {"None"}, Multi = false}),
+    Animations = Tabs.Usual:AddDropdown("Animations", {Title = "Animations", Values = {"None", "Bubbly", "Astronaut", "Cartoony", "Elder", "Knight", "Levitation", "Mage", "Ninja", "Pirate", "Robot", "Stylish", "Superhero", "Toy", "Vampire", "Werewolf", "Zombie", "Ghost"}, Default = {"None"}, Multi = false}),
     Fov = Tabs.Usual:AddSlider("Fov", {Title = "Fov", Default = 70, Min = 1, Max = 120, Rounding = 0}),
     
     CBring = Tabs.Pvp:AddToggle("CBring", {Title = "CBring", Default = false}),
@@ -2506,7 +2506,7 @@ Tabs.Visual:AddButton({
                     end
                 elseif property == "object" then 
                     for _, ObjectToDestroy in pairs(object:GetChildren()) do
-                        if table.find({"Halloween","GhostRiderCollisionPart","GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
+                        if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
                             ObjectToDestroy:Destroy()
                         end
                     end
@@ -2693,7 +2693,7 @@ Tabs.Visual:AddButton({
                     end
                 elseif property == "object" then 
                     for _, ObjectToDestroy in pairs(object:GetChildren()) do
-                        if table.find({"Halloween","GhostRiderCollisionPart","GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
+                        if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
                             ObjectToDestroy:Destroy()
                         end
                     end
