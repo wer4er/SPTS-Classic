@@ -33,7 +33,7 @@ local PlaceId = game.PlaceId
 local JobId = game.JobId
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
-local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, SavedCameraCFrame, GodCheck
+local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, GodCheck
 
 task.delay(60, function()
     pcall(function()
@@ -3412,7 +3412,8 @@ local function IsAuraEnabled()
 end
 
 LocalPlayer.CharacterAdded:Connect(function(character)
-    Teleported = false
+    Teleported, Changed = false, false
+    
     local Humanoid = character:WaitForChild("Humanoid", math.huge)
 
     task.spawn(function()
@@ -3449,13 +3450,19 @@ LocalPlayer.CharacterAdded:Connect(function(character)
             task.spawn(function()
                 character:WaitForChild("HumanoidRootPart", math.huge):GetPropertyChangedSignal("CFrame"):Wait()
                 character.HumanoidRootPart.CFrame = SavedPosition
-                Camera.CFrame = SavedCameraCFrame
                 Teleported = true
+                Camera:GetPropertyChangedSignal('CFrame'):Wait()
+                Camera.CFrame = SavedCameraCFrame
+                Changed = true
             end)
             task.wait(.5)
-            if not Teleported and SavedPosition then
-                character.HumanoidRootPart.CFrame = SavedPosition
-                Camera.CFrame = SavedCameraCFrame
+            if SavedPosition and SavedCameraCFrame then
+                if not Teleported then
+                    character.HumanoidRootPart.CFrame = SavedPosition
+                end
+                if not Changed then
+                    Camera.CFrame = SavedCameraCFrame
+                end
             end
         end)
     end
