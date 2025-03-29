@@ -33,7 +33,7 @@ local PlaceId = game.PlaceId
 local JobId = game.JobId
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
-local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, GodCheck
+local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
 task.delay(60, function()
     pcall(function()
