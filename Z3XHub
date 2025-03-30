@@ -78,6 +78,8 @@ if Check then
                     end
                 })
             end
+        elseif not checkcaller() and self == LocalPlayer.Character and method == "BreakJoints" then
+            return nil
         end
         return oldcall(self, ...)
     end))
@@ -992,8 +994,10 @@ Components.GodMode:OnChanged(function()
             RemoteEvent:FireServer({"QuestTalkStart"})
         end
     else
-        if isAlive() and LocalPlayer.Character:FindFirstChild("GodModeShield ") then
-            LocalPlayer.Character["GodModeShield "].Name = "GodModeShield"
+        if isAlive() then 
+            if LocalPlayer.Character:FindFirstChild("GodModeShield ") and not Check then
+                LocalPlayer.Character["GodModeShield "].Name = "GodModeShield"
+            end
             RemoteEvent:FireServer({"QuestTalkEnd", "GhostRider"})
         end
     end
@@ -3403,7 +3407,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
             task.wait()
             if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
                 object:Destroy()
-            elseif object.Name == "GodModeShield" and Flags["GodMode"].Value then
+            elseif object.Name == "GodModeShield" and Flags["GodMode"].Value and not Check then
                 object.Name = "GodModeShield "
             end
         end)
