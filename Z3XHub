@@ -3155,10 +3155,6 @@ for _, player in pairs(Players:GetPlayers()) do
                 end)
 
                 player.Character.Humanoid.Died:Connect(function()
-                    if table.find(Targets, player.Name) and Flags["Stack"].Value then
-                        RemoteEvent:FireServer({"Respawn"})     
-                    end
-
                     if CoreGui.ESPFolder:FindFirstChild(player.Name) then
                         CoreGui.ESPFolder[player.Name].Adornee = nil
                         CoreGui.ESPFolder[player.Name].Enabled = false
@@ -3211,10 +3207,6 @@ for _, player in pairs(Players:GetPlayers()) do
                     end)
 
                     Humanoid.Died:Connect(function()     
-                        if table.find(Targets, player.Name) and Flags["Stack"].Value then
-                            RemoteEvent:FireServer({"Respawn"})     
-                        end
-
                         if CoreGui.ESPFolder:FindFirstChild(player.Name) then
                             CoreGui.ESPFolder[player.Name].Adornee = nil
                             CoreGui.ESPFolder[player.Name].Enabled = false
@@ -3416,6 +3408,12 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     
     local Humanoid = character:WaitForChild("Humanoid", math.huge)
 
+    if Flags["Stack"].Value then
+        task.delay(4, function()
+            RemoteEvent:FireServer({"Respawn"})
+        end)
+    end
+
     task.spawn(function()
         character.ChildAdded:Connect(function(object)
             task.wait()
@@ -3431,17 +3429,6 @@ LocalPlayer.CharacterAdded:Connect(function(character)
         task.spawn(function()
             repeat task.wait() until LocalPlayer.Character:FindFirstChild("ForceField") and GodCheck
             RemoteEvent:FireServer({"QuestTalkStart"})
-        end)
-    end
-
-    if Flags["Stack"].Value then
-        task.spawn(function()
-            repeat task.wait() until LocalPlayer.Character:FindFirstChild("ForceField") or not Flags["Stack"].Value
-            repeat task.wait() until not LocalPlayer.Character:FindFirstChild("ForceField") or not Flags["Stack"].Value
-            if Flags["Stack"].Value then
-                RemoteEvent:FireServer({"Respawn"})
-                RemoteEvent:FireServer({"QuestTalkStart"})
-            end
         end)
     end
 
