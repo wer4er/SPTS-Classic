@@ -57,14 +57,12 @@ if Check then
     local MessagePosted =  require(LocalPlayer.PlayerScripts.ChatScript.ChatMain).MessagePosted
 
     local oldhook = nil
-    local MessagePostedHook = function(self, ...)
+    oldhook = hookfunction(MessagePosted.fire, function(self, ...)
         if not checkcaller() and self == MessagePosted then
             return chatted:Fire(...)
         end
         return oldhook(self, ...)
-    end
-
-    oldhook = hookfunction(MessagePosted.fire, MessagePostedHook)
+    end)
 
     local oldcall = nil
     oldcall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
