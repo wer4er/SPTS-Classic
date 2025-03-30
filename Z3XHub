@@ -3510,10 +3510,8 @@ LocalPlayer.CharacterAdded:Connect(function(character)
                         RemoteEvent:FireServer({"QuestTalkStart"})
                     end
                     character.HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
-                    RemoteEvent:FireServer({"Respawn"})
-                else
-                    RemoteEvent:FireServer({"Respawn"})
                 end
+                RemoteEvent:FireServer({"Respawn"})
             end
         end)
     end)
