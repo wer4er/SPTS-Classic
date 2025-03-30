@@ -48,12 +48,9 @@ end)
 local Fluent = loadstring(game:HttpGet("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 local Flags = Fluent.Options
-local Check = getrawmetatable and setreadonly and newcclosure and checkcaller and hookmetamethod and hookfunction
+local Check = newcclosure and checkcaller and hookmetamethod and hookfunction
 
 if Check then
-    local rawmt = getrawmetatable(game)
-    setreadonly(rawmt, false)
-    local namecall = rawmt.__namecall
     local chatted = Instance.new("BindableEvent")
     chatted.Name = LocalPlayer.Name .. "_Chatted"
     local OldChatted = LocalPlayer.Chatted
@@ -69,10 +66,11 @@ if Check then
 
     oldhook = hookfunction(MessagePosted.fire, MessagePostedHook)
 
-    rawmt.__namecall = newcclosure(function(self, ...)
+    local oldcall = nil
+    oldcall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
         local method = getnamecallmethod()
         if method == "Fire" and self.Name == "MessagePosted" then
-           return task.wait(9e9)
+            return task.wait(9e9)
         elseif method == "Create" then
             local args = {...}
             if args[1] == Camera then
@@ -83,8 +81,8 @@ if Check then
                 })
             end
         end
-        return namecall(self, ...)
-    end)
+        return oldcall(self, ...)
+    end))
 end
 
 task.spawn(function()
