@@ -2903,6 +2903,17 @@ Tabs.Usual:AddButton({
     end
 })
 
+Tabs.Pvp:AddButton({
+    Title = "Teleport",
+    Callback = function()
+        for _, Target in pairs(Targets) do
+            if isAlive() and isAlive(Players[Target]) then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character.HumanoidRootPart.CFrame
+            end
+        end
+    end
+})
+
 Tabs.Teleports:AddButton({
     Title = "Teleport To Location",
     Callback = function()
