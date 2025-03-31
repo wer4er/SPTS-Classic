@@ -430,21 +430,21 @@ local function getfspos()
 end
 
 local function getbtpos()
-    if PrivateStats.BodyToughness.Value >= 1e13 then
+    if PrivateStats.BodyToughness.Value >= 1e13 / 20 then
         return CFrame.new(-278.40, 281.40, 999.50)
-    elseif PrivateStats.BodyToughness.Value >= 1e11 then
+    elseif PrivateStats.BodyToughness.Value >= 1e11 / 20 then
         return CFrame.new(-275.53, 281.64, 991.48)
-    elseif PrivateStats.BodyToughness.Value >= 1e9 then
+    elseif PrivateStats.BodyToughness.Value >= 1e9 / 20 then
         return CFrame.new(-244.45, 287.11, 978.97)
-    elseif PrivateStats.BodyToughness.Value >= 1e7 then
+    elseif PrivateStats.BodyToughness.Value >= 1e7 / 20 then
         return CFrame.new(-2024.79, 714.25, -1882.21)
-    elseif PrivateStats.BodyToughness.Value >= 1e6 then
+    elseif PrivateStats.BodyToughness.Value >= 1e6 / 20 then
         return CFrame.new(-2297.46, 976.74, 1075.02)
-    elseif PrivateStats.BodyToughness.Value >= 1e5 then
+    elseif PrivateStats.BodyToughness.Value >= 1e5 / 20 then
         return CFrame.new(1634.49, 259.62, 2248.21)
-    elseif PrivateStats.BodyToughness.Value >= 1e4 then
+    elseif PrivateStats.BodyToughness.Value >= 1e4 / 20 then
         return CFrame.new(357.28, 263.74, -492.33)
-    elseif PrivateStats.BodyToughness.Value >= 1e2 then
+    elseif PrivateStats.BodyToughness.Value >= 1e2 / 20 then
         return CFrame.new(367.77, 249.71, -444.75)
     end
 end
