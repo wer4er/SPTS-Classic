@@ -31,6 +31,7 @@ local Camera = Workspace.CurrentCamera
 local Storage = Workspace.Storage
 local PlaceId = game.PlaceId
 local JobId = game.JobId
+local InjectorName = identifyexecutor()
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
@@ -48,41 +49,43 @@ end)
 local Fluent = loadstring(game:HttpGet("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 local Flags = Fluent.Options
-local Check = newcclosure and checkcaller and hookmetamethod and hookfunction
+local Check = newcclosure and checkcaller and hookmetamethod and hookfunction and InjectorName ~= "NX"
 
 if Check then
-    local chatted = Instance.new("BindableEvent")
-    chatted.Name = LocalPlayer.Name .. "_Chatted"
-    local OldChatted = LocalPlayer.Chatted
-    local MessagePosted =  require(LocalPlayer.PlayerScripts.ChatScript.ChatMain).MessagePosted
-
-    local oldhook = nil
-    oldhook = hookfunction(MessagePosted.fire, function(self, ...)
-        if not checkcaller() and self == MessagePosted then
-            return chatted:Fire(...)
-        end
-        return oldhook(self, ...)
-    end)
-
-    local oldcall = nil
-    oldcall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
-        local method = getnamecallmethod()
-        if method == "Fire" and self.Name == "MessagePosted" then
-            return task.wait(9e9)
-        elseif method == "Create" then
-            local args = {...}
-            if args[1] == Camera then
-                return setmetatable({}, {
-                    ["__index"] = function(self, ...)
-                        return function() end
-                    end
-                })
+    task.spawn(function()
+        local chatted = Instance.new("BindableEvent")
+        chatted.Name = LocalPlayer.Name .. "_Chatted"
+        local OldChatted = LocalPlayer.Chatted
+        local MessagePosted =  require(LocalPlayer.PlayerScripts.ChatScript.ChatMain).MessagePosted
+    
+        local oldhook = nil
+        oldhook = hookfunction(MessagePosted.fire, function(self, ...)
+            if not checkcaller() and self == MessagePosted then
+                return chatted:Fire(...)
             end
-        elseif not checkcaller() and self == LocalPlayer.Character and method == "BreakJoints" then
-            return nil
-        end
-        return oldcall(self, ...)
-    end))
+            return oldhook(self, ...)
+        end)
+
+        local oldcall = nil
+        oldcall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+            local method = getnamecallmethod()
+            if method == "Fire" and self.Name == "MessagePosted" then
+                return task.wait(9e9)
+            elseif method == "Create" then
+                local args = {...}
+                if args[1] == Camera then
+                    return setmetatable({}, {
+                        ["__index"] = function(self, ...)
+                            return function() end
+                        end
+                    })
+                end
+            elseif not checkcaller() and self == LocalPlayer.Character and method == "BreakJoints" then
+                return nil
+            end
+            return oldcall(self, ...)
+        end))
+    end)
 end
 
 task.spawn(function()
