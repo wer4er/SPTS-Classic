@@ -655,7 +655,7 @@ local Window = Fluent:CreateWindow({
 
 local Tabs = {
     Farm = Window:AddTab({Title = "Farm & More", Icon = "axe" }),
-    Visual = Window:AddTab({Title = "Visual",Icon = "circle-dashed"}),
+    Visual = Window:AddTab({Title = "Visual",Icon = "eye"}),
     Usual = Window:AddTab({Title = "Usual",Icon = "zap"}),
     Pvp = Window:AddTab({Title = "Pvp",Icon = "swords"}),
     Teleports = Window:AddTab({Title = "Teleports",Icon = "navigation"}),
