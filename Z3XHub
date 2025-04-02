@@ -3406,9 +3406,8 @@ local function IsAuraEnabled()
 end
 
 LocalPlayer.CharacterAdded:Connect(function(character)
-    Teleported, Changed = false, false
-    
     local Humanoid = character:WaitForChild("Humanoid", math.huge)
+    local HumanoidRootPart = character:WaitForChild("HumanoidRootPart", math.huge)
 
     if Flags["Stack"].Value then
         task.delay(4, function()
@@ -3429,30 +3428,8 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     if Flags["GodMode"].Value then
         task.spawn(function()
-            repeat task.wait() until LocalPlayer.Character:FindFirstChild("ForceField") and GodCheck
+            repeat task.wait() until character:FindFirstChild("ForceField") and GodCheck
             RemoteEvent:FireServer({"QuestTalkStart"})
-        end)
-    end
-
-    if SavedPosition and not Flags["Stack"].Value then
-        task.spawn(function()
-            task.spawn(function()
-                character:WaitForChild("HumanoidRootPart", math.huge):GetPropertyChangedSignal("CFrame"):Wait()
-                character.HumanoidRootPart.CFrame = SavedPosition
-                Teleported = true
-                Camera:GetPropertyChangedSignal('CFrame'):Wait()
-                Camera.CFrame = SavedCameraCFrame
-                Changed = true
-            end)
-            task.wait(.5)
-            if SavedPosition and SavedCameraCFrame then
-                if not Teleported then
-                    character.HumanoidRootPart.CFrame = SavedPosition
-                end
-                if not Changed then
-                    Camera.CFrame = SavedCameraCFrame
-                end
-            end
         end)
     end
 
@@ -3460,7 +3437,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
         task.spawn(function()
             local BodyAngularVelocity = Instance.new("BodyAngularVelocity")
             BodyAngularVelocity.Name = "Spin"
-            BodyAngularVelocity.Parent = character:WaitForChild("HumanoidRootPart", math.huge)
+            BodyAngularVelocity.Parent = HumanoidRootPart
             BodyAngularVelocity.MaxTorque = Vector3.new(0, math.huge, 0)
             BodyAngularVelocity.AngularVelocity = Vector3.new(0, Flags["Spin Speed"].Value, 0)
         end)
@@ -3487,18 +3464,31 @@ LocalPlayer.CharacterAdded:Connect(function(character)
         end)
     end
 
+    if SavedPosition and SavedCameraCFrame and not Flags["Stack"].Value then
+        HumanoidRootPart.CFrame = SavedPosition
+        Camera.CFrame = SavedCameraCFrame
+        task.spawn(function()
+            HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Wait()
+            HumanoidRootPart.CFrame = SavedPosition
+        end)
+        task.spawn(function()
+            Camera:GetPropertyChangedSignal('CFrame'):Wait()
+            Camera.CFrame = SavedCameraCFrame
+        end)
+    end
+
     task.spawn(function()
         RespawnFunction = Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
             if Humanoid.MaxHealth * RespawnHealth >= Humanoid.Health then
                 if not Flags["Stack"].Value then
                     RespawnFunction:Disconnect()
-                    SavedPosition = character.HumanoidRootPart.CFrame
+                    SavedPosition = HumanoidRootPart.CFrame
                     SavedCameraCFrame = Camera.CFrame
                     Camera.CameraType = "Fixed"
                     if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") then
                         RemoteEvent:FireServer({"QuestTalkStart"})
                     end
-                    character.HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
+                    HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
                 end
                 RemoteEvent:FireServer({"Respawn"})
             end
