@@ -3465,13 +3465,13 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     end
 
     if SavedPosition and SavedCameraCFrame and not Flags["Stack"].Value then
-        HumanoidRootPart.CFrame = SavedPosition
-        Camera.CFrame = SavedCameraCFrame
         task.spawn(function()
+            HumanoidRootPart.CFrame = SavedPosition
             HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Wait()
             HumanoidRootPart.CFrame = SavedPosition
         end)
         task.spawn(function()
+            Camera.CFrame = SavedCameraCFrame
             Camera:GetPropertyChangedSignal('CFrame'):Wait()
             Camera.CFrame = SavedCameraCFrame
         end)
