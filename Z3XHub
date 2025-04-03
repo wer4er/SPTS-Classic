@@ -643,7 +643,7 @@ local Animations = {
 }
 
 local Window = Fluent:CreateWindow({
-    Title = "Z3XHub 5.5",
+    Title = "Z3XHub 5.5.1",
     SubTitle = "by wer4er",
     TabWidth = 130,
     Size = UDim2.fromOffset(580, 460),
