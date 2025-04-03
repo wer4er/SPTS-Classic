@@ -119,7 +119,7 @@ for _, object in pairs(game:GetDescendants()) do
 end
 
 Workspace.ChildAdded:Connect(function(object)
-    task.wait()
+    RunService.PreRender:Wait()
     if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
         object:Destroy()
     end
@@ -1924,12 +1924,12 @@ Components.Quests:OnChanged(function()
     while Flags["Auto Claim Quests"].Value and task.wait() do
         for _, quest in pairs({"MS", "PP", "FS", "BT", "JF"}) do
             RemoteEvent:FireServer({"DLQ", quest, "Claim"})
-            task.wait()
+            RunService.PreRender:Wait()
         end
         for _, quest in pairs({"PP", "FS", "BT"}) do
             for i = 1, 3 do
                 RemoteEvent:FireServer({"WLQ", quest .. i, "Claim"})
-                task.wait()
+                RunService.PreRender:Wait()
             end
         end
     end
@@ -2271,7 +2271,7 @@ Components.RGBNames:OnChanged(function()
             end
         end
     else
-        task.wait()
+        RunService.PreRender:Wait()
         for _, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
@@ -2292,7 +2292,7 @@ Components.CustomNames:OnChanged(function()
             end
         end
     else
-        task.wait()
+        RunService.PreRender:Wait()
         for _, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
@@ -3117,7 +3117,7 @@ for _, player in pairs(Players:GetPlayers()) do
 
             if isAlive(player) then
                 player.Character.ChildAdded:Connect(function(object)
-                    task.wait()
+                    RunService.PreRender:Wait()
                     if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
                         object:Destroy()
                     end
@@ -3242,7 +3242,7 @@ for _, player in pairs(Players:GetPlayers()) do
                 end)
 
                 character.ChildAdded:Connect(function(object)
-                    task.wait()
+                    RunService.PreRender:Wait()
                     if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
                         object:Destroy()
                     end
@@ -3418,7 +3418,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     task.spawn(function()
         character.ChildAdded:Connect(function(object)
-            task.wait()
+            RunService.PreRender:Wait()
             if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
                 object:Destroy()
             elseif object.Name == "GodModeShield" and Flags["GodMode"].Value and not Check then
@@ -3524,7 +3524,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 end)
 
 Workspace.ChildAdded:Connect(function(object)
-    task.wait()
+    RunService.PreRender:Wait()
     if object.Name == "Part" then
         if Flags["Custom Lasers"].Value then
             object.Color = Flags["Custom Color"].Value
@@ -3539,7 +3539,7 @@ Workspace.ChildAdded:Connect(function(object)
 end)
 
 Storage.ChildAdded:Connect(function(object)
-    task.wait()
+    RunService.PreRender:Wait()
     if object.Name:match("EnergySphere") then
         if Flags["Custom Spheres"].Value then
             object.Color = Flags["Custom Color"].Value
