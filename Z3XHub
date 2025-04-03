@@ -3,11 +3,13 @@ repeat task.wait() until game:IsLoaded()
 
 local isnetworkowner = isnetworkowner or function() return true end
 local cloneref = cloneref or function(instance) return instance end
-local Services = setmetatable({}, {__index = function(self, Name)
-    local Service = cloneref(game:GetService(Name))
-    self[Name] = Service
-    return Service
-end})
+local Services = setmetatable({}, {
+    __index = function(self, Name)
+        local Service = cloneref(game:GetService(Name))
+        self[Name] = Service
+        return Service
+    end
+})
 local ReplicatedStorage = Services.ReplicatedStorage
 local RemoteEvent = ReplicatedStorage.RemoteEvent
 local RemoteFunction = ReplicatedStorage.RemoteFunction
@@ -35,6 +37,22 @@ local InjectorName = identifyexecutor()
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
+
+local _task = task
+local task = setmetatable({}, {
+    __index = function(self, index)
+        if index == "wait" then
+            return function(num)
+                if num == nil or num == 0 then
+                    return game:GetService"RunService".PreRender:Wait()
+                else
+                    return _task["wait"](num)
+                end
+            end
+        end
+        return _task[index]
+    end
+})
 
 if Loaded then
     TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
@@ -2271,7 +2289,7 @@ Components.RGBNames:OnChanged(function()
             end
         end
     else
-        task.wait()
+        task.wait(.1)
         for _, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
@@ -2292,7 +2310,7 @@ Components.CustomNames:OnChanged(function()
             end
         end
     else
-        task.wait()
+        task.wait(.1)
         for _, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
