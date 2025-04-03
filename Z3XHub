@@ -239,7 +239,7 @@ local function onChatted(player, msg)
         
         if Hidden then
             if lastChatted[player.Name] then
-                Text = "[" .. player.Name .. " -> " .. (lastChatted[player.Name]) .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
+                Text = "[" .. player.Name .. " → " .. (lastChatted[player.Name]) .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
             else
                 Text = "[" .. player.Name .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
             end
