@@ -53,26 +53,22 @@ local Check = newcclosure and checkcaller and hookmetamethod and hookfunction an
 
 if Check then
     task.spawn(function()
-        local chatted = Instance.new("BindableEvent")
-        chatted.Name = LocalPlayer.Name .. "_Chatted"
-        local OldChatted = LocalPlayer.Chatted
+        local Chatted = Instance.new("BindableEvent")
         local MessagePosted =  require(LocalPlayer.PlayerScripts.ChatScript.ChatMain).MessagePosted
-    
-        local oldhook = nil
-        oldhook = hookfunction(MessagePosted.fire, function(self, ...)
+        local oldHook, oldCall = nil, nil
+
+        oldHook = hookfunction(MessagePosted.fire, function(self, ...)
             if not checkcaller() and self == MessagePosted then
-                return chatted:Fire(...)
+                return Chatted:Fire(...)
             end
-            return oldhook(self, ...)
+            return oldHook(self, ...)
         end)
 
-        local oldcall = nil
-        oldcall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
-            local method = getnamecallmethod()
+        oldCall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+            local method, args = getnamecallmethod(), {...}
             if method == "Fire" and self.Name == "MessagePosted" then
                 return task.wait(9e9)
             elseif method == "Create" then
-                local args = {...}
                 if args[1] == Camera then
                     return setmetatable({}, {
                         ["__index"] = function(self, ...)
@@ -83,7 +79,7 @@ if Check then
             elseif not checkcaller() and self == LocalPlayer.Character and method == "BreakJoints" then
                 return nil
             end
-            return oldcall(self, ...)
+            return oldCall(self, ...)
         end))
     end)
 end
@@ -219,33 +215,38 @@ local function isAlive(player)
     return player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
 end
 
-local lastchatted = {}
+local lastChatted = {}
 local function onChatted(player, msg)
     if Flags["Logs"].Value["ChatSpy"] then
-        local newchatted = false
-        
-        local command, target = msg:match("^/(w) (%S+)")
+        local newChatted = false
+        local Text
+        local Command, Target = msg:match("^/(w) (%S+)")
 
-        if command == "w" and Players[target] then
-            newchatted = true
-            lastchatted[player.Name] = target
+        if Command == "w" and Players[Target] then
+            newChatted = true
+            lastChatted[player.Name] = Target
         end
 
-        local hidden = true
+        local Hidden = true
         local con = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents", math.huge):WaitForChild("OnMessageDoneFiltering", math.huge).OnClientEvent:Connect(function(packet, channel)
             if packet.SpeakerUserId == player.UserId and packet.Message == msg:sub(#msg-#packet.Message + 1) and (channel== "All") then
-                hidden = false
-                lastchatted[player.Name] = nil
+                Hidden = false
+                lastChatted[player.Name] = nil
             end
         end)
         task.wait(1)
         con:Disconnect()
         
-        if hidden then
-            local text = "[" .. player.Name .. " -> " .. (lastchatted[player.Name] or "unknown") .. "]: " .. (newchatted and msg:sub(msg:find(target) + #target + 1) or msg)
+        if Hidden then
+            if lastChatted[player.Name] then
+                Text = "[" .. player.Name .. " -> " .. (lastChatted[player.Name]) .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
+            else
+                Text = "[" .. player.Name .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
+            end
+            
             if Flags["Type Of Logs"].Value["Chat"] then
                 StarterGui:SetCore("ChatMakeSystemMessage", {
-                    Text = text,
+                    Text = Text,
                     Color = Color3.new(.988235, 1, .329412),
                     Font = "GothamBold",
                     TextSize = 18
@@ -256,13 +257,13 @@ local function onChatted(player, msg)
                 Fluent:Notify({
                     Title = "Z3XHub",
                     Content = "[LOGS]",
-                    SubContent = text,
+                    SubContent = Text,
                     Duration = 3
                 })
             end
             
             if Flags["Type Of Logs"].Value["Console"] then
-                print("[LOGS]: " .. text)
+                print("[LOGS]: " .. Text)
             end
         end
     end
@@ -3359,7 +3360,7 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 Players.PlayerRemoving:Connect(function(player)
-    lastchatted[player.Name] = nil
+    lastChatted[player.Name] = nil
     
     if CoreGui.ESPFolder:FindFirstChild(player.Name) then
         CoreGui.ESPFolder[player.Name]:Destroy()
