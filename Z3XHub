@@ -69,7 +69,7 @@ if Check then
         oldCall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
             local Method, Args = getnamecallmethod(), {...}
             if rawequal(Method, "Fire") and rawequal(self.Name, "MessagePosted") then
-                return task.wait(9e9)
+                return wait(9e9)
             elseif rawequal(Method,"Create") then
                 if rawequal(Args[1], Camera) then
                     return setmetatable({}, {
