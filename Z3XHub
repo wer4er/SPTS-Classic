@@ -4,7 +4,7 @@ repeat task.wait() until game:IsLoaded()
 local isnetworkowner = isnetworkowner or function() return true end
 local cloneref = cloneref or function(instance) return instance end
 local Services = setmetatable({}, {
-    __index = function(self, Name)
+    ["__index"] = function(self, Name)
         local Service = cloneref(game:GetService(Name))
         self[Name] = Service
         return Service
@@ -3475,7 +3475,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
         end)
         task.spawn(function()
             Camera.CFrame = SavedCameraCFrame
-            Camera:GetPropertyChangedSignal('CFrame'):Wait()
+            Camera:GetPropertyChangedSignal("CFrame"):Wait()
             Camera.CFrame = SavedCameraCFrame
         end)
     end
