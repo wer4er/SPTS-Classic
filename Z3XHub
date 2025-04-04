@@ -83,18 +83,18 @@ if Check then
         end)
 
         oldCall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
-            local method, args = getnamecallmethod(), {...}
-            if method == "Fire" and self.Name == "MessagePosted" then
+            local Method, Args = getnamecallmethod(), {...}
+            if Method == "Fire" and self.Name == "MessagePosted" then
                 return task.wait(9e9)
-            elseif method == "Create" then
-                if args[1] == Camera then
+            elseif Method == "Create" then
+                if rawequal(Args[1], Camera) then
                     return setmetatable({}, {
                         ["__index"] = function(self, ...)
                             return function() end
                         end
                     })
                 end
-            elseif not checkcaller() and self == LocalPlayer.Character and method == "BreakJoints" then
+            elseif not checkcaller() and self == LocalPlayer.Character and Method == "BreakJoints" then
                 return nil
             end
             return oldCall(self, ...)
