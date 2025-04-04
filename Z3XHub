@@ -141,12 +141,6 @@ else
     end)
 end
 
-LocalPlayer.Idled:Connect(function()
-    VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
-    task.wait(1)
-    VirtualUser:Button2Up(Vector2.new(0, 0), Camera.CFrame)
-end)
-
 PlayerGui.IntroGui:GetPropertyChangedSignal("Enabled"):Connect(function()
     PlayerGui.IntroGui.Enabled = false
 end)
@@ -159,7 +153,7 @@ ScreenGui:GetPropertyChangedSignal("Enabled"):Connect(function()
     ScreenGui.Enabled = true
 end)
 
-local function formatstats(num)
+local function ConvertToLetter(num)
     local rnum = math.floor(num * 100 + .5) / 100
     local suffixes = {"K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd", "Nod", "Vg", "Uvg", "Dvg", "Tvg"}
 
@@ -199,7 +193,7 @@ local function updcolorstroke(status)
     return colors.strokecolor[status] or Color3.new(0, 0, 0)
 end
 
-local function formattime(time)
+local function ConvertTime(time)
     local days = math.floor(time / 86400)
     local hours = math.floor((time % 86400) / 3600)
     local minutes = math.floor((time % 3600) / 60)
@@ -352,7 +346,7 @@ local function CreateESP(player)
         TxtBody.TextColor3 = Color3.new(1, 1, 1)
         TxtBody.TextSize = 14
         TxtBody.TextStrokeTransparency = .5
-        TxtBody.Text = "Body: " .. formatstats(PrivateStats:WaitForChild("BodyToughness", math.huge).Value)
+        TxtBody.Text = "Body: " .. ConvertToLetter(PrivateStats:WaitForChild("BodyToughness", math.huge).Value)
 
         local TxtFist = Instance.new("TextLabel", Frame)
         TxtFist.Name = "Fist"
@@ -364,7 +358,7 @@ local function CreateESP(player)
         TxtFist.TextColor3 = Color3.new(1, 1, 1)
         TxtFist.TextSize = 14
         TxtFist.TextStrokeTransparency = .5
-        TxtFist.Text = "Fist: " .. formatstats(PrivateStats:WaitForChild("FistStrength", math.huge).Value)
+        TxtFist.Text = "Fist: " .. ConvertToLetter(PrivateStats:WaitForChild("FistStrength", math.huge).Value)
 
         local TxtPsychic = Instance.new("TextLabel", Frame)
         TxtPsychic.Name = "Psychic"
@@ -376,7 +370,7 @@ local function CreateESP(player)
         TxtPsychic.TextColor3 = Color3.new(1, 1, 1)
         TxtPsychic.TextSize = 14
         TxtPsychic.TextStrokeTransparency = .5
-        TxtPsychic.Text = "Psychic: " .. formatstats(PrivateStats:WaitForChild("PsychicPower", math.huge).Value)
+        TxtPsychic.Text = "Psychic: " .. ConvertToLetter(PrivateStats:WaitForChild("PsychicPower", math.huge).Value)
     
         task.spawn(function()
             while task.wait() do
@@ -1330,9 +1324,9 @@ local function loadUtility(name)
                     for i, object in pairs(UpdatingStats) do
                         local Stat = Players:FindFirstChild(player.Name):WaitForChild("PrivateStats", math.huge)
                         local Statname = object[3]
-                        object[1].Text = Statname .. ": " .. formatstats(Stat[object[2]].Value)
+                        object[1].Text = Statname .. ": " .. ConvertToLetter(Stat[object[2]].Value)
                         Stat[object[2]]:GetPropertyChangedSignal("Value"):Connect(function()
-                            object[1].Text = Statname .. ": " .. formatstats(Stat[object[2]].Value)
+                            object[1].Text = Statname .. ": " .. ConvertToLetter(Stat[object[2]].Value)
                         end)
                     end
                 end
@@ -1608,7 +1602,7 @@ local function loadUtility(name)
 
             if object[2] ~= "Token" then
                 PrivateStats[object[2]]:GetPropertyChangedSignal("Value"):Connect(function()
-                    object[1].Text = object[1].Name .. ": " .. formatstats(PrivateStats[object[2]].Value - object[3])
+                    object[1].Text = object[1].Name .. ": " .. ConvertToLetter(PrivateStats[object[2]].Value - object[3])
                 end)
             else
                 PrivateStats[object[2]]:GetPropertyChangedSignal("Value"):Connect(function()
@@ -1616,7 +1610,7 @@ local function loadUtility(name)
                         AllTokens += 5
                     end
                     OldValue = PrivateStats[object[2]].Value
-                    object[1].Text = object[1].Name .. ": " .. formatstats(AllTokens)
+                    object[1].Text = object[1].Name .. ": " .. ConvertToLetter(AllTokens)
                 end)
             end
         end
@@ -1625,7 +1619,7 @@ local function loadUtility(name)
 
         task.spawn(function()
             while task.wait() do
-                StatCounter.TimeFrameText.Text = "Time: " .. formattime(os.time() - startTime)
+                StatCounter.TimeFrameText.Text = "Time: " .. ConvertTime(os.time() - startTime)
             end
         end)
     elseif rawequal(name, "Multi Checker") then
@@ -1896,7 +1890,7 @@ local function loadUtility(name)
                     MultiChecker.PpFrameText.Text = "Psychic: x" .. tostring(Multiplier.PPMultiplier)
                     MultiChecker.MsFrameText.Text = "Speed: x" .. tostring(Multiplier.MSMultiplier)
                     MultiChecker.JfFrameText.Text = "Jump: x" .. tostring(Multiplier.JFMultiplier)
-                    MultiChecker.TokensFrameText.Text = "Tokens: " .. formatstats(Players[MultiChecker.PlayerTextBox.Text].PrivateStats.Token.Value)
+                    MultiChecker.TokensFrameText.Text = "Tokens: " .. ConvertToLetter(Players[MultiChecker.PlayerTextBox.Text].PrivateStats.Token.Value)
                 end
             end
         end)
@@ -3171,7 +3165,7 @@ for i, player in pairs(Players:GetPlayers()) do
             for i, object in pairs(UpdatingStats) do
                 PrivateStats:WaitForChild(object[1], math.huge):GetPropertyChangedSignal("Value"):Connect(function()
                     if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                        CoreGui.ESPFolder[player.Name].Frame[object[2]].Text = object[2] .. ": " .. formatstats(PrivateStats[object[1]].Value)
+                        CoreGui.ESPFolder[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats[object[1]].Value)
                     end
                 end)
             end
@@ -3195,10 +3189,10 @@ for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 local Humanoid = player.Character:FindFirstChild("Humanoid")
                 
-                CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. formatstats(Humanoid.MaxHealth) .. "/" .. formatstats(Humanoid.MaxHealth)
+                CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
 
                 Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                    CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. formatstats(Humanoid.Health) .. "/" .. formatstats(Humanoid.MaxHealth)
+                    CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
                 end)
 
                 player.Character.Humanoid.Died:Connect(function()
@@ -3247,10 +3241,10 @@ for i, player in pairs(Players:GetPlayers()) do
                         CoreGui.ESPFolder[player.Name].Enabled = Flags["ESP"].Value
                     end
 
-                    CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. formatstats(Humanoid.MaxHealth) .. "/" .. formatstats(Humanoid.MaxHealth)
+                    CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
 
                     Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                        CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. formatstats(Humanoid.Health) .. "/" .. formatstats(Humanoid.MaxHealth)
+                        CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
                     end)
 
                     Humanoid.Died:Connect(function()     
@@ -3343,10 +3337,10 @@ Players.PlayerAdded:Connect(function(player)
                 CoreGui.ESPFolder[player.Name].Enabled = Flags["ESP"].Value
             end
             
-            CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. formatstats(Humanoid.MaxHealth) .. "/" .. formatstats(Humanoid.MaxHealth)
+            CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
 
             Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. formatstats(Humanoid.Health) .. "/" .. formatstats(Humanoid.MaxHealth)
+                CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
             end)
 
             Humanoid.Died:Connect(function()         
@@ -3385,7 +3379,7 @@ Players.PlayerAdded:Connect(function(player)
     for i, object in pairs(UpdatingStats) do
         PrivateStats:WaitForChild(object[1], math.huge):GetPropertyChangedSignal("Value"):Connect(function()
             if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                CoreGui.ESPFolder[player.Name].Frame[object[2]].Text = object[2] .. ": " .. formatstats(PrivateStats:WaitForChild(object[1], math.huge).Value)
+                CoreGui.ESPFolder[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats:WaitForChild(object[1], math.huge).Value)
             end
         end)
     end
