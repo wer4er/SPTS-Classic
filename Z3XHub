@@ -41,10 +41,10 @@ local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCa
 local _task = task
 local task = setmetatable({}, {
     __index = function(self, index)
-        if index == "wait" then
+        if rawequal(index, "wait") then
             return function(num)
-                if num == nil or num == 0 then
-                    return game:GetService"RunService".PreRender:Wait()
+                if rawequal(num, nil) or rawequal(num, 0) then
+                    return RunService.PreRender:Wait()
                 else
                     return _task["wait"](num)
                 end
@@ -76,7 +76,7 @@ if Check then
         local oldHook, oldCall = nil, nil
 
         oldHook = hookfunction(MessagePosted.fire, function(self, ...)
-            if not checkcaller() and self == MessagePosted then
+            if not checkcaller() and rawequal(self, MessagePosted) then
                 return Chatted:Fire(...)
             end
             return oldHook(self, ...)
@@ -84,9 +84,9 @@ if Check then
 
         oldCall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
             local Method, Args = getnamecallmethod(), {...}
-            if Method == "Fire" and self.Name == "MessagePosted" then
+            if rawequal(Method, "Fire") and rawequal(self.Name, "MessagePosted") then
                 return task.wait(9e9)
-            elseif Method == "Create" then
+            elseif rawequal(Method,"Create") then
                 if rawequal(Args[1], Camera) then
                     return setmetatable({}, {
                         ["__index"] = function(self, ...)
@@ -94,7 +94,7 @@ if Check then
                         end
                     })
                 end
-            elseif not checkcaller() and self == LocalPlayer.Character and Method == "BreakJoints" then
+            elseif not checkcaller() and rawequal(self, LocalPlayer.Character) and rawequal(Method, "BreakJoints") then
                 return nil
             end
             return oldCall(self, ...)
@@ -123,7 +123,7 @@ end)
 for _, object in pairs(Workspace:GetChildren()) do
     if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
         object:Destroy()
-    elseif object.Name == "Town" then
+    elseif rawequal(object.Name, "Town") then
         if object.Halloween.SecretTraining2:FindFirstChild("Part") then
             object.Halloween.SecretTraining2.Part.CanCollide = false
         end
@@ -131,7 +131,7 @@ for _, object in pairs(Workspace:GetChildren()) do
 end
 
 for _, object in pairs(game:GetDescendants()) do
-    if object:IsA("BillboardGui") and object.Name == "WarnBBGui" then
+    if object:IsA("BillboardGui") and rawequal(object.Name, "WarnBBGui") then
         object:Destroy()
     end
 end
@@ -240,14 +240,14 @@ local function onChatted(player, msg)
         local Text
         local Command, Target = msg:match("^/(w) (%S+)")
 
-        if Command == "w" and Players[Target] then
+        if rawequal(Command, "w") and Players[Target] then
             newChatted = true
             lastChatted[player.Name] = Target
         end
 
         local Hidden = true
         local con = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents", math.huge):WaitForChild("OnMessageDoneFiltering", math.huge).OnClientEvent:Connect(function(packet, channel)
-            if packet.SpeakerUserId == player.UserId and packet.Message == msg:sub(#msg-#packet.Message + 1) and (channel== "All") then
+            if rawequal(packet.SpeakerUserId, player.UserId) and rawequal(packet.Message, msg:sub(#msg-#packet.Message + 1)) and rawequal(channel, "All") then
                 Hidden = false
                 lastChatted[player.Name] = nil
             end
@@ -735,7 +735,7 @@ Tabs.Pvp:AddButton({
     Callback = function()
         if table.find(Whitelisted, Target) then
             for _, rTarget in pairs(Whitelisted) do
-                if rTarget == Target then
+                if rawequal(rTarget, Target) then
                     table.remove(Whitelisted, i)
                 end
             end
@@ -784,7 +784,7 @@ Tabs.Pvp:AddButton({
     Callback = function()
         if table.find(Targets, Target) then
             for _, rTarget in pairs(Targets) do
-                if rTarget == Target then
+                if rawequal(rTarget, Target) then
                     table.remove(Targets, i)
                 end
             end
@@ -1030,7 +1030,7 @@ Components.Respawn:OnChanged(function()
 end)
 
 local function loadUtility(name)
-    if name == "Stats Checker" then
+    if rawequal(name, "Stats Checker") then
         local StatsChecker = {
             StatsCheckerGui = Instance.new("ScreenGui"),
             MainFrame = Instance.new("TextButton"),
@@ -1084,7 +1084,7 @@ local function loadUtility(name)
                 Mx, My = nMx, nMy
             end)
             MouseKill = UserInputService.InputEnded:Connect(function(UserInput)
-                if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+                if rawequal(UserInput.UserInputType, Enum.UserInputType.MouseButton1) then
                     MouseMove:Disconnect()
                     MouseKill:Disconnect()
                 end
@@ -1299,7 +1299,7 @@ local function loadUtility(name)
         
         StatsChecker.PlayerTextBox.FocusLost:Connect(function()
             for _, player in pairs(Players:GetPlayers()) do
-                if (string.sub(string.lower(player.Name), 1, string.len(StatsChecker.PlayerTextBox.Text))) == string.lower(StatsChecker.PlayerTextBox.Text) then
+                if rawequal((string.sub(string.lower(player.Name), 1, string.len(StatsChecker.PlayerTextBox.Text))), string.lower(StatsChecker.PlayerTextBox.Text)) then
                     StatsChecker.PlayerTextBox.Text = player.Name
                     for _, object in pairs(UpdatingStats) do
                         local Stat = Players:FindFirstChild(player.Name):WaitForChild("PrivateStats", math.huge)
@@ -1312,7 +1312,7 @@ local function loadUtility(name)
                 end
             end
         end)        
-    elseif name == "Stats Counter" then
+    elseif rawequal(name, "Stats Counter") then
         local StatCounter = {
             StatCounterGui = Instance.new("ScreenGui"),
             MainFrame = Instance.new("TextButton"),
@@ -1365,7 +1365,7 @@ local function loadUtility(name)
                 Mx, My = nMx, nMy
             end)
             MouseKill = UserInputService.InputEnded:Connect(function(UserInput)
-                if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+                if rawequal(UserInput.UserInputType, Enum.UserInputType.MouseButton1) then
                     MouseMove:Disconnect()
                     MouseKill:Disconnect()
                 end
@@ -1602,7 +1602,7 @@ local function loadUtility(name)
                 StatCounter.TimeFrameText.Text = "Time: " .. formattime(os.time() - startTime)
             end
         end)
-    elseif name == "Multi Checker" then
+    elseif rawequal(name, "Multi Checker") then
         local MultiChecker = {
             MultiCheckerGui = Instance.new("ScreenGui"),
             MainFrame = Instance.new("TextButton"),
@@ -1656,7 +1656,7 @@ local function loadUtility(name)
                 Mx, My = nMx, nMy
             end)
             MouseKill = UserInputService.InputEnded:Connect(function(UserInput)
-                if UserInput.UserInputType == Enum.UserInputType.MouseButton1 then
+                if rawequal(UserInput.UserInputType, Enum.UserInputType.MouseButton1) then
                     MouseMove:Disconnect()
                     MouseKill:Disconnect()
                 end
@@ -1862,7 +1862,7 @@ local function loadUtility(name)
 
         MultiChecker.PlayerTextBox.FocusLost:Connect(function()
             for _, player in pairs(Players:GetPlayers()) do
-                if (string.sub(string.lower(player.Name), 1, string.len(MultiChecker.PlayerTextBox.Text))) == string.lower(MultiChecker.PlayerTextBox.Text) then
+                if rawequal((string.sub(string.lower(player.Name), 1, string.len(MultiChecker.PlayerTextBox.Text))), string.lower(MultiChecker.PlayerTextBox.Text)) then
                     MultiChecker.PlayerTextBox.Text = player.Name
                     local Multiplier = HttpService:JSONDecode(Players[MultiChecker.PlayerTextBox.Text].PrivateStats.Inventory.Value)
                     MultiChecker.FsFrameText.Text = "Fist: x" .. tostring(Multiplier.FSMultiplier)
@@ -1879,11 +1879,11 @@ end
 
 local function destroyUtility(name)
     for _, object in pairs(CoreGui:GetChildren()) do
-        if name == "Stats Checker" and object.Name == "Stats Checker" then
+        if rawequal(name, "Stats Checker") and rawequal(object.Name, "Stats Checker") then
             object:Destroy()
-        elseif name == "Stats Counter" and object.Name == "Stats Counter" then
+        elseif rawequal(name, "Stats Counter") and rawequal(object.Name, "Stats Counter") then
             object:Destroy()
-        elseif name == "Multi Checker" and object.Name == "Multi Checker" then
+        elseif rawequal(name, "Multi Checker") and rawequal(object.Name, "Multi Checker") then
             object:Destroy()
         end
     end
@@ -1958,7 +1958,7 @@ Components.AntiAura:OnChanged(function()
         for _, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 for _, object in pairs(player.Character:GetChildren()) do
-                    if object.Name == "KillingIntentPart" then 
+                    if rawequal(object.Name, "KillingIntentPart") then 
                         object:Destroy()
                     end
                 end
@@ -2007,7 +2007,7 @@ Components.SpamR:OnChanged(function()
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
         for _, sphere in pairs(Storage:GetChildren()) do
             task.spawn(function()
-                if isAlive() and sphere.Name == getball() and isnetworkowner(sphere) then
+                if isAlive() and rawequal(sphere.Name, getball()) and isnetworkowner(sphere) then
                     sphere.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
                 end
             end)
@@ -2161,7 +2161,7 @@ Components.StackAll:OnChanged(function()
                     player.Character.HumanoidRootPart.CFrame = CFrame.new(15e2, -55e2, -25e2)
                     for _, sphere in pairs(Storage:GetChildren()) do
                         task.spawn(function()
-                            if sphere.Name == getball() then
+                            if rawequal(sphere.Name, getball()) then
                                 firetouchinterest(player.Character.HumanoidRootPart, sphere, 0)
                             end
                         end)
@@ -2323,7 +2323,7 @@ end)
 Components.Spin:OnChanged(function()
     if isAlive() then
         for _, object in pairs(LocalPlayer.Character.HumanoidRootPart:GetChildren()) do
-            if object.Name == "Spin" then
+            if rawequal(object.Name, "Spin") then
                 object:Destroy()
             end
         end
@@ -2410,69 +2410,69 @@ Tabs.Visual:AddButton({
             local property = objects1[2]
         
             if object and property then
-                if property == "Water" then
+                if rawequal(property, "Water") then
                     object.WaterColor = Color3.new(0, 0, 0)
                     object.WaterTransparency = 0
-                elseif property == "Rock" then
+                elseif rawequal(property, "Rock") then
                     object.Color = Color3.new(0, 0, 0)
-                elseif property == "Crystal" then
+                elseif rawequal(property, "Crystal") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "Part" then
+                        if rawequal(Child.Name, "Part") then
                             Child.Color = Color3.new(0, 0, 0)
                             Child.Material = Enum.Material.Foil
-                        elseif Child.Name == "CyanGem" then
+                        elseif rawequal(Child.Name, "CyanGem") then
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(0, 0, 0)
                             end
-                        elseif Child.Name == "cloud" then
+                        elseif rawequal(Child.Name, "cloud") then
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(0, 0, 0)
                             end
                         end
                     end
-                elseif property == "Waterfall" then
+                elseif rawequal(property, "Waterfall") then
                     for _, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(0, 0, 0)
-                            if Child.Name == "Union" then
+                            if rawequal(Child.Name, "Union") then
                                 Child.UsePartColor = true
                             end
                         end
                     end
-                elseif property == "Volcano" then
+                elseif rawequal(property, "Volcano") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "LavaFloor" then
+                        if rawequal(Child.Name, "LavaFloor") then
                             Child.Color = Color3.new(0, 0, 0)
                             Child.UsePartColor = true
-                        elseif Child.Name == "Lava" then
+                        elseif rawequal(Child.Name, "Lava") then
                             for _, Child1 in pairs(Child:GetChildren()) do
-                                if Child1.Name == ("LavaPart" or "TouchPart") then
+                                if rawequal(Child1.Name, "LavaPart") or rawequal(Child1.Name, "TouchPart") then
                                     Child1.Color = Color3.new(0, 0, 0)
-                                elseif Child1.Name == "SmokeEmitter" then
+                                elseif rawequal(Child1.Name, "SmokeEmitter") then
                                     Child1.Color = Color3.new(0, 0, 0)
-                                elseif Child1.Name == "Splash" then
+                                elseif rawequal(Child1.Name, "Splash") then
                                     Child1.Color = Color3.new(0, 0, 0)
                                 end
                             end
-                        elseif Child.Name == "Parts" then
+                        elseif rawequal(Child.Name, "Parts") then
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(0, 0, 0)
                             end
                         end
                     end
-                elseif property == "IceMountain" then
+                elseif rawequal(property, "IceMountain") then
                     for _, Child in pairs(object:GetChildren()) do
                         Child.Color = Color3.new(0, 0, 0)
                     end
-                elseif property == "Tornado" then
+                elseif rawequal(property, "Tornado") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "Dust" then
+                        if rawequal(Child.Name, "Dust") then
                             Child.Color = Color3.new(0, 0, 0)
                         else
                             Child.Color = Color3.new(0, 0, 0)
                         end
                     end
-                elseif property == "TrainingArea" then
+                elseif rawequal(property, "TrainingArea") then
                     for _, Child in pairs(object:GetChildren()) do
                         if Child.Name:match("StarFSTraining%d") then
                             Child.Color = Color3.new(0, 0, 0)
@@ -2491,23 +2491,23 @@ Tabs.Visual:AddButton({
                             Child.Color = Color3.new(0, 0, 0)
                         end
                     end
-                elseif property == "Tree" then
+                elseif rawequal(property, "Tree") then
                     for _, Leaf in pairs(object.Leaf:GetChildren()) do
                         Leaf.Color = Color3.new(0, 0, 0)
                     end
                     for _, Trunk in pairs(object.Trunk:GetChildren()) do
                         Trunk.Color = Color3.new(0, 0, 0)
                     end
-                elseif property == "Children" then
+                elseif rawequal(property, "Children") then
                     for _, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(0, 0, 0)
-                            if Child.Name == "Union" then
+                            if rawequal(Child.Name, "Union") then
                                 Child.UsePartColor = true
                             end
                         end
                     end
-                elseif property == "SpotLight" then
+                elseif rawequal(property, "SpotLight") then
                     for _, Light in pairs(object) do
                         if Light:IsA("SpotLight") then
                             Light.Color = Color3.new(0, 0, 0)
@@ -2516,15 +2516,15 @@ Tabs.Visual:AddButton({
                             end)
                         end
                     end
-                elseif property == "object" then 
+                elseif rawequal(property, "object") then 
                     for _, ObjectToDestroy in pairs(object:GetChildren()) do
                         if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
                             ObjectToDestroy:Destroy()
                         end
                     end
-                elseif property == "Material" then 
+                elseif rawequal(property, "Material") then 
                     for _, Part in pairs(object:GetChildren()) do
-                        if Part:IsA("BasePart") and Part.Material == Enum.Material.Pebble then
+                        if Part:IsA("BasePart") and rawequal(Part.Material, Enum.Material.Pebble) then
                             Part.Material = Enum.Material.Cobblestone
                         end
                     end
@@ -2563,108 +2563,108 @@ Tabs.Visual:AddButton({
             local property = objects1[2]
         
             if object and property then
-                if property == "Water" then
+                if rawequal(property, "Water") then
                     object.WaterColor = Color3.new(.5, .7, 1)
                     object.WaterTransparency = 1
-                elseif property == "Rock" then
+                elseif rawequal(property, "Rock") then
                     object.Color = Color3.new(.8, .8, .8)
-                elseif property == "Crystal" then
+                elseif rawequal(property, "Crystal") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "Part" then
+                        if rawequal(Child.Name, "Part") then
                             Child.Color = Color3.new(.624, .953, .914)
                             Child.Material = Enum.Material.Foil
-                        elseif Child.Name == "CyanGem" then
+                        elseif rawequal(Child.Name, "CyanGem") then
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(.016, .687, .926)
                             end
-                        elseif Child.Name == "cloud" then
+                        elseif rawequal(Child.Name, "cloud") then
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(.950, .953, .953)
                             end
                         end
                     end
-                elseif property == "Waterfall" then
+                elseif rawequal(property, "Waterfall") then
                     for _, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(0.471, 0.565, 0.510)
-                            if Child.Name == "Union" then
-                                    Child.UsePartColor = true
+                            if rawequal(Child.Name, "Union") then
+                                Child.UsePartColor = true
                             end
                         end
                     end
-                elseif property == "Volcano" then
+                elseif rawequal(property, "Volcano") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "LavaFloor" then
+                        if rawequal(Child.Name, "LavaFloor") then
                             Child.Color = Color3.new(1, 0, 0)
                             Child.UsePartColor = true
-                        elseif Child.Name == "Lava" then
+                        elseif rawequal(Child.Name, "Lava") then
                             for _, Child1 in pairs(Child:GetChildren()) do
-                                if Child1.Name == ("LavaPart" or "TouchPart") then
+                                if rawequal(Child1.Name, "LavaPart") or rawequal(Child1.Name, "TouchPart") then
                                     Child1.Color = Color3.new(1, 0, 0)
-                                elseif Child1.Name == "SmokeEmitter" then
+                                elseif rawequal(Child1.Name, "SmokeEmitter") then
                                     Child1.Color = Color3.new(.640, .636, .648)
-                                elseif Child1.Name == "Splash" then
+                                elseif rawequal(Child1.Name, "Splash") then
                                     Child1.Color = Color3.new(.973, .973, .973)
                                 end
                             end
-                        elseif Child.Name == "Parts" then
+                        elseif rawequal(Child.Name, "Parts") then
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(.412, .251, .157)
                             end
                         end
                     end
-                elseif property == "IceMountain" then
+                elseif rawequal(property, "IceMountain") then
                     for _, Child in pairs(object:GetChildren()) do
                         Child.Color = Color3.new(.906, .906, .926)
                     end
-                elseif property == "Tornado" then
+                elseif rawequal(property, "Tornado") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "Dust" then
+                        if rawequal(Child.Name, "Dust") then
                             Child.Color = Color3.new(.389, .373, .385)
                         else
                             Child.Color = Color3.new(.640, .636, .648)
                         end
                     end
-                elseif property == "Children" then
+                elseif rawequal(property, "Children") then
                     for _, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(.632, .769, .550)
-                            if Child.Name == "Union" then
+                            if rawequal(Child.Name, "Union") then
                                 Child.UsePartColor = true
                             end
                         end
                     end
-                elseif property == "TrainingArea" then
+                elseif rawequal(property, "TrainingArea") then
                     for _, Child in pairs(object:GetChildren()) do
-                        if Child.Name == "StarFSTraining1" then
+                        if rawequal(Child.Name, "StarFSTraining1") then
                             Child.Color = Color3.new(0.016, 0.687, 0.926)
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
-                                    if Child1.Name == "Atmosphere1" then
+                                    if rawequal(Child1.Name, "Atmosphere1") then
                                         Child1.Color = Color3.new(1, 1, 1)
                                     else
                                         Child1.Color = Color3.new(1, 1, 1)
                                     end
                                 end
                             end
-                        elseif Child.Name == "StarFSTraining2" then
+                        elseif rawequal(Child.Name, "StarFSTraining2") then
                             Child.Color = Color3.new(0, 1, 0)
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
-                                    if Child1.Name == "Atmosphere1" then
+                                    if rawequal(Child1.Name, "Atmosphere1") then
                                         Child1.Color = Color3.new(0, 1, 0)
                                     else
                                         Child1.Color = Color3.new(1, 1, 0)
                                     end
                                 end
                             end
-                        elseif Child.Name == "StarFSTraining3" then
+                        elseif rawequal(Child.Name, "StarFSTraining3") then
                             Child.Color = Color3.new(1, 0, 0)
                             for _, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
-                                    if Child1.Name == "Atmosphere1" then
+                                    if rawequal(Child1.Name, "Atmosphere1") then
                                         Child1.Color = Color3.new(1, 0.2, 0)
-                                    elseif Child1.Name == "Atmosphere2" then
+                                    elseif rawequal(Child1.Name, "Atmosphere2") then
                                         Child1.Color = Color3.new(1, 0.3, 0)
                                     else
                                         Child1.Color = Color3.new(1, 0.2, 0)
@@ -2681,20 +2681,20 @@ Tabs.Visual:AddButton({
                             Child.Color = Color3.new(1, 0, 0) 
                         end
                     end
-                elseif property == "Tree" then
+                elseif rawequal(property, "Tree") then
                     for _, Leaf in pairs(object.Leaf:GetChildren()) do
-                        if object.Name == "Tree1" then
+                        if rawequal(object.Name, "Tree1") then
                             Leaf.Color = Color3.new(0.133333, 0.545098, 0.133333)  
-                        elseif object.Name == "Tree2" then
+                        elseif rawequal(object.Name, "Tree2") then
                             Leaf.Color = Color3.new(0.235294, 0.701961, 0.443137) 
-                        elseif object.Name == "Tree3" then
+                        elseif rawequal(object.Name, "Tree3") then
                             Leaf.Color = Color3.new(0.180392, 0.545098, 0.341176)   
                         end
                     end
                     for _, Trunk in pairs(object.Trunk:GetChildren()) do
                         Trunk.Color = Color3.new(0.487, 0.361, 0.275)
                     end                 
-                elseif property == "SpotLight" then
+                elseif rawequal(property, "SpotLight") then
                     for _, Light in pairs(object) do
                         if Light:IsA("SpotLight") then
                             Light.Color = Color3.new(1, .843137, 0)
@@ -2703,15 +2703,15 @@ Tabs.Visual:AddButton({
                             end)
                         end
                     end
-                elseif property == "object" then 
+                elseif rawequal(property, "object") then 
                     for _, ObjectToDestroy in pairs(object:GetChildren()) do
                         if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
                             ObjectToDestroy:Destroy()
                         end
                     end
-                elseif property == "Material" then 
+                elseif rawequal(property, "Material") then 
                     for _, Part in pairs(object:GetChildren()) do
-                        if Part:IsA("BasePart") and Part.Material == Enum.Material.Pebble then
+                        if Part:IsA("BasePart") and rawequal(Part.Material, Enum.Material.Pebble) then
                             Part.Material = Enum.Material.Cobblestone
                         end
                     end
@@ -2913,7 +2913,7 @@ Tabs.Usual:AddButton({
     Callback = function()
         LocalPlayer:GetMouse().KeyDown:Connect(function(Key, P)
             if P then return end
-            if Key == "v" then
+            if rawequal(Key, "v") then
                 if LocalPlayer:GetMouse().Target and isAlive() then
                     LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z))
                 end
@@ -3136,7 +3136,7 @@ for _, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character.ChildAdded:Connect(function(object)
                     task.wait()
-                    if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
+                    if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                         object:Destroy()
                     end
                 end)
@@ -3261,7 +3261,7 @@ for _, player in pairs(Players:GetPlayers()) do
 
                 character.ChildAdded:Connect(function(object)
                     task.wait()
-                    if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
+                    if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                         object:Destroy()
                     end
                 end)
@@ -3409,7 +3409,7 @@ Players.PlayerRemoving:Connect(function(player)
 
     if table.find(Targets, player.Name) then
         for _, Target in pairs(Targets) do
-            if Target == player.Name then
+            if rawequal(Target, player.Name) then
                 table.remove(Targets, i)
             end
         end
@@ -3437,9 +3437,9 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     task.spawn(function()
         character.ChildAdded:Connect(function(object)
             task.wait()
-            if object.Name == "KillingIntentPart" and Flags["Anti Killing Intent Aura"].Value then
+            if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                 object:Destroy()
-            elseif object.Name == "GodModeShield" and Flags["GodMode"].Value and not Check then
+            elseif rawequal(object.Name, "GodModeShield") and Flags["GodMode"].Value and not Check then
                 object.Name = "GodModeShield "
             end
         end)
@@ -3543,7 +3543,7 @@ end)
 
 Workspace.ChildAdded:Connect(function(object)
     task.wait()
-    if object.Name == "Part" then
+    if rawequal(object.Name, "Part") then
         if Flags["Custom Lasers"].Value then
             object.Color = Flags["Custom Color"].Value
             object.Transparency = 0
