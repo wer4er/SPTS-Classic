@@ -129,16 +129,18 @@ end)
 
 Workspace.FallenPartsDestroyHeight = math.huge - math.huge
 
-if getconnections and LocalPlayer.Idled then
-    for i, connection in pairs(getconnections(LocalPlayer.Idled)) do
-        connection:Disable()
+if LocalPlayer.Idled then
+    if getconnections then
+        for i, connection in pairs(getconnections(LocalPlayer.Idled)) do
+            connection:Disable()
+        end
+    else
+        LocalPlayer.Idled:Connect(function()
+            VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
+            task.wait(1)
+            VirtualUser:Button2Up(Vector2.new(0, 0), Camera.CFrame)
+        end)
     end
-else
-    LocalPlayer.Idled:Connect(function()
-        VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
-        task.wait(1)
-        VirtualUser:Button2Up(Vector2.new(0, 0), Camera.CFrame)
-    end)
 end
 
 PlayerGui.IntroGui:GetPropertyChangedSignal("Enabled"):Connect(function()
