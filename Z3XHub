@@ -129,6 +129,18 @@ end)
 
 Workspace.FallenPartsDestroyHeight = math.huge - math.huge
 
+if getconnections then
+    for _, connection in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+        connection:Disable()
+    end
+else
+    LocalPlayer.Idled:Connect(function()
+        VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(0, 0), Camera.CFrame)
+    end)
+end
+
 LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
     task.wait(1)
@@ -151,7 +163,7 @@ local function formatstats(num)
     local rnum = math.floor(num * 100 + .5) / 100
     local suffixes = {"K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd", "Nod", "Vg", "Uvg", "Dvg", "Tvg"}
 
-    for i = #suffixes, 1, -1 do
+    for _ = #suffixes, 1, -1 do
         if rnum >= 10 ^ (i * 3) then
             return string.format("%.2f%s", rnum / 10 ^ (i * 3), suffixes[i])
         end
@@ -899,7 +911,7 @@ Components.Fist:OnChanged(function()
             if getfspos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getfspos()
             end
-            for i = 1, #getfs() do
+            for _ = 1, #getfs() do
                 RemoteEvent:FireServer({getfs()[i]})
             end
         end
@@ -924,7 +936,7 @@ Components.Psychic:OnChanged(function()
             if getpppos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getpppos()
             end
-            for i = 1, #getpp() do
+            for _ = 1, #getpp() do
                 RemoteEvent:FireServer({getpp()[i]})
             end
         end
@@ -938,7 +950,7 @@ Components.BodyFist:OnChanged(function()
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getfspos()
             end
             task.wait(.2)
-            for i = 1, #getfs() do
+            for _ = 1, #getfs() do
                 RemoteEvent:FireServer({getfs()[i]})
             end
             if getbtpos() then
@@ -958,7 +970,7 @@ Components.BodyPsychic:OnChanged(function()
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getpppos()
             end
             task.wait(.2)
-            for i = 1, #getpp() do
+            for _ = 1, #getpp() do
                 RemoteEvent:FireServer({getpp()[i]})
             end
             if getbtpos() then
@@ -1874,8 +1886,8 @@ local function destroyUtility(name)
 end
 
 Components.Utilities:OnChanged(function()
-    local lenUtility = (function() local count = 0 for i,v in pairs(Flags["Utilities"].Value) do count += 1 end return count end)()
-    local lenOldUtility = (function() local count = 0 for i,v in pairs(oldUtilities) do count += 1 end return count end)()
+    local lenUtility = (function() local count = 0 for _,v in pairs(Flags["Utilities"].Value) do count += 1 end return count end)()
+    local lenOldUtility = (function() local count = 0 for _,v in pairs(oldUtilities) do count += 1 end return count end)()
 
     if lenUtility > lenOldUtility then
         for utility in pairs(Flags["Utilities"].Value) do
@@ -1929,7 +1941,7 @@ Components.Quests:OnChanged(function()
             task.wait()
         end
         for _, quest in pairs({"PP", "FS", "BT"}) do
-            for i = 1, 3 do
+            for _ = 1, 3 do
                 RemoteEvent:FireServer({"WLQ", quest .. i, "Claim"})
                 task.wait()
             end
@@ -2780,7 +2792,7 @@ Tabs.Visual:AddButton({
 
         local function setuptextobj(frameName, prefix, count)
             local frame = ScreenGui.MenuFrame[frameName]
-            for i = 0, count do
+            for _ = 0, count do
                 local obj = frame:FindFirstChild(prefix .. tostring(i))
                 if obj then
                     obj.TextColor3 = Color3.new(.29,.77,.27)
@@ -2836,7 +2848,7 @@ Tabs.Visual:AddButton({
                 header.TextColor3 = Color3.new(1, 1, 1)
             end
 
-            for i = 1, 5 do
+            for _ = 1, 5 do
                 local maxFrame = questFrame:FindFirstChild("MaxFrame" .. tostring(i))
                 if maxFrame then
                     maxFrame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
