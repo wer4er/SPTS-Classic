@@ -38,22 +38,6 @@ local RespawnHealth = .5
 local StockGravity = 196.1999969482422
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
-local _task = task
-local task = setmetatable({}, {
-    __index = function(self, index)
-        if rawequal(index, "wait") then
-            return function(num)
-                if rawequal(num, nil) or rawequal(num, 0) then
-                    return RunService.PreRender:Wait()
-                else
-                    return _task["wait"](num)
-                end
-            end
-        end
-        return _task[index]
-    end
-})
-
 if Loaded then
     TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
     return
@@ -103,7 +87,7 @@ if Check then
 end
 
 task.spawn(function()
-    repeat task.wait() until LocalPlayer.Character
+    repeat RunService.PreRender:Wait() until LocalPlayer.Character
     task.delay(.5, function()
         function RemoteFunction.OnClientInvoke() 
             return false
@@ -137,7 +121,7 @@ for _, object in pairs(game:GetDescendants()) do
 end
 
 Workspace.ChildAdded:Connect(function(object)
-    task.wait()
+    RunService.PreRender:Wait()
     if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
         object:Destroy()
     end
@@ -383,7 +367,7 @@ local function CreateESP(player)
         TxtPsychic.Text = "Psychic: " .. formatstats(PrivateStats:WaitForChild("PsychicPower", math.huge).Value)
     
         task.spawn(function()
-            while task.wait() do
+            while RunService.PreRender:Wait() do
                 if isAlive() and isAlive(player) then
                     TxtDistance.Text = "Distance: " .. math.floor((LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
                 end
@@ -910,7 +894,7 @@ local Components = {
 }
 
 Components.Fist:OnChanged(function()
-    while Flags["Fist Strength"].Value and task.wait() do
+    while Flags["Fist Strength"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             if getfspos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getfspos()
@@ -923,7 +907,7 @@ Components.Fist:OnChanged(function()
 end)
 
 Components.Body:OnChanged(function()
-    while Flags["Body Toughness"].Value and task.wait() do
+    while Flags["Body Toughness"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             if getbtpos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos()
@@ -935,7 +919,7 @@ Components.Body:OnChanged(function()
 end)
 
 Components.Psychic:OnChanged(function()
-    while Flags["Psychic Power"].Value and task.wait() do
+    while Flags["Psychic Power"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             if getpppos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getpppos()
@@ -948,7 +932,7 @@ Components.Psychic:OnChanged(function()
 end)
 
 Components.BodyFist:OnChanged(function()
-    while Flags["Body Toughness & Fist Strength"].Value and task.wait() do
+    while Flags["Body Toughness & Fist Strength"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             if getfspos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getfspos()
@@ -959,7 +943,7 @@ Components.BodyFist:OnChanged(function()
             end
             if getbtpos() then
                 local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until PrivateStats.BodyToughness.Value ~= lastValue
+                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() RunService.PreRender:Wait() until PrivateStats.BodyToughness.Value ~= lastValue
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -968,7 +952,7 @@ Components.BodyFist:OnChanged(function()
 end)
 
 Components.BodyPsychic:OnChanged(function()
-    while Flags["Body Toughness & Psychic Power"].Value and task.wait() do
+    while Flags["Body Toughness & Psychic Power"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             if getpppos() then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = getpppos()
@@ -979,7 +963,7 @@ Components.BodyPsychic:OnChanged(function()
             end
             if getbtpos() then
                 local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until PrivateStats.BodyToughness.Value ~= lastValue
+                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() RunService.PreRender:Wait() until PrivateStats.BodyToughness.Value ~= lastValue
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -1598,7 +1582,7 @@ local function loadUtility(name)
         local startTime = os.time()
 
         task.spawn(function()
-            while task.wait() do
+            while RunService.PreRender:Wait() do
                 StatCounter.TimeFrameText.Text = "Time: " .. formattime(os.time() - startTime)
             end
         end)
@@ -1939,15 +1923,15 @@ Lighting:GetPropertyChangedSignal("ClockTime"):Connect(function()
 end)
 
 Components.Quests:OnChanged(function()
-    while Flags["Auto Claim Quests"].Value and task.wait() do
+    while Flags["Auto Claim Quests"].Value and RunService.PreRender:Wait() do
         for _, quest in pairs({"MS", "PP", "FS", "BT", "JF"}) do
             RemoteEvent:FireServer({"DLQ", quest, "Claim"})
-            task.wait()
+            RunService.PreRender:Wait()
         end
         for _, quest in pairs({"PP", "FS", "BT"}) do
             for i = 1, 3 do
                 RemoteEvent:FireServer({"WLQ", quest .. i, "Claim"})
-                task.wait()
+                RunService.PreRender:Wait()
             end
         end
     end
@@ -1986,7 +1970,7 @@ Components.Fov:OnChanged(function()
 end)
 
 Components.CBring:OnChanged(function()
-    while Flags["CBring"].Value and task.wait() do
+    while Flags["CBring"].Value and RunService.PreRender:Wait() do
         for _, Target in pairs(Targets) do
             if Target ~= LocalPlayer and isAlive() and isAlive(Players[Target]) then
                 Players[Target].Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
@@ -1996,14 +1980,14 @@ Components.CBring:OnChanged(function()
 end)
 
 Components.AutoC:OnChanged(function()
-    while Flags["Spam C"].Value and task.wait() do
+    while Flags["Spam C"].Value and RunService.PreRender:Wait() do
         RemoteEvent:FireServer({"Skill_Punch", "Left"})
         RemoteEvent:FireServer({"Skill_Punch", "Right"})
     end
 end)
 
 Components.SpamR:OnChanged(function()
-    while Flags["Spam R"].Value and task.wait() do
+    while Flags["Spam R"].Value and RunService.PreRender:Wait() do
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
         for _, sphere in pairs(Storage:GetChildren()) do
             task.spawn(function()
@@ -2026,7 +2010,7 @@ Components.Stack:OnChanged(function()
             LocalPlayer.Town.Parent = Workspace
         end
         task.spawn(function()
-            while Flags["Stack"].Value and task.wait() do
+            while Flags["Stack"].Value and RunService.PreRender:Wait() do
                 if isAlive() then
                     LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -1e4, 0)
                 end
@@ -2087,7 +2071,7 @@ Components.Spectate:OnChanged(function()
 end)
 
 Components.SoulAttack:OnChanged(function()
-    while Flags["Soul Attack"].Value and task.wait() do
+    while Flags["Soul Attack"].Value and RunService.PreRender:Wait() do
         for _, Target in pairs(Targets) do
             if isAlive() and isAlive(Players[Target]) and not Players[Target].Character:FindFirstChild("ForceField") and not Players[Target].Character:FindFirstChild("SafeZoneShield") and not Players[Target].Character:FindFirstChild("GodModeShield") then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character.HumanoidRootPart.CFrame + Players[Target].Character.HumanoidRootPart.CFrame.UpVector * 40
@@ -2100,7 +2084,7 @@ Components.SoulAttack:OnChanged(function()
 end)
 
 Components.SoulReap:OnChanged(function()
-    while Flags["Soul Reap"].Value and task.wait() do
+    while Flags["Soul Reap"].Value and RunService.PreRender:Wait() do
         for _, Target in pairs(Targets) do
             if isAlive() and isAlive(Players[Target]) and not Players[Target].Character:FindFirstChild("ForceField") and not Players[Target].Character:FindFirstChild("SafeZoneShield") and not Players[Target].Character:FindFirstChild("GodModeShield") then
                 RemoteEvent:FireServer({"Skill_SoulReap", Players[Target]})
@@ -2111,7 +2095,7 @@ Components.SoulReap:OnChanged(function()
 end)
 
 Components.HellFire:OnChanged(function()
-    while Flags["Hell Fire"].Value and task.wait() do
+    while Flags["Hell Fire"].Value and RunService.PreRender:Wait() do
         for _, Target in pairs(Targets) do
             if isAlive() and isAlive(Players[Target]) then
                 RemoteEvent:FireServer({"Skill_DevilFlame", Players[Target]})
@@ -2122,7 +2106,7 @@ Components.HellFire:OnChanged(function()
 end)
 
 Components.LoopTeleport:OnChanged(function()
-    while Flags["Loop Teleport"].Value and task.wait() do
+    while Flags["Loop Teleport"].Value and RunService.PreRender:Wait() do
         for _, Target in pairs(Targets) do
             if isAlive() and isAlive(Players[Target]) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character.HumanoidRootPart.CFrame
@@ -2132,7 +2116,7 @@ Components.LoopTeleport:OnChanged(function()
 end)
 
 Components.SitOnHead:OnChanged(function()
-    while Flags["Sit On Head"].Value and task.wait() do
+    while Flags["Sit On Head"].Value and RunService.PreRender:Wait() do
         for _, Target in pairs(Targets) do
             if isAlive() and isAlive(Players[Target]) then
                 LocalPlayer.Character.Humanoid.Sit = true
@@ -2143,7 +2127,7 @@ Components.SitOnHead:OnChanged(function()
 end)
 
 Components.CBringAll:OnChanged(function()
-    while Flags["CBring All"].Value and task.wait() do
+    while Flags["CBring All"].Value and RunService.PreRender:Wait() do
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= LocalPlayer and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
                 player.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 1
@@ -2153,7 +2137,7 @@ Components.CBringAll:OnChanged(function()
 end)
 
 Components.StackAll:OnChanged(function()
-    while Flags["Stack All"].Value and task.wait() do
+    while Flags["Stack All"].Value and RunService.PreRender:Wait() do
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
         for _, player in pairs(Players:GetPlayers()) do
             task.spawn(function()
@@ -2173,7 +2157,7 @@ Components.StackAll:OnChanged(function()
 end)
 
 Components.SoulAttackAll:OnChanged(function()
-    while Flags["Soul Attack All"].Value and task.wait() do
+    while Flags["Soul Attack All"].Value and RunService.PreRender:Wait() do
         for _, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
@@ -2186,7 +2170,7 @@ Components.SoulAttackAll:OnChanged(function()
 end)
 
 Components.HellFireAll:OnChanged(function()
-    while Flags["Hell Fire All"].Value and task.wait() do
+    while Flags["Hell Fire All"].Value and RunService.PreRender:Wait() do
         for _, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
@@ -2198,7 +2182,7 @@ Components.HellFireAll:OnChanged(function()
 end)
 
 Components.SoulReapAll:OnChanged(function()
-    while Flags["Soul Reap All"].Value and task.wait() do
+    while Flags["Soul Reap All"].Value and RunService.PreRender:Wait() do
         for _, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
                 RemoteEvent:FireServer({"Skill_SoulReap", Players[player.Name]})
@@ -2209,7 +2193,7 @@ Components.SoulReapAll:OnChanged(function()
 end)
 
 Components.LoopTeleportToLocation:OnChanged(function()
-    while Flags["Loop Teleport To Location"].Value and task.wait() do
+    while Flags["Loop Teleport To Location"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             LocalPlayer.Character.HumanoidRootPart.CFrame = teleportposition[Flags["Locations"].Value]
         end
@@ -2229,13 +2213,13 @@ Components.SpamS:OnChanged(function()
 end)
 
 Components.LagS:OnChanged(function()
-    while Flags["Spam Z"].Value and task.wait() do
+    while Flags["Spam Z"].Value and RunService.PreRender:Wait() do
         RemoteEvent:FireServer({"Skill_KillingIntent_Start", "Start"})
     end
 end)
 
 Components.Teleport:OnChanged(function()
-    while Flags["Teleport To Starter Camera"].Value and task.wait() do
+    while Flags["Teleport To Starter Camera"].Value and RunService.PreRender:Wait() do
         if isAlive() then
             LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(705, 942, 846)
         end
@@ -2243,20 +2227,20 @@ Components.Teleport:OnChanged(function()
 end)
 
 Components.SpamX:OnChanged(function()
-    while Flags["Spam X"].Value and task.wait() do
+    while Flags["Spam X"].Value and RunService.PreRender:Wait() do
         RemoteEvent:FireServer({"ConcealRevealAura", "Start"})
     end
 end)
 
 Components.SpamT:OnChanged(function()
-    while Flags["Spam T"].Value and task.wait() do
+    while Flags["Spam T"].Value and RunService.PreRender:Wait() do
         RemoteEvent:FireServer({"Skill_Invisible", "Start"})
     end
 end)
 
 Components.RGBRank:OnChanged(function()
     if Flags["Rainbow Rank"].Value then
-        while Flags["Rainbow Rank"].Value and task.wait() do
+        while Flags["Rainbow Rank"].Value and RunService.PreRender:Wait() do
             RemoteEvent:FireServer({"ChangeRankEmblem", math.random(1, 10)})
         end
     else
@@ -2268,7 +2252,7 @@ end)
 
 Components.RGBWeight:OnChanged(function()
     if Flags["Rainbow Weight"].Value then
-        while Flags["Rainbow Weight"].Value and task.wait() do
+        while Flags["Rainbow Weight"].Value and RunService.PreRender:Wait() do
             RemoteEvent:FireServer({"Weight", "Weight" .. math.random(1, 4)})
         end
     else
@@ -2280,7 +2264,7 @@ end)
 
 Components.RGBNames:OnChanged(function()
     if Flags["Rainbow Names"].Value then
-        while Flags["Rainbow Names"].Value and task.wait() do
+        while Flags["Rainbow Names"].Value and RunService.PreRender:Wait() do
             for _, player in pairs(Players:GetPlayers()) do
                 if isAlive(player) then
                     player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
@@ -2301,7 +2285,7 @@ end)
 
 Components.CustomNames:OnChanged(function()
     if Flags["Custom Names"].Value then
-        while Flags["Custom Names"].Value and task.wait() do
+        while Flags["Custom Names"].Value and RunService.PreRender:Wait() do
             for _, player in pairs(Players:GetPlayers()) do
                 if isAlive(player) then
                     player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = Flags["Custom Color"].Value
@@ -3135,7 +3119,7 @@ for _, player in pairs(Players:GetPlayers()) do
 
             if isAlive(player) then
                 player.Character.ChildAdded:Connect(function(object)
-                    task.wait()
+                    RunService.PreRender:Wait()
                     if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                         object:Destroy()
                     end
@@ -3260,7 +3244,7 @@ for _, player in pairs(Players:GetPlayers()) do
                 end)
 
                 character.ChildAdded:Connect(function(object)
-                    task.wait()
+                    RunService.PreRender:Wait()
                     if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                         object:Destroy()
                     end
@@ -3436,7 +3420,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     task.spawn(function()
         character.ChildAdded:Connect(function(object)
-            task.wait()
+            RunService.PreRender:Wait()
             if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                 object:Destroy()
             elseif rawequal(object.Name, "GodModeShield") and Flags["GodMode"].Value and not Check then
@@ -3447,7 +3431,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     if Flags["GodMode"].Value then
         task.spawn(function()
-            repeat task.wait() until character:FindFirstChild("ForceField") and GodCheck
+            repeat RunService.PreRender:Wait() until character:FindFirstChild("ForceField") and GodCheck
             RemoteEvent:FireServer({"QuestTalkStart"})
         end)
     end
@@ -3469,7 +3453,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
         end)
     elseif Flags["Auto Disable Aura"].Value then
         task.spawn(function()
-            repeat task.wait() until IsAuraEnabled()
+            repeat RunService.PreRender:Wait() until IsAuraEnabled()
             RemoteEvent:FireServer({"ConcealRevealAura", "Start"})
         end)
     end
@@ -3542,13 +3526,13 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 end)
 
 Workspace.ChildAdded:Connect(function(object)
-    task.wait()
+    RunService.PreRender:Wait()
     if rawequal(object.Name, "Part") then
         if Flags["Custom Lasers"].Value then
             object.Color = Flags["Custom Color"].Value
             object.Transparency = 0
         elseif Flags["Rainbow Lasers"].Value then
-            while table.find(Workspace:GetChildren(), object) and task.wait() do
+            while table.find(Workspace:GetChildren(), object) and RunService.PreRender:Wait() do
                 object.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
                 object.Transparency = 0
             end
@@ -3557,13 +3541,13 @@ Workspace.ChildAdded:Connect(function(object)
 end)
 
 Storage.ChildAdded:Connect(function(object)
-    task.wait()
+    RunService.PreRender:Wait()
     if object.Name:match("EnergySphere") then
         if Flags["Custom Spheres"].Value then
             object.Color = Flags["Custom Color"].Value
             object.Transparency = 0
         elseif Flags["Rainbow Spheres"].Value then
-            while table.find(Storage:GetChildren(), object) and task.wait() do
+            while table.find(Storage:GetChildren(), object) and RunService.PreRender:Wait() do
                 object.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
                 object.Transparency = 0
             end
