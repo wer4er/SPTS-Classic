@@ -906,6 +906,12 @@ local Components = {
 }
 
 Components.Fist:OnChanged(function()
+    if Flags["Fist Strength"].Value then
+        RunService:Set3dRenderingEnabled(false)
+    else
+        RunService:Set3dRenderingEnabled(true)
+    end
+
     while Flags["Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
@@ -919,6 +925,12 @@ Components.Fist:OnChanged(function()
 end)
 
 Components.Body:OnChanged(function()
+    if Flags["Body Toughness"].Value then
+        RunService:Set3dRenderingEnabled(false)
+    else
+        RunService:Set3dRenderingEnabled(true)
+    end
+
     while Flags["Body Toughness"].Value and task.wait() do
         if isAlive() then
             if getbtpos() then
@@ -931,6 +943,12 @@ Components.Body:OnChanged(function()
 end)
 
 Components.Psychic:OnChanged(function()
+    if Flags["Psychic Power"].Value then
+        RunService:Set3dRenderingEnabled(false)
+    else
+        RunService:Set3dRenderingEnabled(true)
+    end
+
     while Flags["Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
@@ -944,6 +962,12 @@ Components.Psychic:OnChanged(function()
 end)
 
 Components.BodyFist:OnChanged(function()
+    if Flags["Body Toughness & Fist Strength"].Value then
+        RunService:Set3dRenderingEnabled(false)
+    else
+        RunService:Set3dRenderingEnabled(true)
+    end
+
     while Flags["Body Toughness & Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
@@ -964,6 +988,12 @@ Components.BodyFist:OnChanged(function()
 end)
 
 Components.BodyPsychic:OnChanged(function()
+    if Flags["Body Toughness & Psychic Power"].Value then
+        RunService:Set3dRenderingEnabled(false)
+    else
+        RunService:Set3dRenderingEnabled(true)
+    end
+
     while Flags["Body Toughness & Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
