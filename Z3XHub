@@ -3436,7 +3436,9 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     local HumanoidRootPart = character:WaitForChild("HumanoidRootPart", math.huge)
 
     if Flags["Stack"].Value then
-        task.delay(4, function()
+        task.spawn(function()
+            repeat task.wait() until character:FindFirstChild("ForceField")
+            task.wait(4)
             RemoteEvent:FireServer({"Respawn"})
         end)
     end
