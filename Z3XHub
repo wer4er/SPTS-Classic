@@ -243,7 +243,7 @@ local function onChatted(player, msg)
         local Text
         local Command, Target = msg:match("^/(w) (%S+)")
 
-        if rawequal(Command, "w") and Players[Target] then
+        if rawequal(Command, "w") and Players:FindFirstChild(Target) then
             newChatted = true
             lastChatted[player.Name] = Target
         end
@@ -715,7 +715,7 @@ Tabs.Pvp:AddInput("Input", {
 Tabs.Pvp:AddButton({
     Title = "Add To Whitelist",
     Callback = function()
-        if Players:FindFirstChild(Target) and Players[Target] ~= LocalPlayer then
+        if Players:FindFirstChild(Target) and Players:FindFirstChild(Target) ~= LocalPlayer then
             if not table.find(Whitelisted, Target) then
                 table.insert(Whitelisted, Target)
             end
@@ -764,7 +764,7 @@ Tabs.Pvp:AddButton({
 Tabs.Pvp:AddButton({
     Title = "Add To Targets",
     Callback = function()
-        if Players:FindFirstChild(Target) and Players[Target] ~= LocalPlayer then
+        if Players:FindFirstChild(Target) and Players:FindFirstChild(Target) ~= LocalPlayer then
             if not table.find(Targets, Target) then
                 table.insert(Targets, Target)
             end
@@ -1987,8 +1987,8 @@ end)
 Components.CBring:OnChanged(function()
     while Flags["CBring"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if Target ~= LocalPlayer and isAlive() and isAlive(Players[Target]) then
-                Players[Target].Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
+            if Target ~= LocalPlayer and isAlive() and isAlive(Players:FindFirstChild(Target)) then
+                Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
             end
         end
     end
@@ -2032,12 +2032,12 @@ Components.Stack:OnChanged(function()
                 RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
                 for i, Target in pairs(Targets) do
                     task.spawn(function()
-                        if isAlive() and isAlive(Players[Target]) then
-                            Players[Target].Character.HumanoidRootPart.CFrame = CFrame.new(0, 1e5, 0)
+                        if isAlive() and isAlive(Players:FindFirstChild(Target)) then
+                            Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame = CFrame.new(0, 1e5, 0)
                             for i, sphere in pairs(Storage:GetChildren()) do
                                 if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") then
                                     task.spawn(function()
-                                        firetouchinterest(Players[Target].Character.HumanoidRootPart, sphere, 0)
+                                        firetouchinterest(Players:FindFirstChild(Target).Character.HumanoidRootPart, sphere, 0)
                                     end)
                                 end
                             end
@@ -2052,20 +2052,20 @@ end)
 Components.Spectate:OnChanged(function()
     if Flags["Spectate"].Value then
         for i, Target in pairs(Targets) do
-            if isAlive(Players[Target]) then
-                Camera.CameraSubject = Players[Target].Character
+            if isAlive(Players:FindFirstChild(Target)) then
+                Camera.CameraSubject = Players:FindFirstChild(Target).Character
             end
-            TCAdded = Players[Target].CharacterAdded:Connect(function(character)
+            TCAdded = Players:FindFirstChild(Target).CharacterAdded:Connect(function(character)
                 Camera.CameraSubject = character:WaitForChild("Humanoid", math.huge)
             end)
             LPCAdded = LocalPlayer.CharacterAdded:Connect(function()
-                if Players:FindFirstChild(Target) and isAlive(Players[Target]) then
-                    Camera.CameraSubject = Players[Target].Character.Humanoid
+                if Players:FindFirstChild(Target) and isAlive(Players:FindFirstChild(Target)) then
+                    Camera.CameraSubject = Players:FindFirstChild(Target).Character.Humanoid
                 end
             end)
             CChanged = Camera:GetPropertyChangedSignal("CameraSubject"):Connect(function()
-                if Players:FindFirstChild(Target) and isAlive(Players[Target]) then
-                    Camera.CameraSubject = Players[Target].Character.Humanoid
+                if Players:FindFirstChild(Target) and isAlive(Players:FindFirstChild(Target)) then
+                    Camera.CameraSubject = Players:FindFirstChild(Target).Character.Humanoid
                 end
             end)
         end
@@ -2088,9 +2088,9 @@ end)
 Components.SoulAttack:OnChanged(function()
     while Flags["Soul Attack"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if isAlive() and isAlive(Players[Target]) and not Players[Target].Character:FindFirstChild("ForceField") and not Players[Target].Character:FindFirstChild("SafeZoneShield") and not Players[Target].Character:FindFirstChild("GodModeShield") then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character.HumanoidRootPart.CFrame + Players[Target].Character.HumanoidRootPart.CFrame.UpVector * 40
-                RemoteEvent:FireServer({"Skill_SoulAttack_Start", Players[Target]})
+            if isAlive() and isAlive(Players:FindFirstChild(Target)) and not Players:FindFirstChild(Target).Character:FindFirstChild("ForceField") and not Players:FindFirstChild(Target).Character:FindFirstChild("SafeZoneShield") and not Players:FindFirstChild(Target).Character:FindFirstChild("GodModeShield") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame + Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame.UpVector * 40
+                RemoteEvent:FireServer({"Skill_SoulAttack_Start", Players:FindFirstChild(Target)})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
                 break
             end
@@ -2101,8 +2101,8 @@ end)
 Components.SoulReap:OnChanged(function()
     while Flags["Soul Reap"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if isAlive() and isAlive(Players[Target]) and not Players[Target].Character:FindFirstChild("ForceField") and not Players[Target].Character:FindFirstChild("SafeZoneShield") and not Players[Target].Character:FindFirstChild("GodModeShield") then
-                RemoteEvent:FireServer({"Skill_SoulReap", Players[Target]})
+            if isAlive() and isAlive(Players:FindFirstChild(Target)) and not Players:FindFirstChild(Target).Character:FindFirstChild("ForceField") and not Players:FindFirstChild(Target).Character:FindFirstChild("SafeZoneShield") and not Players:FindFirstChild(Target).Character:FindFirstChild("GodModeShield") then
+                RemoteEvent:FireServer({"Skill_SoulReap", Players:FindFirstChild(Target)})
                 break
             end
         end
@@ -2112,8 +2112,8 @@ end)
 Components.HellFire:OnChanged(function()
     while Flags["Hell Fire"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if isAlive() and isAlive(Players[Target]) then
-                RemoteEvent:FireServer({"Skill_DevilFlame", Players[Target]})
+            if isAlive() and isAlive(Players:FindFirstChild(Target)) then
+                RemoteEvent:FireServer({"Skill_DevilFlame", Players:FindFirstChild(Target)})
                 break
             end
         end
@@ -2123,8 +2123,8 @@ end)
 Components.LoopTeleport:OnChanged(function()
     while Flags["Loop Teleport"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if isAlive() and isAlive(Players[Target]) then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character.HumanoidRootPart.CFrame
+            if isAlive() and isAlive(Players:FindFirstChild(Target)) then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame
             end
         end
     end
@@ -2133,9 +2133,9 @@ end)
 Components.SitOnHead:OnChanged(function()
     while Flags["Sit On Head"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if isAlive() and isAlive(Players[Target]) then
+            if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 LocalPlayer.Character.Humanoid.Sit = true
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character:WaitForChild("Head", math.huge).CFrame * CFrame.new(0, 2.5, 0)
+                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge).CFrame * CFrame.new(0, 2.5, 0)
             end
         end
     end
@@ -2189,7 +2189,7 @@ Components.HellFireAll:OnChanged(function()
         for i, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
-                RemoteEvent:FireServer({"Skill_DevilFlame", Players[player.Name]})
+                RemoteEvent:FireServer({"Skill_DevilFlame", Players:FindFirstChild(player.Name)})
                 break
             end
         end
@@ -2200,7 +2200,7 @@ Components.SoulReapAll:OnChanged(function()
     while Flags["Soul Reap All"].Value and task.wait() do
         for i, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
-                RemoteEvent:FireServer({"Skill_SoulReap", Players[player.Name]})
+                RemoteEvent:FireServer({"Skill_SoulReap", Players:FindFirstChild(player.Name)})
                 break
             end
         end
@@ -2925,8 +2925,8 @@ Tabs.Pvp:AddButton({
     Title = "Teleport",
     Callback = function()
         for i, Target in pairs(Targets) do
-            if isAlive() and isAlive(Players[Target]) then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Target].Character.HumanoidRootPart.CFrame
+            if isAlive() and isAlive(Players:FindFirstChild(Target)) then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame
             end
         end
     end
