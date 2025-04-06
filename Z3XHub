@@ -902,13 +902,8 @@ local Components = {
 }
 
 Components.Fist:OnChanged(function()
-    if Flags["Fist Strength"].Value then
-        setfpscap(45)
-        RunService:Set3dRenderingEnabled(false)
-    else
-        setfpscap(0)
-        RunService:Set3dRenderingEnabled(true)
-    end
+    setfpscap(Flags["Fist Strength"].Value and 45 or 0)
+    RunService:Set3dRenderingEnabled(not Flags["Fist Strength"].Value)
 
     while Flags["Fist Strength"].Value and task.wait() do
         if isAlive() then
@@ -923,13 +918,8 @@ Components.Fist:OnChanged(function()
 end)
 
 Components.Body:OnChanged(function()
-    if Flags["Body Toughness"].Value then
-        setfpscap(45)
-        RunService:Set3dRenderingEnabled(false)
-    else
-        setfpscap(0)
-        RunService:Set3dRenderingEnabled(true)
-    end
+    setfpscap(Flags["Body Toughness"].Value and 45 or 0)
+    RunService:Set3dRenderingEnabled(not Flags["Body Toughness"].Value)
 
     while Flags["Body Toughness"].Value and task.wait() do
         if isAlive() then
@@ -943,13 +933,8 @@ Components.Body:OnChanged(function()
 end)
 
 Components.Psychic:OnChanged(function()
-    if Flags["Psychic Power"].Value then
-        setfpscap(45)
-        RunService:Set3dRenderingEnabled(false)
-    else
-        setfpscap(0)
-        RunService:Set3dRenderingEnabled(true)
-    end
+    setfpscap(Flags["Psychic Power"].Value and 45 or 0)
+    RunService:Set3dRenderingEnabled(not Flags["Psychic Power"].Value)
 
     while Flags["Psychic Power"].Value and task.wait() do
         if isAlive() then
@@ -964,13 +949,8 @@ Components.Psychic:OnChanged(function()
 end)
 
 Components.BodyFist:OnChanged(function()
-    if Flags["Body Toughness & Fist Strength"].Value then
-        setfpscap(45)
-        RunService:Set3dRenderingEnabled(false)
-    else
-        setfpscap(0)
-        RunService:Set3dRenderingEnabled(true)
-    end
+    setfpscap(Flags["Body Toughness & Fist Strength"].Value and 45 or 0)
+    RunService:Set3dRenderingEnabled(not Flags["Body Toughness & Fist Strength"].Value)
 
     while Flags["Body Toughness & Fist Strength"].Value and task.wait() do
         if isAlive() then
@@ -992,13 +972,8 @@ Components.BodyFist:OnChanged(function()
 end)
 
 Components.BodyPsychic:OnChanged(function()
-    if Flags["Body Toughness & Psychic Power"].Value then
-        setfpscap(45)
-        RunService:Set3dRenderingEnabled(false)
-    else
-        setfpscap(0)
-        RunService:Set3dRenderingEnabled(true)
-    end
+    setfpscap(Flags["Body Toughness & Psychic Power"].Value and 45 or 0)
+    RunService:Set3dRenderingEnabled(not Flags["Body Toughness & Psychic Power"].Value)
 
     while Flags["Body Toughness & Psychic Power"].Value and task.wait() do
         if isAlive() then
