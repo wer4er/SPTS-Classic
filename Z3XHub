@@ -105,12 +105,12 @@ PlayerGui:WaitForChild("BubbleChat", math.huge).DescendantAdded:Connect(function
 end)
 
 UserInputService.WindowFocused:Connect(function()
-    setfpscap(45)
+    setfpscap(0)
     RunService:Set3dRenderingEnabled(true)
 end)
 
 UserInputService.WindowFocusReleased:Connect(function()
-    setfpscap(0)
+    setfpscap(45)
     RunService:Set3dRenderingEnabled(false)
 end)
 
