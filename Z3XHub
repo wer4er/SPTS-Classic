@@ -2218,7 +2218,7 @@ end)
 Components.SpamS:OnChanged(function()
     while Flags["Spam Sounds"].Value and task.wait(Flags["Cooldown Of Spam Sounds"].Value) do
         if isAlive() then
-            for i, object in pairs(LocalPlayer.Character.Head:GetChildren()) do
+            for i, object in pairs(LocalPlayer.Character:GetDescendants()) do
                 if object:IsA("Sound") then
                     object:Play()
                 end
