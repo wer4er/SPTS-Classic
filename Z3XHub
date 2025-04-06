@@ -36,6 +36,7 @@ local JobId = game.JobId
 local InjectorName = identifyexecutor()
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
+local Targets, Whitelisted, Target = {}, {}, Players:GetChildren()[math.random(1, #Players:GetChildren())].Name
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
 if Loaded then
@@ -289,9 +290,9 @@ local function onChatted(player, msg)
     end
 end
 
-local ESPFolder, HFolder = Instance.new("Folder", CoreGui), Instance.new("Folder", CoreGui)
-ESPFolder.Name = "ESPFolder"
-HFolder.Name = "HFolder"
+local ESPFolder, HighlightsFolder = Instance.new("Folder", CoreGui), Instance.new("Folder", CoreGui)
+ESPFolder.Name, HighlightsFolder.Name = "ESPFolder", "HighlightsFolder"
+local Highlights, Esp = CoreGui.HighlightsFolder, CoreGui.ESPFolder
 
 local function CreateESP(player)
     task.spawn(function()
@@ -299,7 +300,7 @@ local function CreateESP(player)
         local leaderstats = player:WaitForChild("leaderstats", math.huge)
         local Status = leaderstats.Status
 
-        local BillboardGui = Instance.new("BillboardGui", CoreGui.ESPFolder)
+        local BillboardGui = Instance.new("BillboardGui", Esp)
         BillboardGui.ExtentsOffset = Vector3.new(0, 1, 0)
         BillboardGui.AlwaysOnTop = true
         BillboardGui.Size = UDim2.new(0, 2, 0, 2)
@@ -394,12 +395,12 @@ local function CreateESP(player)
     end)
 end
 
-local function CreateH(player)
+local function CreateHighlight(player)
     task.spawn(function()
         local leaderstats = player:WaitForChild("leaderstats", math.huge)
         local Status = leaderstats.Status
 
-        local Highlight = Instance.new("Highlight", CoreGui.HFolder)
+        local Highlight = Instance.new("Highlight", Highlights)
         Highlight.Name = player.Name
         Highlight.FillTransparency = .5
         Highlight.FillColor = updcolor(Status.Value)
@@ -663,7 +664,7 @@ local Animations = {
 }
 
 local Window = Fluent:CreateWindow({
-    Title = "Z3XHub 5.5.1",
+    Title = "Z3XHub 5.5.2",
     SubTitle = "by wer4er",
     TabWidth = 130,
     Size = UDim2.fromOffset(580, 460),
@@ -686,10 +687,6 @@ local Tabs = {
 }
 
 Window:SelectTab(1)
-
-local Targets = {}
-local Whitelisted = {}
-local Target = Players:GetChildren()[math.random(1, #Players:GetChildren())].Name
 
 Tabs.Pvp:AddInput("Input", {
     Title = "Targets",
@@ -1916,18 +1913,18 @@ end)
 
 Components.Esp:OnChanged(function()
     for i, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and isAlive(player) and CoreGui.ESPFolder:FindFirstChild(player.Name) then
-            CoreGui.ESPFolder[player.Name].Adornee = Flags["ESP"].Value and player.Character:WaitForChild("Head") or nil
-            CoreGui.ESPFolder[player.Name].Enabled = Flags["ESP"].Value
+        if player ~= LocalPlayer and isAlive(player) and Esp:FindFirstChild(player.Name) then
+            Esp[player.Name].Adornee = Flags["ESP"].Value and player.Character:WaitForChild("Head") or nil
+            Esp[player.Name].Enabled = Flags["ESP"].Value
         end
     end
 end)
 
 Components.Highlights:OnChanged(function()
     for i, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and isAlive(player) and CoreGui.HFolder:FindFirstChild(player.Name) then
-            CoreGui.HFolder[player.Name].Adornee = Flags["Highlights"].Value and player.Character or nil
-            CoreGui.HFolder[player.Name].Enabled = Flags["Highlights"].Value
+        if player ~= LocalPlayer and isAlive(player) and Highlights:FindFirstChild(player.Name) then
+            Highlights[player.Name].Adornee = Flags["Highlights"].Value and player.Character or nil
+            Highlights[player.Name].Enabled = Flags["Highlights"].Value
         end
     end
 end)
@@ -3129,7 +3126,7 @@ for i, player in pairs(Players:GetPlayers()) do
             player:WaitForChild("LocalSoundFolder", math.huge):Destroy()
 
             CreateESP(player)
-            CreateH(player)
+            CreateHighlight(player)
 
             local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
             local leaderstats = player:WaitForChild("leaderstats", math.huge)
@@ -3146,21 +3143,21 @@ for i, player in pairs(Players:GetPlayers()) do
 
             for i, object in pairs(UpdatingStats) do
                 PrivateStats:WaitForChild(object[1], math.huge):GetPropertyChangedSignal("Value"):Connect(function()
-                    if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                        CoreGui.ESPFolder[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats[object[1]].Value)
+                    if Esp:FindFirstChild(player.Name) then
+                        Esp[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats[object[1]].Value)
                     end
                 end)
             end
 
             Status:GetPropertyChangedSignal("Value"):Connect(function()
-                if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                    CoreGui.ESPFolder[player.Name].Frame.Names.TextColor3 = updcolor(Status.Value)
-                    CoreGui.ESPFolder[player.Name].Frame.Names.TextStrokeColor3 = updcolorstroke(Status.Value)
+                if Esp:FindFirstChild(player.Name) then
+                    Esp[player.Name].Frame.Names.TextColor3 = updcolor(Status.Value)
+                    Esp[player.Name].Frame.Names.TextStrokeColor3 = updcolorstroke(Status.Value)
                 end
 
-                if CoreGui.HFolder:FindFirstChild(player.Name) then
-                    CoreGui.HFolder[player.Name].FillColor = updcolor(Status.Value)
-                    CoreGui.HFolder[player.Name].OutlineColor = updcolor(Status.Value)
+                if Highlights:FindFirstChild(player.Name) then
+                    Highlights[player.Name].FillColor = updcolor(Status.Value)
+                    Highlights[player.Name].OutlineColor = updcolor(Status.Value)
                 end
             end)
 
@@ -3171,21 +3168,21 @@ for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 local Humanoid = player.Character:FindFirstChild("Humanoid")
                 
-                CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
+                Esp[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
 
                 Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                    CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
+                    Esp[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
                 end)
 
                 player.Character.Humanoid.Died:Connect(function()
-                    if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                        CoreGui.ESPFolder[player.Name].Adornee = nil
-                        CoreGui.ESPFolder[player.Name].Enabled = false
+                    if Esp:FindFirstChild(player.Name) then
+                        Esp[player.Name].Adornee = nil
+                        Esp[player.Name].Enabled = false
                     end
 
-                    if CoreGui.HFolder:FindFirstChild(player.Name) then
-                        CoreGui.HFolder[player.Name].Adornee = nil
-                        CoreGui.HFolder[player.Name].Enabled = false
+                    if Highlights:FindFirstChild(player.Name) then
+                        Highlights[player.Name].Adornee = nil
+                        Highlights[player.Name].Enabled = false
                     end
 
                     if Flags["Logs"].Value["Dead"] then
@@ -3213,31 +3210,31 @@ for i, player in pairs(Players:GetPlayers()) do
                 task.spawn(function()
                     local Humanoid = character:WaitForChild("Humanoid", math.huge)
 
-                    if CoreGui.HFolder:FindFirstChild(player.Name) then
-                        CoreGui.HFolder[player.Name].Adornee = Flags["Highlights"].Value and character or nil
-                        CoreGui.HFolder[player.Name].Enabled = Flags["Highlights"].Value
+                    if Highlights:FindFirstChild(player.Name) then
+                        Highlights[player.Name].Adornee = Flags["Highlights"].Value and character or nil
+                        Highlights[player.Name].Enabled = Flags["Highlights"].Value
                     end
 
-                    if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                        CoreGui.ESPFolder[player.Name].Adornee = Flags["ESP"].Value and character:WaitForChild("Head") or nil
-                        CoreGui.ESPFolder[player.Name].Enabled = Flags["ESP"].Value
+                    if Esp:FindFirstChild(player.Name) then
+                        Esp[player.Name].Adornee = Flags["ESP"].Value and character:WaitForChild("Head") or nil
+                        Esp[player.Name].Enabled = Flags["ESP"].Value
                     end
 
-                    CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
+                    Esp[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
 
                     Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                        CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
+                        Esp[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
                     end)
 
                     Humanoid.Died:Connect(function()     
-                        if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                            CoreGui.ESPFolder[player.Name].Adornee = nil
-                            CoreGui.ESPFolder[player.Name].Enabled = false
+                        if Esp:FindFirstChild(player.Name) then
+                            Esp[player.Name].Adornee = nil
+                            Esp[player.Name].Enabled = false
                         end
     
-                        if CoreGui.HFolder:FindFirstChild(player.Name) then
-                            CoreGui.HFolder[player.Name].Adornee = nil
-                            CoreGui.HFolder[player.Name].Enabled = false
+                        if Highlights:FindFirstChild(player.Name) then
+                            Highlights[player.Name].Adornee = nil
+                            Highlights[player.Name].Enabled = false
                         end
     
                         if Flags["Logs"].Value["Dead"] then
@@ -3274,7 +3271,7 @@ end
 
 Players.PlayerAdded:Connect(function(player)
     CreateESP(player)
-    CreateH(player)
+    CreateHighlight(player)
 
     player:WaitForChild("LocalSoundFolder", math.huge):Destroy()
 
@@ -3306,75 +3303,73 @@ Players.PlayerAdded:Connect(function(player)
     end)
 
     player.CharacterAdded:Connect(function(character)
-        task.spawn(function()
-            local Humanoid = character:WaitForChild("Humanoid", math.huge)
+        local Humanoid = character:WaitForChild("Humanoid", math.huge)
 
-            if CoreGui.HFolder:FindFirstChild(player.Name) then
-                CoreGui.HFolder[player.Name].Adornee = Flags["Highlights"].Value and character or nil
-                CoreGui.HFolder[player.Name].Enabled = Flags["Highlights"].Value
+        if Highlights:FindFirstChild(player.Name) then
+            Highlights[player.Name].Adornee = Flags["Highlights"].Value and character or nil
+            Highlights[player.Name].Enabled = Flags["Highlights"].Value
+        end
+
+        if Esp:FindFirstChild(player.Name) then
+            Esp[player.Name].Adornee = Flags["ESP"].Value and character:WaitForChild("Head") or nil
+            Esp[player.Name].Enabled = Flags["ESP"].Value
+        end
+        
+        Esp[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
+
+        Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+            Esp[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
+        end)
+
+        Humanoid.Died:Connect(function()         
+            if Esp:FindFirstChild(player.Name) then
+                Esp[player.Name].Adornee = nil
+                Esp[player.Name].Enabled = false
             end
 
-            if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                CoreGui.ESPFolder[player.Name].Adornee = Flags["ESP"].Value and character:WaitForChild("Head") or nil
-                CoreGui.ESPFolder[player.Name].Enabled = Flags["ESP"].Value
+            if Highlights:FindFirstChild(player.Name) then
+                Highlights[player.Name].Adornee = nil
+                Highlights[player.Name].Enabled = false
             end
-            
-            CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.MaxHealth) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
 
-            Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                CoreGui.ESPFolder[player.Name].Frame.Health.Text = "Health: " .. ConvertToLetter(Humanoid.Health) .. "/" .. ConvertToLetter(Humanoid.MaxHealth)
-            end)
-
-            Humanoid.Died:Connect(function()         
-                if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                    CoreGui.ESPFolder[player.Name].Adornee = nil
-                    CoreGui.ESPFolder[player.Name].Enabled = false
+            if Flags["Logs"].Value["Dead"] then
+                if Flags["Type Of Logs"].Value["Chat"] then
+                    StarterGui:SetCore("ChatMakeSystemMessage", ({Text = player.DisplayName .. " (@" .. player.Name .. ") Dead", Color = Color3.new(1, 0, 0), Font = "GothamBold", TextSize = 18}))
                 end
 
-                if CoreGui.HFolder:FindFirstChild(player.Name) then
-                    CoreGui.HFolder[player.Name].Adornee = nil
-                    CoreGui.HFolder[player.Name].Enabled = false
+                if Flags["Type Of Logs"].Value["Notify"] then
+                    Fluent:Notify({
+                        Title = "Z3XHub",
+                        Content = "[LOGS]",
+                        SubContent = player.DisplayName .. " (@" .. player.Name .. ") Dead",
+                        Duration = 3
+                    })
                 end
 
-                if Flags["Logs"].Value["Dead"] then
-                    if Flags["Type Of Logs"].Value["Chat"] then
-                        StarterGui:SetCore("ChatMakeSystemMessage", ({Text = player.DisplayName .. " (@" .. player.Name .. ") Dead", Color = Color3.new(1, 0, 0), Font = "GothamBold", TextSize = 18}))
-                    end
-
-                    if Flags["Type Of Logs"].Value["Notify"] then
-                        Fluent:Notify({
-                            Title = "Z3XHub",
-                            Content = "[LOGS]",
-                            SubContent = player.DisplayName .. " (@" .. player.Name .. ") Dead",
-                            Duration = 3
-                        })
-                    end
-
-                    if Flags["Type Of Logs"].Value["Console"] then
-                        print("[LOGS]: " .. player.DisplayName .. " (@" .. player.Name .. ") Dead")
-                    end
+                if Flags["Type Of Logs"].Value["Console"] then
+                    print("[LOGS]: " .. player.DisplayName .. " (@" .. player.Name .. ") Dead")
                 end
-            end)
+            end
         end)
     end)
 
     for i, object in pairs(UpdatingStats) do
         PrivateStats:WaitForChild(object[1], math.huge):GetPropertyChangedSignal("Value"):Connect(function()
-            if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-                CoreGui.ESPFolder[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats:WaitForChild(object[1], math.huge).Value)
+            if Esp:FindFirstChild(player.Name) then
+                Esp[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats:WaitForChild(object[1], math.huge).Value)
             end
         end)
     end
 
     Status:GetPropertyChangedSignal("Value"):Connect(function()
-        if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-            CoreGui.ESPFolder[player.Name].Frame.Names.TextColor3 = updcolor(Status.Value)
-            CoreGui.ESPFolder[player.Name].Frame.Names.TextStrokeColor3 = updcolorstroke(Status.Value)
+        if Esp:FindFirstChild(player.Name) then
+            Esp[player.Name].Frame.Names.TextColor3 = updcolor(Status.Value)
+            Esp[player.Name].Frame.Names.TextStrokeColor3 = updcolorstroke(Status.Value)
         end
 
-        if CoreGui.HFolder:FindFirstChild(player.Name) then
-            CoreGui.HFolder[player.Name].FillColor = updcolor(Status.Value)
-            CoreGui.HFolder[player.Name].OutlineColor = updcolor(Status.Value)
+        if Highlights:FindFirstChild(player.Name) then
+            Highlights[player.Name].FillColor = updcolor(Status.Value)
+            Highlights[player.Name].OutlineColor = updcolor(Status.Value)
         end
     end)
 end)
@@ -3382,12 +3377,12 @@ end)
 Players.PlayerRemoving:Connect(function(player)
     lastChatted[player.Name] = nil
     
-    if CoreGui.ESPFolder:FindFirstChild(player.Name) then
-        CoreGui.ESPFolder[player.Name]:Destroy()
+    if Esp:FindFirstChild(player.Name) then
+        Esp[player.Name]:Destroy()
     end
 
-    if CoreGui.HFolder:FindFirstChild(player.Name) then
-        CoreGui.HFolder[player.Name]:Destroy()
+    if Highlights:FindFirstChild(player.Name) then
+        Highlights[player.Name]:Destroy()
     end
     
     if Flags["Logs"].Value["Joined/Left"] then
@@ -3410,9 +3405,17 @@ Players.PlayerRemoving:Connect(function(player)
     end
 
     if table.find(Targets, player.Name) then
-        for i, Target in pairs(Targets) do
-            if rawequal(Target, player.Name) then
+        for i, rTarget in pairs(Targets) do
+            if rawequal(rTarget, player.Name) then
                 table.remove(Targets, i)
+            end
+        end
+    end
+
+    if table.find(Whitelisted, player.Name) then
+        for i, rTarget in pairs(Whitelisted) do
+            if rawequal(rTarget, player.Name) then
+                table.remove(Whitelisted, i)
             end
         end
     end
