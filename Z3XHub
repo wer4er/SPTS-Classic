@@ -2035,7 +2035,7 @@ Components.Stack:OnChanged(function()
         task.spawn(function()
             while Flags["Stack"].Value and task.wait() do
                 if isAlive() then
-                    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -1e4, 0)
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -1e3, 0)
                 end
                 RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
                 for i, Target in pairs(Targets) do
