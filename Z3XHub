@@ -104,6 +104,16 @@ PlayerGui:WaitForChild("BubbleChat", math.huge).DescendantAdded:Connect(function
     end
 end)
 
+UserInputService.WindowFocused:Connect(function()
+    setfpscap(45)
+    RunService:Set3dRenderingEnabled(true)
+end)
+
+UserInputService.WindowFocusReleased:Connect(function()
+    setfpscap(0)
+    RunService:Set3dRenderingEnabled(false)
+end)
+
 for i, object in pairs(Workspace:GetChildren()) do
     if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
         object:Destroy()
@@ -902,9 +912,6 @@ local Components = {
 }
 
 Components.Fist:OnChanged(function()
-    setfpscap(Flags["Fist Strength"].Value and 45 or 0)
-    RunService:Set3dRenderingEnabled(not Flags["Fist Strength"].Value)
-
     while Flags["Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
@@ -918,9 +925,6 @@ Components.Fist:OnChanged(function()
 end)
 
 Components.Body:OnChanged(function()
-    setfpscap(Flags["Body Toughness"].Value and 45 or 0)
-    RunService:Set3dRenderingEnabled(not Flags["Body Toughness"].Value)
-
     while Flags["Body Toughness"].Value and task.wait() do
         if isAlive() then
             if getbtpos() then
@@ -933,9 +937,6 @@ Components.Body:OnChanged(function()
 end)
 
 Components.Psychic:OnChanged(function()
-    setfpscap(Flags["Psychic Power"].Value and 45 or 0)
-    RunService:Set3dRenderingEnabled(not Flags["Psychic Power"].Value)
-
     while Flags["Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
@@ -949,9 +950,6 @@ Components.Psychic:OnChanged(function()
 end)
 
 Components.BodyFist:OnChanged(function()
-    setfpscap(Flags["Body Toughness & Fist Strength"].Value and 45 or 0)
-    RunService:Set3dRenderingEnabled(not Flags["Body Toughness & Fist Strength"].Value)
-
     while Flags["Body Toughness & Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
@@ -972,9 +970,6 @@ Components.BodyFist:OnChanged(function()
 end)
 
 Components.BodyPsychic:OnChanged(function()
-    setfpscap(Flags["Body Toughness & Psychic Power"].Value and 45 or 0)
-    RunService:Set3dRenderingEnabled(not Flags["Body Toughness & Psychic Power"].Value)
-
     while Flags["Body Toughness & Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
