@@ -2189,7 +2189,7 @@ Components.HellFireAll:OnChanged(function()
         for i, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
-                RemoteEvent:FireServer({"Skill_DevilFlame", Players:FindFirstChild(player.Name)})
+                RemoteEvent:FireServer({"Skill_DevilFlame", player})
                 break
             end
         end
@@ -2200,7 +2200,7 @@ Components.SoulReapAll:OnChanged(function()
     while Flags["Soul Reap All"].Value and task.wait() do
         for i, player in pairs(Players:GetPlayers()) do
             if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
-                RemoteEvent:FireServer({"Skill_SoulReap", Players:FindFirstChild(player.Name)})
+                RemoteEvent:FireServer({"Skill_SoulReap", player})
                 break
             end
         end
