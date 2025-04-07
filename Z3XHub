@@ -52,7 +52,7 @@ end)
 local Fluent = loadstring(game:HttpGet("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 local Flags = Fluent.Options
-local Check = newcclosure and checkcaller and hookmetamethod and hookfunction and InjectorName ~= "NX"
+local Check = newcclosure and checkcaller and hookmetamethod and hookfunction and not rawequal(InjectorName, "NX")
 
 if Check then
     task.spawn(function()
@@ -71,7 +71,7 @@ if Check then
             local Method, Args = getnamecallmethod(), {...}
             if rawequal(Method, "Fire") and rawequal(self.Name, "MessagePosted") then
                 return wait(9e9)
-            elseif rawequal(Method,"Create") then
+            elseif rawequal(Method, "Create") then
                 if rawequal(Args[1], Camera) then
                     return setmetatable({}, {
                         ["__index"] = function(self, ...)
@@ -697,7 +697,7 @@ Tabs.Pvp:AddInput("Input", {
     Callback = function(value)
         for i, player in pairs(Players:GetPlayers()) do
             if string.find(string.lower(player.Name), string.lower(value)) then
-                if player ~= LocalPlayer then
+                if not rawequal(player, LocalPlayer) then
                     Target = player.Name
                     break
                 end
@@ -715,7 +715,7 @@ Tabs.Pvp:AddInput("Input", {
 Tabs.Pvp:AddButton({
     Title = "Add To Whitelist",
     Callback = function()
-        if Players:FindFirstChild(Target) and Players:FindFirstChild(Target) ~= LocalPlayer then
+        if Players:FindFirstChild(Target) and not rawequal(Players:FindFirstChild(Target), LocalPlayer) then
             if not table.find(Whitelisted, Target) then
                 table.insert(Whitelisted, Target)
             end
@@ -764,7 +764,7 @@ Tabs.Pvp:AddButton({
 Tabs.Pvp:AddButton({
     Title = "Add To Targets",
     Callback = function()
-        if Players:FindFirstChild(Target) and Players:FindFirstChild(Target) ~= LocalPlayer then
+        if Players:FindFirstChild(Target) and not rawequal(Players:FindFirstChild(Target), LocalPlayer) then
             if not table.find(Targets, Target) then
                 table.insert(Targets, Target)
             end
@@ -889,10 +889,12 @@ local Components = {
     RGBWeight = Tabs.Fun:AddToggle("Rainbow Weight", {Title = "Rainbow Weight", Default = false}),
     RGBSpheres = Tabs.Fun:AddToggle("Rainbow Spheres", {Title = "Rainbow Spheres", Default = false}),
     RGBLasers = Tabs.Fun:AddToggle("Rainbow Lasers", {Title = "Rainbow Lasers", Default = false}),
+    RGBAuras = Tabs.Fun:AddToggle("Rainbow Auras", {Title = "Rainbow Auras", Default = false}),
     RGBNames = Tabs.Fun:AddToggle("Rainbow Names", {Title = "Rainbow Names", Default = false}),
     CustomColor = Tabs.Fun:CreateColorpicker("Custom Color", {Title = "Custom Color", Default = Color3.new(0,0,0)}),
     CustomSpheres = Tabs.Fun:AddToggle("Custom Spheres", {Title = "Custom Spheres", Default = false}),
     CustomLasers = Tabs.Fun:AddToggle("Custom Lasers", {Title = "Custom Lasers", Default = false}),
+    CustomAuras = Tabs.Fun:AddToggle("Custom Auras", {Title = "Custom Auras", Default = false}),
     CustomNames = Tabs.Fun:AddToggle("Custom Names", {Title = "Custom Names", Default = false}),
     Spin = Tabs.Fun:AddToggle("Spin", {Title = "Spin", Default = false}),
     Gravity = Tabs.Fun:AddToggle("Gravity", {Title = "Gravity", Default = false}),
@@ -958,7 +960,7 @@ Components.BodyFist:OnChanged(function()
             end
             if getbtpos() then
                 local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until PrivateStats.BodyToughness.Value ~= lastValue
+                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -978,7 +980,7 @@ Components.BodyPsychic:OnChanged(function()
             end
             if getbtpos() then
                 local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until PrivateStats.BodyToughness.Value ~= lastValue
+                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -1579,7 +1581,7 @@ local function loadUtility(name)
         for i, object in UpdatingStats do
             object[1].Text = object[1].Name .. ": " .. 0
 
-            if object[2] ~= "Token" then
+            if not rawequal(object[2], "Token") then
                 PrivateStats[object[2]]:GetPropertyChangedSignal("Value"):Connect(function()
                     object[1].Text = object[1].Name .. ": " .. ConvertToLetter(PrivateStats[object[2]].Value - object[3])
                 end)
@@ -1913,7 +1915,7 @@ end)
 
 Components.Esp:OnChanged(function()
     for i, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and isAlive(player) and Esp:FindFirstChild(player.Name) then
+        if not rawequal(player, LocalPlayer) and isAlive(player) and Esp:FindFirstChild(player.Name) then
             Esp[player.Name].Adornee = Flags["ESP"].Value and player.Character:WaitForChild("Head") or nil
             Esp[player.Name].Enabled = Flags["ESP"].Value
         end
@@ -1922,7 +1924,7 @@ end)
 
 Components.Highlights:OnChanged(function()
     for i, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and isAlive(player) and Highlights:FindFirstChild(player.Name) then
+        if not rawequal(player, LocalPlayer) and isAlive(player) and Highlights:FindFirstChild(player.Name) then
             Highlights[player.Name].Adornee = Flags["Highlights"].Value and player.Character or nil
             Highlights[player.Name].Enabled = Flags["Highlights"].Value
         end
@@ -1967,7 +1969,7 @@ Components.AntiAura:OnChanged(function()
 end)
 
 Components.Animations:OnChanged(function()
-    if Flags["Animations"].Value ~= "None" then
+    if not rawequal(Flags["Animations"].Value, "None") then
         for i, object in pairs(Animations[Flags["Animations"].Value]) do
             local Action, SubAction, AssetId = unpack(object)
             if isAlive() then
@@ -1987,7 +1989,7 @@ end)
 Components.CBring:OnChanged(function()
     while Flags["CBring"].Value and task.wait() do
         for i, Target in pairs(Targets) do
-            if Target ~= LocalPlayer and isAlive() and isAlive(Players:FindFirstChild(Target)) then
+            if not rawequal(Target, LocalPlayer) and isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
             end
         end
@@ -2144,7 +2146,7 @@ end)
 Components.CBringAll:OnChanged(function()
     while Flags["CBring All"].Value and task.wait() do
         for i, player in pairs(Players:GetPlayers()) do
-            if player ~= LocalPlayer and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
+            if not rawequal(player, LocalPlayer) and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
                 player.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 1
             end
         end
@@ -2156,7 +2158,7 @@ Components.StackAll:OnChanged(function()
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
         for i, player in pairs(Players:GetPlayers()) do
             task.spawn(function()
-                if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
+                if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
                     player.Character.HumanoidRootPart.CFrame = CFrame.new(15e2, -55e2, -25e2)
                     for i, sphere in pairs(Storage:GetChildren()) do
                         task.spawn(function()
@@ -2174,7 +2176,7 @@ end)
 Components.SoulAttackAll:OnChanged(function()
     while Flags["Soul Attack All"].Value and task.wait() do
         for i, player in pairs(Players:GetPlayers()) do
-            if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
+            if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", player})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
@@ -2187,7 +2189,7 @@ end)
 Components.HellFireAll:OnChanged(function()
     while Flags["Hell Fire All"].Value and task.wait() do
         for i, player in pairs(Players:GetPlayers()) do
-            if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
+            if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
                 RemoteEvent:FireServer({"Skill_DevilFlame", player})
                 break
@@ -2199,7 +2201,7 @@ end)
 Components.SoulReapAll:OnChanged(function()
     while Flags["Soul Reap All"].Value and task.wait() do
         for i, player in pairs(Players:GetPlayers()) do
-            if (player ~= LocalPlayer and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
+            if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
                 RemoteEvent:FireServer({"Skill_SoulReap", player})
                 break
             end
@@ -2277,6 +2279,36 @@ Components.RGBWeight:OnChanged(function()
     end
 end)
 
+Components.RGBAuras:OnChanged(function()
+    if Flags["Rainbow Auras"].Value then
+        while Flags["Rainbow Auras"].Value and task.wait() do
+            for i, player in pairs(Players:GetPlayers()) do
+                if isAlive(player) then
+                    for i, v in pairs(player.Character:GetDescendants()) do
+                        if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
+                            v.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(.5, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(1, Color3.fromHSV(tick() % 5 / 5, 1, 1))})
+                        end
+                    end
+                end
+            end
+        end
+    else
+        for i, player in pairs(Players:GetPlayers()) do
+            if isAlive(player) then
+                for i, v in pairs(player.Character:GetDescendants()) do
+                    if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
+                        if rawequal(player, LocalPlayer) then
+                            RemoteEvent:FireServer({"ConcealRevealAura", "End"})
+                        else
+                            v:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
 Components.RGBNames:OnChanged(function()
     if Flags["Rainbow Names"].Value then
         while Flags["Rainbow Names"].Value and task.wait() do
@@ -2293,6 +2325,36 @@ Components.RGBNames:OnChanged(function()
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextStrokeColor3 = updcolorstroke(player:WaitForChild("leaderstats", math.huge).Status.Value)
+            end
+        end
+    end
+end)
+
+Components.CustomAuras:OnChanged(function()
+    if Flags["Custom Auras"].Value then
+        while Flags["Custom Auras"].Value and task.wait() do
+            for i, player in pairs(Players:GetPlayers()) do
+                if isAlive(player) then
+                    for i, v in pairs(player.Character:GetDescendants()) do
+                        if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
+                            v.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(.5, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(1, Flags["Custom Color"].Value)})
+                        end
+                    end
+                end
+            end
+        end
+    else
+        for i, player in pairs(Players:GetPlayers()) do
+            if isAlive(player) then
+                for i, v in pairs(player.Character:GetDescendants()) do
+                    if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
+                        if rawequal(player, LocalPlayer) then
+                            RemoteEvent:FireServer({"ConcealRevealAura", "End"})
+                        else
+                            v:Destroy()
+                        end
+                    end
+                end
             end
         end
     end
@@ -3096,7 +3158,7 @@ Tabs.Settings:AddKeybind("Keybind", {
             SavedPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
             SavedCameraCFrame = Camera.CFrame
             Camera.CameraType = "Fixed"
-            if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and LocalPlayer.Character.Humanoid.Health ~= 0 then
+            if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not rawequal(LocalPlayer.Character.Humanoid.Health, 0) then
                 RemoteEvent:FireServer({"QuestTalkStart"})
             end
             LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
@@ -3122,7 +3184,7 @@ local UpdatingStats = {
 
 for i, player in pairs(Players:GetPlayers()) do
     task.spawn(function()
-        if player ~= LocalPlayer then
+        if not rawequal(player, LocalPlayer) then
             player:WaitForChild("LocalSoundFolder", math.huge):Destroy()
 
             CreateESP(player)
@@ -3423,7 +3485,7 @@ end)
 
 local function IsAuraEnabled()
     for i, object in pairs(LocalPlayer.Character:GetDescendants()) do
-        if object.Name ~= "KillingIntentAuraSound" and object.Name:match("Aura") then
+        if not rawequal(object.Name, "KillingIntentAuraSound") and object.Name:match("Aura") then
             return true
         end
     end
@@ -3477,11 +3539,11 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     elseif Flags["Auto Disable Aura"].Value then
         task.spawn(function()
             repeat task.wait() until IsAuraEnabled()
-            RemoteEvent:FireServer({"ConcealRevealAura", "Start"})
+            RemoteEvent:FireServer({"ConcealRevealAura", "End"})
         end)
     end
 
-    if Flags["Animations"].Value ~= "None" then
+    if not rawequal(Flags["Animations"].Value, "None") then
         task.spawn(function()
             for i, object in pairs(Animations[Flags["Animations"].Value]) do
                 local Action, SubAction, AssetId = unpack(object)
@@ -3511,7 +3573,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
                     SavedPosition = HumanoidRootPart.CFrame
                     SavedCameraCFrame = Camera.CFrame
                     Camera.CameraType = "Fixed"
-                    if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") and Humanoid.Health ~= 0 then
+                    if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") and not rawequal(Humanoid.Health, 0) then
                         RemoteEvent:FireServer({"QuestTalkStart"})
                     end
                     HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
