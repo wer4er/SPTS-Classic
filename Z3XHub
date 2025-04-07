@@ -1599,7 +1599,7 @@ local function loadUtility(name)
         local startTime = os.time()
 
         task.spawn(function()
-            while task.wait() do
+            while task.wait() and Flags["Utilities"].Value["Stats Counter"] do
                 StatCounter.TimeFrameText.Text = "Time: " .. ConvertTime(os.time() - startTime)
             end
         end)
