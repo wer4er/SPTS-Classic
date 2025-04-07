@@ -3096,7 +3096,7 @@ Tabs.Settings:AddKeybind("Keybind", {
             SavedPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
             SavedCameraCFrame = Camera.CFrame
             Camera.CameraType = "Fixed"
-            if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") then
+            if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and LocalPlayer.Character.Humanoid.Health ~= 0 then
                 RemoteEvent:FireServer({"QuestTalkStart"})
             end
             LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
@@ -3511,7 +3511,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
                     SavedPosition = HumanoidRootPart.CFrame
                     SavedCameraCFrame = Camera.CFrame
                     Camera.CameraType = "Fixed"
-                    if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") then
+                    if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") and Humanoid.Health ~= 0 then
                         RemoteEvent:FireServer({"QuestTalkStart"})
                     end
                     HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
