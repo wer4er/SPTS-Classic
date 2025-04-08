@@ -1897,8 +1897,8 @@ local function destroyUtility(name)
 end
 
 Components.Utilities:OnChanged(function()
-    local lenUtility = (function() local count = 0 for i, v in next, Flags["Utilities"].Value do count += 1 end return count end)()
-    local lenOldUtility = (function() local count = 0 for i, v in next, oldUtilities do count += 1 end return count end)()
+    local lenUtility = (function() local count = 0 for i, object in next, Flags["Utilities"].Value do count += 1 end return count end)()
+    local lenOldUtility = (function() local count = 0 for i, object in next, oldUtilities do count += 1 end return count end)()
 
     if lenUtility > lenOldUtility then
         for utility in pairs(Flags["Utilities"].Value) do
@@ -2290,9 +2290,9 @@ Components.RGBAuras:OnChanged(function()
         while Flags["Rainbow Auras"].Value and task.wait() do
             for i, player in next, Players:GetPlayers() do
                 if isAlive(player) then
-                    for i, v in next, player.Character:GetDescendants() do
-                        if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
-                            v.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(.5, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(1, Color3.fromHSV(tick() % 5 / 5, 1, 1))})
+                    for i, object in next, player.Character:GetDescendants() do
+                        if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
+                            object.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(.5, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(1, Color3.fromHSV(tick() % 5 / 5, 1, 1))})
                         end
                     end
                 end
@@ -2301,12 +2301,12 @@ Components.RGBAuras:OnChanged(function()
     else
         for i, player in next, Players:GetPlayers() do
             if isAlive(player) then
-                for i, v in next, player.Character:GetDescendants() do
-                    if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
-                        if rawequal(player, LocalPlayer) then
+                for i, object in next, player.Character:GetDescendants() do
+                    if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
+                        if rawequal(player, LocalPlayer) and not Flags["Auto Super Aura"].Value then
                             RemoteEvent:FireServer({"ConcealRevealAura", "End"})
                         else
-                            v:Destroy()
+                            object:Destroy()
                         end
                     end
                 end
@@ -2341,9 +2341,9 @@ Components.CustomAuras:OnChanged(function()
         while Flags["Custom Auras"].Value and task.wait() do
             for i, player in next, Players:GetPlayers() do
                 if isAlive(player) then
-                    for i, v in next, player.Character:GetDescendants() do
-                        if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
-                            v.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(.5, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(1, Flags["Custom Color"].Value)})
+                    for i, object in next, player.Character:GetDescendants() do
+                        if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
+                            object.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(.5, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(1, Flags["Custom Color"].Value)})
                         end
                     end
                 end
@@ -2352,12 +2352,12 @@ Components.CustomAuras:OnChanged(function()
     else
         for i, player in next, Players:GetPlayers() do
             if isAlive(player) then
-                for i, v in next, player.Character:GetDescendants() do
-                    if v.Name:match("Aura") and not rawequal(v.Name, "KillingIntentAuraSound") then
-                        if rawequal(player, LocalPlayer) then
+                for i, object in next, player.Character:GetDescendants() do
+                    if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
+                        if rawequal(player, LocalPlayer) and not Flags["Auto Super Aura"].Value then
                             RemoteEvent:FireServer({"ConcealRevealAura", "End"})
                         else
-                            v:Destroy()
+                            object:Destroy()
                         end
                     end
                 end
