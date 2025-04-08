@@ -303,10 +303,17 @@ local Highlights, Esp = CoreGui.HighlightsFolder, CoreGui.ESPFolder
 local function CreateESP(player)
     task.spawn(function()
         local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
-        local leaderstats = player:WaitForChild("leaderstats", math.huge)
-        local Status = leaderstats.Status
-
+        local LeaderStats = player:WaitForChild("leaderstats", math.huge)
+        local Status = LeaderStats:WaitForChild("Status", math.huge)
         local BillboardGui = Instance.new("BillboardGui", Esp)
+        local Frame = Instance.new("Frame", BillboardGui)
+        local Name = Instance.new("TextLabel", Frame)
+        local Distance = Instance.new("TextLabel", Frame)
+        local Health = Instance.new("TextLabel", Frame)
+        local Body = Instance.new("TextLabel", Frame)
+        local Fist = Instance.new("TextLabel", Frame)
+        local Psychic = Instance.new("TextLabel", Frame)
+
         BillboardGui.ExtentsOffset = Vector3.new(0, 1, 0)
         BillboardGui.AlwaysOnTop = true
         BillboardGui.Size = UDim2.new(0, 2, 0, 2)
@@ -314,87 +321,80 @@ local function CreateESP(player)
         BillboardGui.Name = player.Name
         BillboardGui.Enabled = false
 
-        local Frame = Instance.new("Frame", BillboardGui)
         Frame.ZIndex = 10
         Frame.BackgroundTransparency = 1
         Frame.Size = UDim2.new(5, 0, 5, 0)
 
-        local TxtName = Instance.new("TextLabel", Frame)
-        TxtName.Name = "Names"
-        TxtName.ZIndex = 10
-        TxtName.Text = player.Name
-        TxtName.BackgroundTransparency = 1
-        TxtName.Position = UDim2.new(0, 0, 0, -55)
-        TxtName.Size = UDim2.new(1, 0, 10, 0)
-        TxtName.Font = "GothamBold"
-        TxtName.TextSize = 14
-        TxtName.TextStrokeTransparency = .5
-        TxtName.TextColor3 = updcolor(Status.Value)
-        TxtName.TextStrokeColor3 = updcolorstroke(Status.Value)
+        Name.Name = "Names"
+        Name.ZIndex = 10
+        Name.Text = player.Name
+        Name.BackgroundTransparency = 1
+        Name.Position = UDim2.new(0, 0, 0, -55)
+        Name.Size = UDim2.new(1, 0, 10, 0)
+        Name.Font = "GothamBold"
+        Name.TextSize = 14
+        Name.TextStrokeTransparency = .5
+        Name.TextColor3 = updcolor(Status.Value)
+        Name.TextStrokeColor3 = updcolorstroke(Status.Value)
 
-        local TxtDistance = Instance.new("TextLabel", Frame)
-        TxtDistance.Name = "Distance"
-        TxtDistance.ZIndex = 10
-        TxtDistance.Text = "Distance: nil"
-        TxtDistance.BackgroundTransparency = 1
-        TxtDistance.Position = UDim2.new(0, 0, 0, -45)
-        TxtDistance.Size = UDim2.new(1, 0, 10, 0)
-        TxtDistance.Font = "GothamBold"
-        TxtDistance.TextColor3 = Color3.new(1, 1, 1)
-        TxtDistance.TextSize = 14
-        TxtDistance.TextStrokeTransparency = .5
+        Distance.Name = "Distance"
+        Distance.ZIndex = 10
+        Distance.Text = "Distance: nil"
+        Distance.BackgroundTransparency = 1
+        Distance.Position = UDim2.new(0, 0, 0, -45)
+        Distance.Size = UDim2.new(1, 0, 10, 0)
+        Distance.Font = "GothamBold"
+        Distance.TextColor3 = Color3.new(1, 1, 1)
+        Distance.TextSize = 14
+        Distance.TextStrokeTransparency = .5
 
-        local TxtHealth = Instance.new("TextLabel", Frame)
-        TxtHealth.Name = "Health"
-        TxtHealth.ZIndex = 10
-        TxtHealth.BackgroundTransparency = 1
-        TxtHealth.Position = UDim2.new(0, 0, 0, -35)
-        TxtHealth.Size = UDim2.new(1, 0, 10, 0)
-        TxtHealth.Font = "GothamBold"
-        TxtHealth.TextColor3 = Color3.new(1, 1, 1)
-        TxtHealth.TextSize = 14
-        TxtHealth.TextStrokeTransparency = .5
+        Health.Name = "Health"
+        Health.ZIndex = 10
+        Health.BackgroundTransparency = 1
+        Health.Position = UDim2.new(0, 0, 0, -35)
+        Health.Size = UDim2.new(1, 0, 10, 0)
+        Health.Font = "GothamBold"
+        Health.TextColor3 = Color3.new(1, 1, 1)
+        Health.TextSize = 14
+        Health.TextStrokeTransparency = .5
 
-        local TxtBody = Instance.new("TextLabel", Frame)
-        TxtBody.Name = "Body"
-        TxtBody.ZIndex = 10
-        TxtBody.BackgroundTransparency = 1
-        TxtBody.Position = UDim2.new(0, 0, 0, -25)
-        TxtBody.Size = UDim2.new(1, 0, 10, 0)
-        TxtBody.Font = "GothamBold"
-        TxtBody.TextColor3 = Color3.new(1, 1, 1)
-        TxtBody.TextSize = 14
-        TxtBody.TextStrokeTransparency = .5
-        TxtBody.Text = "Body: " .. ConvertToLetter(PrivateStats:WaitForChild("BodyToughness", math.huge).Value)
+        Body.Name = "Body"
+        Body.ZIndex = 10
+        Body.BackgroundTransparency = 1
+        Body.Position = UDim2.new(0, 0, 0, -25)
+        Body.Size = UDim2.new(1, 0, 10, 0)
+        Body.Font = "GothamBold"
+        Body.TextColor3 = Color3.new(1, 1, 1)
+        Body.TextSize = 14
+        Body.TextStrokeTransparency = .5
+        Body.Text = "Body: " .. ConvertToLetter(PrivateStats:WaitForChild("BodyToughness", math.huge).Value)
 
-        local TxtFist = Instance.new("TextLabel", Frame)
-        TxtFist.Name = "Fist"
-        TxtFist.ZIndex = 10
-        TxtFist.BackgroundTransparency = 1
-        TxtFist.Position = UDim2.new(0, 0, 0, -15)
-        TxtFist.Size = UDim2.new(1, 0, 10, 0)
-        TxtFist.Font = "GothamBold"
-        TxtFist.TextColor3 = Color3.new(1, 1, 1)
-        TxtFist.TextSize = 14
-        TxtFist.TextStrokeTransparency = .5
-        TxtFist.Text = "Fist: " .. ConvertToLetter(PrivateStats:WaitForChild("FistStrength", math.huge).Value)
+        Fist.Name = "Fist"
+        Fist.ZIndex = 10
+        Fist.BackgroundTransparency = 1
+        Fist.Position = UDim2.new(0, 0, 0, -15)
+        Fist.Size = UDim2.new(1, 0, 10, 0)
+        Fist.Font = "GothamBold"
+        Fist.TextColor3 = Color3.new(1, 1, 1)
+        Fist.TextSize = 14
+        Fist.TextStrokeTransparency = .5
+        Fist.Text = "Fist: " .. ConvertToLetter(PrivateStats:WaitForChild("FistStrength", math.huge).Value)
 
-        local TxtPsychic = Instance.new("TextLabel", Frame)
-        TxtPsychic.Name = "Psychic"
-        TxtPsychic.ZIndex = 10
-        TxtPsychic.BackgroundTransparency = 1
-        TxtPsychic.Position = UDim2.new(0, 0, 0, -5)
-        TxtPsychic.Size = UDim2.new(1, 0, 10, 0)
-        TxtPsychic.Font = "GothamBold"
-        TxtPsychic.TextColor3 = Color3.new(1, 1, 1)
-        TxtPsychic.TextSize = 14
-        TxtPsychic.TextStrokeTransparency = .5
-        TxtPsychic.Text = "Psychic: " .. ConvertToLetter(PrivateStats:WaitForChild("PsychicPower", math.huge).Value)
+        Psychic.Name = "Psychic"
+        Psychic.ZIndex = 10
+        Psychic.BackgroundTransparency = 1
+        Psychic.Position = UDim2.new(0, 0, 0, -5)
+        Psychic.Size = UDim2.new(1, 0, 10, 0)
+        Psychic.Font = "GothamBold"
+        Psychic.TextColor3 = Color3.new(1, 1, 1)
+        Psychic.TextSize = 14
+        Psychic.TextStrokeTransparency = .5
+        Psychic.Text = "Psychic: " .. ConvertToLetter(PrivateStats:WaitForChild("PsychicPower", math.huge).Value)
     
         task.spawn(function()
             while task.wait() do
                 if isAlive() and isAlive(player) then
-                    TxtDistance.Text = "Distance: " .. math.floor((LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
+                    Distance.Text = "Distance: " .. math.floor((LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
                 end
             end
         end)
@@ -403,10 +403,10 @@ end
 
 local function CreateHighlight(player)
     task.spawn(function()
-        local leaderstats = player:WaitForChild("leaderstats", math.huge)
-        local Status = leaderstats.Status
-
+        local LeaderStats = player:WaitForChild("leaderstats", math.huge)
+        local Status = LeaderStats:WaitForChild("Status", math.huge)
         local Highlight = Instance.new("Highlight", Highlights)
+        
         Highlight.Name = player.Name
         Highlight.FillTransparency = .5
         Highlight.FillColor = updcolor(Status.Value)
@@ -670,7 +670,7 @@ local Animations = {
 }
 
 local Window = Fluent:CreateWindow({
-    Title = "Z3XHub 5.5.2",
+    Title = "Z3XHub 5.5.3",
     SubTitle = "by wer4er",
     TabWidth = 130,
     Size = UDim2.fromOffset(580, 460),
@@ -3185,14 +3185,14 @@ local UpdatingStats = {
 for i, player in next, Players:GetPlayers() do
     task.spawn(function()
         if not rawequal(player, LocalPlayer) then
+            local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
+            local LeaderStats = player:WaitForChild("leaderstats", math.huge)
+            local Status = LeaderStats:WaitForChild("Status", math.huge)
+
             player:WaitForChild("LocalSoundFolder", math.huge):Destroy()
 
             CreateESP(player)
             CreateHighlight(player)
-
-            local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
-            local leaderstats = player:WaitForChild("leaderstats", math.huge)
-            local Status = leaderstats:WaitForChild("Status", math.huge)
 
             if isAlive(player) then
                 player.Character.ChildAdded:Connect(function(object)
@@ -3338,8 +3338,8 @@ Players.PlayerAdded:Connect(function(player)
     player:WaitForChild("LocalSoundFolder", math.huge):Destroy()
 
     local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
-    local leaderstats = player:WaitForChild("leaderstats", math.huge)
-    local Status = leaderstats:WaitForChild("Status", math.huge)
+    local LeaderStats = player:WaitForChild("leaderstats", math.huge)
+    local Status = LeaderStats:WaitForChild("Status", math.huge)
 
     if Flags["Logs"].Value["Joined/Left"] then
         if Flags["Type Of Logs"].Value["Chat"] then
