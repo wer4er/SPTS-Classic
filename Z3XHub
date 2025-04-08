@@ -36,6 +36,7 @@ local JobId = game.JobId
 local InjectorName = identifyexecutor()
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
+local teleportsvalue, teleportposition, oldUtilities = {}, {}, {}
 local Targets, Whitelisted, Target = {}, {}, Players:GetChildren()[math.random(1, #Players:GetChildren())].Name
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
@@ -669,6 +670,33 @@ local Animations = {
     }
 }
 
+local teleports = {
+    {"SafeZone", CFrame.new(471, 249, 889)},
+    {"LeaderBoards", CFrame.new(-766, 249, 750)},
+    {"FS Rock", CFrame.new(382, 249, 971)},
+    {"FS Crystal", CFrame.new(-2273, 1943, 1048)},
+    {"FS 1B", CFrame.new(1176, 4789, -2293)},
+    {"FS 100B", CFrame.new(1381, 9274, 1648)},
+    {"FS 10T", CFrame.new(-363, 15735, -3)},
+    {"PP 1M", CFrame.new(-2527, 5486, -532)},
+    {"PP 1B", CFrame.new(-2560, 5500, -439)},
+    {"PP 1T", CFrame.new(-2582, 5516, -504)},
+    {"PP 1Qa", CFrame.new(-2544, 5412, -495)},
+    {"BT 100", CFrame.new(365, 249, -445)},
+    {"BT 10K", CFrame.new(349, 263, -490)},
+    {"BT 100K", CFrame.new(1640, 258, 2244)},
+    {"BT 1M", CFrame.new(-2307, 976, 1068)},
+    {"BT 10M", CFrame.new(-2024, 714, -1860)},
+    {"BT 1B", CFrame.new(-254, 286, 980)},
+    {"BT 100B", CFrame.new(-271, 281, 991)},
+    {"BT 10T", CFrame.new(-279, 281, 1007)}
+}
+
+for i, teleport in next, teleports do
+    table.insert(teleportsvalue, teleport[1])
+    teleportposition[teleport[1]] = teleport[2]
+end
+
 local Window = Fluent:CreateWindow({
     Title = "Z3XHub 5.5.3",
     SubTitle = "by wer4er",
@@ -815,38 +843,6 @@ Tabs.Pvp:AddButton({
         })
     end
 })
-
-local teleports = {
-    {"SafeZone", CFrame.new(471, 249, 889)},
-    {"LeaderBoards", CFrame.new(-766, 249, 750)},
-    {"FS Rock", CFrame.new(382, 249, 971)},
-    {"FS Crystal", CFrame.new(-2273, 1943, 1048)},
-    {"FS 1B", CFrame.new(1176, 4789, -2293)},
-    {"FS 100B", CFrame.new(1381, 9274, 1648)},
-    {"FS 10T", CFrame.new(-363, 15735, -3)},
-    {"PP 1M", CFrame.new(-2527, 5486, -532)},
-    {"PP 1B", CFrame.new(-2560, 5500, -439)},
-    {"PP 1T", CFrame.new(-2582, 5516, -504)},
-    {"PP 1Qa", CFrame.new(-2544, 5412, -495)},
-    {"BT 100", CFrame.new(365, 249, -445)},
-    {"BT 10K", CFrame.new(349, 263, -490)},
-    {"BT 100K", CFrame.new(1640, 258, 2244)},
-    {"BT 1M", CFrame.new(-2307, 976, 1068)},
-    {"BT 10M", CFrame.new(-2024, 714, -1860)},
-    {"BT 1B", CFrame.new(-254, 286, 980)},
-    {"BT 100B", CFrame.new(-271, 281, 991)},
-    {"BT 10T", CFrame.new(-279, 281, 1007)}
-}
-
-local teleportsvalue = {}
-local teleportposition = {}
-
-for i, teleport in next, teleports do
-    table.insert(teleportsvalue, teleport[1])
-    teleportposition[teleport[1]] = teleport[2]
-end
-
-local oldUtilities = {}
 
 local Components = {
     Fist = Tabs.Farm:AddToggle("Fist Strength", {Title = "Fist Strength", Default = false}),
@@ -1078,25 +1074,10 @@ local function loadUtility(name)
         StatsChecker.MainFrame.BackgroundTransparency = 0
         StatsChecker.MainFrame.Position = UDim2.new(.5, 0, .5, 0)
         StatsChecker.MainFrame.Size = UDim2.new(.25, 0, .28, 0)
-        StatsChecker.MainFrame.Active = false
+        StatsChecker.MainFrame.Active = true
         StatsChecker.MainFrame.Text = ""
         StatsChecker.MainFrame.AutoButtonColor = false
-        StatsChecker.MainFrame.MouseButton1Down:Connect(function()
-            local Mx, My = LocalPlayer:GetMouse().X, LocalPlayer:GetMouse().Y
-            local MouseMove, MouseKill
-            MouseMove = LocalPlayer:GetMouse().Move:Connect(function()
-                local nMx, nMy = LocalPlayer:GetMouse().X, LocalPlayer:GetMouse().Y
-                local Dx, Dy = nMx - Mx, nMy - My
-                StatsChecker.MainFrame.Position = StatsChecker.MainFrame.Position + UDim2.fromOffset(Dx, Dy)
-                Mx, My = nMx, nMy
-            end)
-            MouseKill = UserInputService.InputEnded:Connect(function(UserInput)
-                if rawequal(UserInput.UserInputType, Enum.UserInputType.MouseButton1) then
-                    MouseMove:Disconnect()
-                    MouseKill:Disconnect()
-                end
-            end)
-        end)
+        StatsChecker.MainFrame.Draggable = true
         
         StatsChecker.MainFrameCorner.CornerRadius = UDim.new(0, 10)
         StatsChecker.MainFrameCorner.Name = "MainFrameCorner"
@@ -1359,25 +1340,10 @@ local function loadUtility(name)
         StatCounter.MainFrame.BackgroundTransparency = 0
         StatCounter.MainFrame.Position = UDim2.new(.5, 0, .5, 0)
         StatCounter.MainFrame.Size = UDim2.new(.25, 0, .28, 0)
-        StatCounter.MainFrame.Active = false
+        StatCounter.MainFrame.Active = true
         StatCounter.MainFrame.Text = ""
         StatCounter.MainFrame.AutoButtonColor = false
-        StatCounter.MainFrame.MouseButton1Down:Connect(function()
-            local Mx, My = LocalPlayer:GetMouse().X, LocalPlayer:GetMouse().Y
-            local MouseMove, MouseKill
-            MouseMove = LocalPlayer:GetMouse().Move:Connect(function()
-                local nMx, nMy = LocalPlayer:GetMouse().X, LocalPlayer:GetMouse().Y
-                local Dx, Dy = nMx - Mx, nMy - My
-                StatCounter.MainFrame.Position = StatCounter.MainFrame.Position + UDim2.fromOffset(Dx, Dy)
-                Mx, My = nMx, nMy
-            end)
-            MouseKill = UserInputService.InputEnded:Connect(function(UserInput)
-                if rawequal(UserInput.UserInputType, Enum.UserInputType.MouseButton1) then
-                    MouseMove:Disconnect()
-                    MouseKill:Disconnect()
-                end
-            end)
-        end)
+        StatCounter.MainFrame.Draggable = true
 
         StatCounter.MainFrameCorner.CornerRadius = UDim.new(0, 10)
         StatCounter.MainFrameCorner.Name = "MainFrameCorner"
@@ -1650,25 +1616,10 @@ local function loadUtility(name)
         MultiChecker.MainFrame.BackgroundTransparency = 0
         MultiChecker.MainFrame.Position = UDim2.new(.5, 0, .5, 0)
         MultiChecker.MainFrame.Size = UDim2.new(.25, 0, .28, 0)
-        MultiChecker.MainFrame.Active = false
+        MultiChecker.MainFrame.Active = true
         MultiChecker.MainFrame.Text = ""
         MultiChecker.MainFrame.AutoButtonColor = false
-        MultiChecker.MainFrame.MouseButton1Down:Connect(function()
-            local Mx, My = LocalPlayer:GetMouse().X, LocalPlayer:GetMouse().Y
-            local MouseMove, MouseKill
-            MouseMove = LocalPlayer:GetMouse().Move:Connect(function()
-                local nMx, nMy = LocalPlayer:GetMouse().X, LocalPlayer:GetMouse().Y
-                local Dx, Dy = nMx - Mx, nMy - My
-                MultiChecker.MainFrame.Position = MultiChecker.MainFrame.Position + UDim2.fromOffset(Dx, Dy)
-                Mx, My = nMx, nMy
-            end)
-            MouseKill = UserInputService.InputEnded:Connect(function(UserInput)
-                if rawequal(UserInput.UserInputType, Enum.UserInputType.MouseButton1) then
-                    MouseMove:Disconnect()
-                    MouseKill:Disconnect()
-                end
-            end)
-        end)
+        MultiChecker.MainFrame.Draggable = true
 
         MultiChecker.MainFrameCorner.CornerRadius = UDim.new(0, 10)
         MultiChecker.MainFrameCorner.Name = "MainFrameCorner"
