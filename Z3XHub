@@ -3072,28 +3072,22 @@ Tabs.Settings:AddButton({
     Title = "Fps Booster",
     Callback = function()
         for i, object in pairs(game:GetDescendants()) do
-            if object:IsA("Part") or object:IsA("Union") or object:IsA("CornerWedgePart") or object:IsA("TrussPart") or object:IsA("MeshPart") then
+            pcall(function()
                 object.Material = "Plastic"
                 object.Reflectance = 0
-                if object:IsA("MeshPart") then
-                    object.TextureID = 10385902758728957
-                end
-            elseif object:IsA("Decal") or object:IsA("Texture") then
+                object.TextureID = 10385902758728957
                 object.Transparency = 1
-            elseif object:IsA("ParticleEmitter") or object:IsA("Trail") then
                 object.Lifetime = NumberRange.new(0)
-            elseif object:IsA("Explosion") then
                 object.BlastPressure = 1
                 object.BlastRadius = 1
-            elseif object:IsA("Fire") or object:IsA("SpotLight") or object:IsA("Smoke") then
                 object.Enabled = false
-            end
+            end)
         end
         
         for i, effect in pairs(Lighting:GetChildren()) do
-            if effect:IsA("BlurEffect") or effect:IsA("SunRaysEffect") or effect:IsA("ColorCorrectionEffect") or effect:IsA("BloomEffect") or effect:IsA("DepthOfFieldEffect") then
+            pcall(function()
                 effect.Enabled = false
-            end
+            end)
         end
     end
 })
