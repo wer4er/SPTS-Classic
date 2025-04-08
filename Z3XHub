@@ -461,7 +461,7 @@ local function getbtpos()
     if PrivateStats.BodyToughness.Value >= 1e13 / 20 then
         return CFrame.new(-278.40, 281.40, 999.50)
     elseif PrivateStats.BodyToughness.Value >= 1e11 / 20 then
-        return CFrame.new(-275.53, 281.64, 991.48)
+        return CFrame.new(-275.53, 281.11, 991.48)
     elseif PrivateStats.BodyToughness.Value >= 1e9 / 20 then
         return CFrame.new(-244.45, 287.11, 978.97)
     elseif PrivateStats.BodyToughness.Value >= 1e7 / 20 then
