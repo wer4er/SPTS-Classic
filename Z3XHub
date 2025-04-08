@@ -147,7 +147,7 @@ Workspace.FallenPartsDestroyHeight = math.huge - math.huge
 if LocalPlayer.Idled then
     if getconnections then
         for i, connection in pairs(getconnections(LocalPlayer.Idled)) do
-            if typeof(connection) ~= "table" and connection["Disable"] then
+            if not rawequal(typeof(connection), "table") and connection["Disable"] then
                 connection:Disable()
             end
         end
