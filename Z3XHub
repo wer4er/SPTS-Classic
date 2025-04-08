@@ -2035,13 +2035,13 @@ Components.Stack:OnChanged(function()
         task.spawn(function()
             while Flags["Stack"].Value and task.wait() do
                 if isAlive() then
-                    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -1e3, 0)
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(0, -1e3, 0))
                 end
                 RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
                 for i, Target in pairs(Targets) do
                     task.spawn(function()
                         if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                            Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame = CFrame.new(0, 1e5, 0)
+                            Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(CFrame.new(0, 1e5, 0))
                             for i, sphere in pairs(Storage:GetChildren()) do
                                 if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") then
                                     task.spawn(function()
@@ -2165,7 +2165,7 @@ Components.StackAll:OnChanged(function()
         for i, player in pairs(Players:GetPlayers()) do
             task.spawn(function()
                 if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
-                    player.Character.HumanoidRootPart.CFrame = CFrame.new(15e2, -55e2, -25e2)
+                    player.Character.HumanoidRootPart:PivotTo(CFrame.new(15e2, -55e2, -25e2))
                     for i, sphere in pairs(Storage:GetChildren()) do
                         task.spawn(function()
                             if rawequal(sphere.Name, getball()) then
@@ -2244,7 +2244,7 @@ end)
 Components.Teleport:OnChanged(function()
     while Flags["Teleport To Starter Camera"].Value and task.wait() do
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(705, 942, 846)
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(705, 942, 846))
         end
     end
 end)
@@ -3144,7 +3144,7 @@ Tabs.Settings:AddKeybind("Keybind", {
     Mode = "Toggle",
     Callback = function()
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(470, 250, 900)
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(470, 250, 900))
         end
     end
 })
@@ -3155,13 +3155,13 @@ Tabs.Settings:AddKeybind("Keybind", {
     Mode = "Toggle",
     Callback = function()
         if isAlive() then
-            SavedPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
-            SavedCameraCFrame = Camera.CFrame
+            SavedPosition = LocalPlayer.Character.HumanoidRootPart:GetPivot()
+            SavedCameraCFrame = Camera:GetPivot()
             Camera.CameraType = "Fixed"
             if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not rawequal(LocalPlayer.Character.Humanoid.Health, 0) then
                 RemoteEvent:FireServer({"QuestTalkStart"})
             end
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(math.huge, -math.huge, math.huge))
         end
         RemoteEvent:FireServer({"Respawn"})
     end
@@ -3554,14 +3554,14 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     if SavedPosition and SavedCameraCFrame and not Flags["Stack"].Value then
         task.spawn(function()
-            HumanoidRootPart.CFrame = SavedPosition
+            HumanoidRootPart:PivotTo(SavedPosition)
             HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Wait()
-            HumanoidRootPart.CFrame = SavedPosition
+            HumanoidRootPart:PivotTo(SavedPosition)
         end)
         task.spawn(function()
-            Camera.CFrame = SavedCameraCFrame
+            Camera:PivotTo(SavedCameraCFrame)
             Camera:GetPropertyChangedSignal("CFrame"):Wait()
-            Camera.CFrame = SavedCameraCFrame
+            Camera:PivotTo(SavedCameraCFrame)
         end)
     end
 
@@ -3570,13 +3570,13 @@ LocalPlayer.CharacterAdded:Connect(function(character)
             if Humanoid.MaxHealth * RespawnHealth >= Humanoid.Health then
                 if not Flags["Stack"].Value then
                     RespawnFunction:Disconnect()
-                    SavedPosition = HumanoidRootPart.CFrame
-                    SavedCameraCFrame = Camera.CFrame
+                    SavedPosition = HumanoidRootPart:GetPivot()
+                    SavedCameraCFrame = Camera:GetPivot()
                     Camera.CameraType = "Fixed"
                     if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") and not rawequal(Humanoid.Health, 0) then
                         RemoteEvent:FireServer({"QuestTalkStart"})
                     end
-                    HumanoidRootPart.CFrame = CFrame.new(math.huge, -math.huge, math.huge)
+                    HumanoidRootPart:PivotTo(CFrame.new(math.huge, -math.huge, math.huge))
                 end
                 RemoteEvent:FireServer({"Respawn"})
             end
