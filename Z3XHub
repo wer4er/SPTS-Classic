@@ -156,9 +156,9 @@ if LocalPlayer.Idled then
     end
     
     LocalPlayer.Idled:Connect(function()
-        VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
+        VirtualUser:Button2Down(Vector2.new(0, 0), Camera:GetPivot())
         task.wait(1)
-        VirtualUser:Button2Up(Vector2.new(0, 0), Camera.CFrame)
+        VirtualUser:Button2Up(Vector2.new(0, 0), Camera:GetPivot())
     end)
 end
 
@@ -917,7 +917,7 @@ Components.Fist:OnChanged(function()
     while Flags["Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = getfspos()
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(getfspos())
             end
             for i = 1, #getfs() do
                 RemoteEvent:FireServer({getfs()[i]})
@@ -930,7 +930,7 @@ Components.Body:OnChanged(function()
     while Flags["Body Toughness"].Value and task.wait() do
         if isAlive() then
             if getbtpos() then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos()
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos())
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -942,7 +942,7 @@ Components.Psychic:OnChanged(function()
     while Flags["Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = getpppos()
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(getpppos())
             end
             for i = 1, #getpp() do
                 RemoteEvent:FireServer({getpp()[i]})
@@ -955,7 +955,7 @@ Components.BodyFist:OnChanged(function()
     while Flags["Body Toughness & Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = getfspos()
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(getfspos())
             end
             task.wait(.2)
             for i = 1, #getfs() do
@@ -963,7 +963,7 @@ Components.BodyFist:OnChanged(function()
             end
             if getbtpos() then
                 local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+                repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -975,7 +975,7 @@ Components.BodyPsychic:OnChanged(function()
     while Flags["Body Toughness & Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = getpppos()
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(getpppos())
             end
             task.wait(.2)
             for i = 1, #getpp() do
@@ -983,7 +983,7 @@ Components.BodyPsychic:OnChanged(function()
             end
             if getbtpos() then
                 local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart.CFrame = getbtpos() task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+                repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -1948,7 +1948,7 @@ Components.CBring:OnChanged(function()
     while Flags["CBring"].Value and task.wait() do
         for i, Target in next, Targets do
             if not rawequal(Target, LocalPlayer) and isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
+                Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() * CFrame.new(0, 0, -1))
             end
         end
     end
@@ -1967,7 +1967,7 @@ Components.SpamR:OnChanged(function()
         for i, sphere in next, Storage:GetChildren() do
             task.spawn(function()
                 if isAlive() and rawequal(sphere.Name, getball()) and isnetworkowner(sphere) then
-                    sphere.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+                    sphere:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot())
                 end
             end)
         end
@@ -2049,7 +2049,7 @@ Components.SoulAttack:OnChanged(function()
     while Flags["Soul Attack"].Value and task.wait() do
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) and not Players:FindFirstChild(Target).Character:FindFirstChild("ForceField") and not Players:FindFirstChild(Target).Character:FindFirstChild("SafeZoneShield") and not Players:FindFirstChild(Target).Character:FindFirstChild("GodModeShield") then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame + Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame.UpVector * 40
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot() + Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot().UpVector * 40)
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", Players:FindFirstChild(Target)})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
                 break
@@ -2084,7 +2084,7 @@ Components.LoopTeleport:OnChanged(function()
     while Flags["Loop Teleport"].Value and task.wait() do
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
             end
         end
     end
@@ -2095,7 +2095,7 @@ Components.SitOnHead:OnChanged(function()
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 LocalPlayer.Character.Humanoid.Sit = true
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge).CFrame * CFrame.new(0, 2.5, 0)
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge):GetPivot() * CFrame.new(0, 2.5, 0))
             end
         end
     end
@@ -2105,7 +2105,7 @@ Components.CBringAll:OnChanged(function()
     while Flags["CBring All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
             if not rawequal(player, LocalPlayer) and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
-                player.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 1
+                player.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() + LocalPlayer.Character.HumanoidRootPart:GetPivot().LookVector * 1)
             end
         end
     end
@@ -2135,7 +2135,7 @@ Components.SoulAttackAll:OnChanged(function()
     while Flags["Soul Attack All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
             if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10))
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", player})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
                 break
@@ -2148,7 +2148,7 @@ Components.HellFireAll:OnChanged(function()
     while Flags["Hell Fire All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
             if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10)
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10))
                 RemoteEvent:FireServer({"Skill_DevilFlame", player})
                 break
             end
@@ -2170,7 +2170,7 @@ end)
 Components.LoopTeleportToLocation:OnChanged(function()
     while Flags["Loop Teleport To Location"].Value and task.wait() do
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = teleportposition[Flags["Locations"].Value]
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(teleportposition[Flags["Locations"].Value])
         end
     end
 end)
@@ -2916,7 +2916,7 @@ Tabs.Visual:AddButton({
         for i, object in next, Workspace.Main:GetChildren() do
             if object:IsA("Part") and object.Name:match("LeaderBoardPart") then
                 Index += 1
-                object.CFrame = Positions[Index]
+                object:PivotTo(Positions[Index])
                 object.Orientation = Vector3.new(0, 90, 0)
                 object.Size = Vector3.new(20, 12, 2)
                 object.Material = Enum.Material.ForceField
@@ -2934,7 +2934,7 @@ Tabs.Usual:AddButton({
             if P then return end
             if rawequal(Key, "v") then
                 if LocalPlayer:GetMouse().Target and isAlive() then
-                    LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z))
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z)))
                 end
             end
         end)
@@ -2946,7 +2946,7 @@ Tabs.Pvp:AddButton({
     Callback = function()
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Players:FindFirstChild(Target).Character.HumanoidRootPart.CFrame
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
             end
         end
     end
@@ -2956,7 +2956,7 @@ Tabs.Teleports:AddButton({
     Title = "Teleport To Location",
     Callback = function()
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = teleportposition[Flags["Locations"].Value]
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(teleportposition[Flags["Locations"].Value])
         end
     end
 })
@@ -2983,16 +2983,16 @@ Tabs.Fun:AddButton({
                 Humanoid.PlatformStand = true
                 if UserInputService:GetFocusedTextBox() then return end
                 if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-                    Ball.RotVelocity = Ball.RotVelocity - Camera.CFrame.RightVector * Delta * 30
+                    Ball.RotVelocity = Ball.RotVelocity - Camera:GetPivot().RightVector * Delta * 30
                 end
                 if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-                    Ball.RotVelocity = Ball.RotVelocity - Camera.CFrame.LookVector * Delta * 30
+                    Ball.RotVelocity = Ball.RotVelocity - Camera:GetPivot().LookVector * Delta * 30
                 end
                 if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-                    Ball.RotVelocity += Camera.CFrame.RightVector * Delta * 30
+                    Ball.RotVelocity += Camera:GetPivot().RightVector * Delta * 30
                 end
                 if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-                    Ball.RotVelocity += Camera.CFrame.LookVector * Delta * 30
+                    Ball.RotVelocity += Camera:GetPivot().LookVector * Delta * 30
                 end
             end)
             UserInputService.JumpRequest:Connect(function()
@@ -3538,7 +3538,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     Humanoid.Died:Connect(function()
         task.delay(0, function()
             if not Check then
-                TweenService:Create(Camera, TweenInfo.new(0, Enum.EasingStyle.Linear), {CFrame = Camera.CFrame}):Play()
+                TweenService:Create(Camera, TweenInfo.new(0, Enum.EasingStyle.Linear), {CFrame = Camera:GetPivot()}):Play()
             end
         end)
         if Flags["Logs"].Value["Dead"] then
