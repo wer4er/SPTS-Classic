@@ -33,6 +33,7 @@ local Camera = Workspace.CurrentCamera
 local Storage = Workspace.Storage
 local PlaceId = game.PlaceId
 local JobId = game.JobId
+local identifyexecutor = identifyexecutor or function() return "hueta" end
 local InjectorName = identifyexecutor()
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
