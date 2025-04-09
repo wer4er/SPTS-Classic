@@ -2941,7 +2941,13 @@ Tabs.Usual:AddButton({
             if P then return end
             if rawequal(Key, "v") then
                 if LocalPlayer:GetMouse().Target and isAlive() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z)))
+                    if Check then
+                        if not getsenv(LocalPlayer.PlayerScripts.MainScript).CanTeleport then
+                            LocalPlayer.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z)))
+                        end
+                    else
+                        LocalPlayer.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z)))
+                    end
                 end
             end
         end)
