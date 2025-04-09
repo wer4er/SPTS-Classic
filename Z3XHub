@@ -451,43 +451,43 @@ end
 
 local function getfspos()
     if PrivateStats.FistStrength.Value >= 1e13 then
-        return CFrame.new(-364.10, 15735.15, -7.32)
+        return CFrame.fromMatrix(Vector3.new(-364.10, 15735.15, -7.32), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.FistStrength.Value >= 1e11 then
-        return CFrame.new(1380.36, 9273.74, 1652.63)
+        return CFrame.fromMatrix(Vector3.new(1380.36, 9273.74, 1652.63), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.FistStrength.Value >= 1e9 then
-        return CFrame.new(1175.30, 4789.25, -2293.05)
+        return CFrame.fromMatrix(Vector3.new(1175.30, 4789.25, -2293.05), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     end
 end
 
 local function getbtpos()
     if PrivateStats.BodyToughness.Value >= 1e13 / 20 then
-        return CFrame.new(-278.40, 281.40, 999.50)
+        return CFrame.fromMatrix(Vector3.new(-278.40, 281.40, 999.50), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e11 / 20 then
-        return CFrame.new(-275.53, 281.11, 991.48)
+        return CFrame.fromMatrix(Vector3.new(-275.53, 281.11, 991.48), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e9 / 20 then
-        return CFrame.new(-244.45, 287.11, 978.97)
+        return CFrame.fromMatrix(Vector3.new(-244.45, 287.11, 978.97), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e7 / 20 then
-        return CFrame.new(-2024.79, 714.25, -1882.21)
+        return CFrame.fromMatrix(Vector3.new(-2024.79, 714.25, -1882.21), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e6 / 20 then
-        return CFrame.new(-2297.46, 976.74, 1075.02)
+        return CFrame.fromMatrix(Vector3.new(-2297.46, 976.74, 1075.02), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e5 / 20 then
-        return CFrame.new(1634.49, 259.62, 2248.21)
+        return CFrame.fromMatrix(Vector3.new(1634.49, 259.62, 2248.21), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e4 / 20 then
-        return CFrame.new(357.28, 263.74, -492.33)
+        return CFrame.fromMatrix(Vector3.new(357.28, 263.74, -492.33), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.BodyToughness.Value >= 1e2 / 20 then
-        return CFrame.new(367.77, 249.71, -444.75)
+        return CFrame.fromMatrix(Vector3.new(367.77, 249.71, -444.75), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     end
 end
 
 local function getpppos()
     if PrivateStats.PsychicPower.Value >= 1e15 then
-        return CFrame.new(-2545.08, 5412.33, -491.88)
+        return CFrame.fromMatrix(Vector3.new(-2545.08, 5412.33, -491.88), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.PsychicPower.Value >= 1e12 then
-        return CFrame.new(-2581.78, 5516.39, -500.41)
+        return CFrame.fromMatrix(Vector3.new(-2581.78, 5516.39, -500.41), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.PsychicPower.Value >= 1e9 then
-        return CFrame.new(-2561.86, 5500.88, -440.46)
+        return CFrame.fromMatrix(Vector3.new(-2561.86, 5500.88, -440.46), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     elseif PrivateStats.PsychicPower.Value >= 1e6 then
-        return CFrame.new(-2529.78, 5486.39, -534.67)
+        return CFrame.fromMatrix(Vector3.new(-2529.78, 5486.39, -534.67), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
     end
 end
 
@@ -672,25 +672,25 @@ local Animations = {
 }
 
 local teleports = {
-    {"SafeZone", CFrame.new(471, 249, 889)},
-    {"LeaderBoards", CFrame.new(-766, 249, 750)},
-    {"FS Rock", CFrame.new(382, 249, 971)},
-    {"FS Crystal", CFrame.new(-2273, 1943, 1048)},
-    {"FS 1B", CFrame.new(1176, 4789, -2293)},
-    {"FS 100B", CFrame.new(1381, 9274, 1648)},
-    {"FS 10T", CFrame.new(-363, 15735, -3)},
-    {"PP 1M", CFrame.new(-2527, 5486, -532)},
-    {"PP 1B", CFrame.new(-2560, 5500, -439)},
-    {"PP 1T", CFrame.new(-2582, 5516, -504)},
-    {"PP 1Qa", CFrame.new(-2544, 5412, -495)},
-    {"BT 100", CFrame.new(365, 249, -445)},
-    {"BT 10K", CFrame.new(349, 263, -490)},
-    {"BT 100K", CFrame.new(1640, 258, 2244)},
-    {"BT 1M", CFrame.new(-2307, 976, 1068)},
-    {"BT 10M", CFrame.new(-2024, 714, -1860)},
-    {"BT 1B", CFrame.new(-254, 286, 980)},
-    {"BT 100B", CFrame.new(-271, 281, 991)},
-    {"BT 10T", CFrame.new(-279, 281, 1007)}
+    {"SafeZone", CFrame.fromMatrix(Vector3.new(471, 249, 889), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"LeaderBoards", CFrame.fromMatrix(Vector3.new(-766, 249, 750), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"FS Rock", CFrame.fromMatrix(Vector3.new(382, 249, 971), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"FS Crystal", CFrame.fromMatrix(Vector3.new(-2273, 1943, 1048), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"FS 1B", CFrame.fromMatrix(Vector3.new(1176, 4789, -2293), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"FS 100B", CFrame.fromMatrix(Vector3.new(1381, 9274, 1648), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"FS 10T", CFrame.fromMatrix(Vector3.new(-363, 15735, -3), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"PP 1M", CFrame.fromMatrix(Vector3.new(-2527, 5486, -532), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"PP 1B", CFrame.fromMatrix(Vector3.new(-2560, 5500, -439), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"PP 1T", CFrame.fromMatrix(Vector3.new(-2582, 5516, -504), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"PP 1Qa", CFrame.fromMatrix(Vector3.new(-2544, 5412, -495), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 100", CFrame.fromMatrix(Vector3.new(365, 249, -445), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 10K", CFrame.fromMatrix(Vector3.new(349, 263, -490), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 100K", CFrame.fromMatrix(Vector3.new(1640, 258, 2244), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 1M", CFrame.fromMatrix(Vector3.new(-2307, 976, 1068), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 10M", CFrame.fromMatrix(Vector3.new(-2024, 714, -1860), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 1B", CFrame.fromMatrix(Vector3.new(-254, 286, 980), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 100B", CFrame.fromMatrix(Vector3.new(-271, 281, 991), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))},
+    {"BT 10T", CFrame.fromMatrix(Vector3.new(-279, 281, 1007), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))}
 }
 
 for i, teleport in next, teleports do
@@ -1948,7 +1948,7 @@ Components.CBring:OnChanged(function()
     while Flags["CBring"].Value and task.wait() do
         for i, Target in next, Targets do
             if not rawequal(Target, LocalPlayer) and isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() * CFrame.new(0, 0, -1))
+                Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(0, 0, -1), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
             end
         end
     end
@@ -1987,13 +1987,13 @@ Components.Stack:OnChanged(function()
         task.spawn(function()
             while Flags["Stack"].Value and task.wait() do
                 if isAlive() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(0, -1e3, 0))
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, -1e3, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 end
                 RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
                 for i, Target in next, Targets do
                     task.spawn(function()
                         if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                            Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(CFrame.new(0, 1e5, 0))
+                            Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, 1e5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                             for i, sphere in next, Storage:GetChildren() do
                                 if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") then
                                     task.spawn(function()
@@ -2095,7 +2095,7 @@ Components.SitOnHead:OnChanged(function()
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 LocalPlayer.Character.Humanoid.Sit = true
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge):GetPivot() * CFrame.new(0, 2.5, 0))
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge):GetPivot() * CFrame.fromMatrix(Vector3.new(0, 2.5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
             end
         end
     end
@@ -2117,7 +2117,7 @@ Components.StackAll:OnChanged(function()
         for i, player in next, Players:GetPlayers() do
             task.spawn(function()
                 if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
-                    player.Character.HumanoidRootPart:PivotTo(CFrame.new(15e2, -55e2, -25e2))
+                    player.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(15e2, -55e2, -25e2), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                     for i, sphere in next, Storage:GetChildren() do
                         task.spawn(function()
                             if rawequal(sphere.Name, getball()) then
@@ -2135,7 +2135,7 @@ Components.SoulAttackAll:OnChanged(function()
     while Flags["Soul Attack All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
             if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10))
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", player})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
                 break
@@ -2148,7 +2148,7 @@ Components.HellFireAll:OnChanged(function()
     while Flags["Hell Fire All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
             if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.new(player.Character.HumanoidRootPart.Velocity / 10))
+                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 RemoteEvent:FireServer({"Skill_DevilFlame", player})
                 break
             end
@@ -2196,7 +2196,7 @@ end)
 Components.Teleport:OnChanged(function()
     while Flags["Teleport To Starter Camera"].Value and task.wait() do
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(705, 942, 846))
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(705, 942, 846), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
         end
     end
 end)
@@ -2911,7 +2911,14 @@ Tabs.Visual:AddButton({
 Tabs.Visual:AddButton({
     Title = "Leaderboards On Spawn",
     Callback = function()
-        local Positions = {CFrame.new(359, 252, 830),CFrame.new(359, 252, 810),CFrame.new(359, 252, 790),CFrame.new(359, 264, 830),CFrame.new(359, 264, 810)}
+        local Positions = {
+            CFrame.fromMatrix(Vector3.new(359, 252, 830), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)),
+            CFrame.fromMatrix(Vector3.new(359, 252, 810), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)),
+            CFrame.fromMatrix(Vector3.new(359, 252, 790), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)),
+            CFrame.fromMatrix(Vector3.new(359, 264, 830), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)),
+            CFrame.fromMatrix(Vector3.new(359, 264, 810), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))
+        }
+
         local Index = 0
         for i, object in next, Workspace.Main:GetChildren() do
             if object:IsA("Part") and object.Name:match("LeaderBoardPart") then
@@ -3096,7 +3103,7 @@ Tabs.Settings:AddKeybind("Keybind", {
     Mode = "Toggle",
     Callback = function()
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(470, 250, 900))
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(470, 250, 900), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
         end
     end
 })
@@ -3113,7 +3120,7 @@ Tabs.Settings:AddKeybind("Keybind", {
             if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not rawequal(LocalPlayer.Character.Humanoid.Health, 0) then
                 RemoteEvent:FireServer({"QuestTalkStart"})
             end
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.new(math.huge, -math.huge, math.huge))
+            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(math.huge, -math.huge, math.huge), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
         end
         RemoteEvent:FireServer({"Respawn"})
     end
@@ -3528,7 +3535,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
                     if not character:FindFirstChild("GodModeShield") and not character:FindFirstChild("GodModeShield ") and not character:FindFirstChild("ForceField") and not rawequal(Humanoid.Health, 0) then
                         RemoteEvent:FireServer({"QuestTalkStart"})
                     end
-                    HumanoidRootPart:PivotTo(CFrame.new(math.huge, -math.huge, math.huge))
+                    HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(math.huge, -math.huge, math.huge), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 end
                 RemoteEvent:FireServer({"Respawn"})
             end
