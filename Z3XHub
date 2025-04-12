@@ -53,6 +53,7 @@ end)
 
 local Fluent = loadstring(game:HttpGet("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
+local SaveManager = loadstring(game:HttpGet("https://gist.githubusercontent.com/wer4er/e3850471d61eff8f190afc2a43b92626/raw/6ca53c3360444d3d3c3ad30b202cb9f66abbbe7c/SaveManager"))()
 local Flags = Fluent.Options
 local Check = newcclosure and checkcaller and hookmetamethod and hookfunction and not rawequal(InjectorName, "NX")
 
