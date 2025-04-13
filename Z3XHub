@@ -956,18 +956,29 @@ end)
 Components.BodyFist:OnChanged(function()
     while Flags["Body Toughness & Fist Strength"].Value and task.wait() do
         if isAlive() then
-            if getfspos() then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(getfspos())
-            end
-            task.wait(.2)
-            for i = 1, #getfs() do
-                RemoteEvent:FireServer({getfs()[i]})
-            end
-            if getbtpos() then
-                local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+            if PrivateStats.FistStrength.Value >= 1e9 then
+                if getfspos() then
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getfspos())
+                end
+                task.wait(.2)
+                for i = 1, #getfs() do
+                    RemoteEvent:FireServer({getfs()[i]})
+                end
+                if getbtpos() then
+                    local lastValue = PrivateStats.BodyToughness.Value
+                    repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+                else
+                    RemoteEvent:FireServer({"+BT1"})
+                end
             else
-                RemoteEvent:FireServer({"+BT1"})
+                if getbtpos() then
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos())
+                else
+                    RemoteEvent:FireServer({"+BT1"})
+                end
+                for i = 1, #getfs() do
+                    RemoteEvent:FireServer({getfs()[i]})
+                end
             end
         end
     end
@@ -976,18 +987,29 @@ end)
 Components.BodyPsychic:OnChanged(function()
     while Flags["Body Toughness & Psychic Power"].Value and task.wait() do
         if isAlive() then
-            if getpppos() then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(getpppos())
-            end
-            task.wait(.2)
-            for i = 1, #getpp() do
-                RemoteEvent:FireServer({getpp()[i]})
-            end
-            if getbtpos() then
-                local lastValue = PrivateStats.BodyToughness.Value
-                repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+            if PrivateStats.PsychicPower.Value >= 1e6 then
+                if getpppos() then
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getpppos())
+                end
+                task.wait(.2)
+                for i = 1, #getpp() do
+                    RemoteEvent:FireServer({getpp()[i]})
+                end
+                if getbtpos() then
+                    local lastValue = PrivateStats.BodyToughness.Value
+                    repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+                else
+                    RemoteEvent:FireServer({"+BT1"})
+                end
             else
-                RemoteEvent:FireServer({"+BT1"})
+                if getbtpos() then
+                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos())
+                else
+                    RemoteEvent:FireServer({"+BT1"})
+                end
+                for i = 1, #getpp() do
+                    RemoteEvent:FireServer({getpp()[i]})
+                end
             end
         end
     end
