@@ -2794,7 +2794,7 @@ Tabs.Visual:AddButton({
         end
 
         for prefix, color in pairs(specialColors) do
-            if MenuFrame.InfoFrame:FindFirstChild(prefix.."Txt") then MenuFrame.InfoFrame[prefix.."Txt"].TextColor3 = color end
+            if MenuFrame.InfoFrame:FindFirstChild(prefix .. "Txt") then MenuFrame.InfoFrame[prefix .. "Txt"].TextColor3 = color end
         end
 
         local menuButtons = {
@@ -2866,12 +2866,12 @@ Tabs.Visual:AddButton({
         end
 
         for i = 1, 19 do
-            local textName = "SkillTxt"..i
+            local textName = "SkillTxt" .. i
             if MenuFrame.SkillFrame:FindFirstChild(textName) then MenuFrame.SkillFrame[textName].TextColor3 = Color3.new(0.29, 0.76, 0.27) end
         end
 
         for i = 0, 18 do
-            local textName = "SettingTxt"..i
+            local textName = "SettingTxt" .. i
             if MenuFrame.SettingFrame:FindFirstChild(textName) then MenuFrame.SettingFrame[textName].TextColor3 = Color3.new(0.29, 0.76, 0.27) end
         end
 
@@ -2896,7 +2896,7 @@ Tabs.Visual:AddButton({
                 end
                 
                 for i = 1, 9 do
-                    local maxFrameName = "MaxFrame"..i
+                    local maxFrameName = "MaxFrame" .. i
                     if frame:FindFirstChild(maxFrameName) then
                         frame[maxFrameName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
                         if frame[maxFrameName]:FindFirstChild("RewardTxt") and frame[maxFrameName].RewardTxt:FindFirstChild("GemImgBtn") then
