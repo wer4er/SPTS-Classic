@@ -38,7 +38,7 @@ local InjectorName = identifyexecutor()
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
 local teleportsvalue, teleportposition, oldUtilities = {}, {}, {}
-local Targets, Whitelisted, Target = {}, {}, Players:GetChildren()[math.random(1, #Players:GetChildren())].Name
+local Targets, Whitelisted, Target = {}, {}, Players:GetPlayers()[math.random(1, #Players:GetPlayers())].Name
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
 if Loaded then
@@ -140,10 +140,11 @@ for i, object in next, game:GetDescendants() do
 end
 
 Workspace.ChildAdded:Connect(function(object)
-    RunService.PreRender:Wait()
-    if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
-        object:Destroy()
-    end
+    task.delay(RunService.PreRender:Wait(), function()
+        if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
+            object:Destroy()
+        end
+    end)
 end)
 
 Workspace.FallenPartsDestroyHeight = math.huge - math.huge
@@ -3185,10 +3186,11 @@ for i, player in next, Players:GetPlayers() do
 
             if isAlive(player) then
                 player.Character.ChildAdded:Connect(function(object)
-                    RunService.PreRender:Wait()
-                    if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
-                        object:Destroy()
-                    end
+                    task.delay(RunService.PreRender:Wait(), function()
+                        if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
+                            object:Destroy()
+                        end
+                    end)
                 end)
             end
 
@@ -3310,10 +3312,11 @@ for i, player in next, Players:GetPlayers() do
                 end)
 
                 character.ChildAdded:Connect(function(object)
-                    RunService.PreRender:Wait()
-                    if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
-                        object:Destroy()
-                    end
+                    task.delay(RunService.PreRender:Wait(), function()
+                        if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
+                            object:Destroy()
+                        end
+                    end)
                 end)
             end)
         end
@@ -3494,12 +3497,13 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     task.spawn(function()
         character.ChildAdded:Connect(function(object)
-            RunService.PreRender:Wait()
-            if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
-                object:Destroy()
-            elseif rawequal(object.Name, "GodModeShield") and Flags["GodMode"].Value and not Check then
-                object.Name = "GodModeShield "
-            end
+            task.delay(RunService.PreRender:Wait(), function()
+                if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
+                    object:Destroy()
+                elseif rawequal(object.Name, "GodModeShield") and Flags["GodMode"].Value and not Check then
+                    object.Name = "GodModeShield "
+                end
+            end)
         end)
     end)
 
@@ -3600,33 +3604,35 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 end)
 
 Workspace.ChildAdded:Connect(function(object)
-    RunService.PreRender:Wait()
-    if rawequal(object.Name, "Part") then
-        if Flags["Custom Lasers"].Value then
-            object.Color = Flags["Custom Color"].Value
-            object.Transparency = 0
-        elseif Flags["Rainbow Lasers"].Value then
-            while table.find(Workspace:GetChildren(), object) and task.wait() do
-                object.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+    task.delay(RunService.PreRender:Wait(), function()
+        if rawequal(object.Name, "Part") then
+            if Flags["Custom Lasers"].Value then
+                object.Color = Flags["Custom Color"].Value
                 object.Transparency = 0
+            elseif Flags["Rainbow Lasers"].Value then
+                while table.find(Workspace:GetChildren(), object) and task.wait() do
+                    object.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+                    object.Transparency = 0
+                end
             end
         end
-    end
+    end)
 end)
 
 Storage.ChildAdded:Connect(function(object)
-    RunService.PreRender:Wait()
-    if object.Name:match("EnergySphere") then
-        if Flags["Custom Spheres"].Value then
-            object.Color = Flags["Custom Color"].Value
-            object.Transparency = 0
-        elseif Flags["Rainbow Spheres"].Value then
-            while table.find(Storage:GetChildren(), object) and task.wait() do
-                object.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+    task.delay(RunService.PreRender:Wait(), function()
+        if object.Name:match("EnergySphere") then
+            if Flags["Custom Spheres"].Value then
+                object.Color = Flags["Custom Color"].Value
                 object.Transparency = 0
+            elseif Flags["Rainbow Spheres"].Value then
+                while table.find(Storage:GetChildren(), object) and task.wait() do
+                    object.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+                    object.Transparency = 0
+                end
             end
         end
-    end
+    end)
 end)
 
 if isAlive() then
