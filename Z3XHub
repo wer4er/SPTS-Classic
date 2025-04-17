@@ -25,16 +25,17 @@ local VirtualUser = Services.VirtualUser
 local Workspace = Services.Workspace
 local CoreGui = Services.CoreGui
 local Players = Services.Players
-local LocalPlayer = Players.LocalPlayer
-local PrivateStats = LocalPlayer.PrivateStats
-local PlayerGui = LocalPlayer.PlayerGui
+local Client = Players.LocalPlayer
+local PrivateStats = Client.PrivateStats
+local PlayerGui = Client.PlayerGui
 local ScreenGui = PlayerGui.ScreenGui
+local MenuFrame = ScreenGui.MenuFrame
 local Camera = Workspace.CurrentCamera
 local Storage = Workspace.Storage
 local PlaceId = game.PlaceId
 local JobId = game.JobId
-local identifyexecutor = identifyexecutor or function() return "hueta" end
-local InjectorName = identifyexecutor()
+local InjectorName = identifyexecutor and identifyexecutor() or "hueta"
+local Check = getsenv and newcclosure and checkcaller and hookmetamethod and hookfunction and not rawequal(InjectorName, "NX")
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
 local teleportsvalue, teleportposition, oldUtilities = {}, {}, {}
@@ -42,12 +43,12 @@ local Targets, Whitelisted, Target = {}, {}, Players:GetPlayers()[math.random(1,
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
 if Loaded then
-    TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
+    TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Client)
     return
 end
 
 CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function()
-    TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
+    TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Client)
     return
 end)
 
@@ -55,13 +56,11 @@ local Fluent = loadstring(game:HttpGet("https://github.com/ActualMasterOogway/Fl
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 local SaveManager = loadstring(game:HttpGet("https://gist.githubusercontent.com/wer4er/e3850471d61eff8f190afc2a43b92626/raw/6ca53c3360444d3d3c3ad30b202cb9f66abbbe7c/SaveManager"))()
 local Flags = Fluent.Options
-local Check = newcclosure and checkcaller and hookmetamethod and hookfunction and not rawequal(InjectorName, "NX")
-local CheckGetsenv = getsenv and not rawequal(InjectorName, "NX")
 
 if Check then
     task.spawn(function()
         local Chatted = Instance.new("BindableEvent")
-        local MessagePosted =  require(LocalPlayer.PlayerScripts.ChatScript.ChatMain).MessagePosted
+        local MessagePosted =  require(Client.PlayerScripts.ChatScript.ChatMain).MessagePosted
         local oldHook, oldCall = nil, nil
 
         oldHook = hookfunction(MessagePosted.fire, function(self, ...)
@@ -83,7 +82,7 @@ if Check then
                         end
                     })
                 end
-            elseif not checkcaller() and rawequal(self, LocalPlayer.Character) and rawequal(Method, "BreakJoints") then
+            elseif not checkcaller() and rawequal(self, Client.Character) and rawequal(Method, "BreakJoints") then
                 return nil
             end
             return oldCall(self, ...)
@@ -92,7 +91,7 @@ if Check then
 end
 
 task.spawn(function()
-    repeat task.wait() until LocalPlayer.Character
+    repeat task.wait() until Client.Character
     task.delay(.5, function()
         function RemoteFunction.OnClientInvoke() 
             return false
@@ -140,7 +139,8 @@ for i, object in next, game:GetDescendants() do
 end
 
 Workspace.ChildAdded:Connect(function(object)
-    task.delay(RunService.PreRender:Wait(), function()
+    task.spawn(function()
+        task.wait()
         if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
             object:Destroy()
         end
@@ -149,16 +149,16 @@ end)
 
 Workspace.FallenPartsDestroyHeight = math.huge - math.huge
 
-if LocalPlayer.Idled then
+if Client.Idled then
     if getconnections then
-        for i, connection in next, getconnections(LocalPlayer.Idled) do
+        for i, connection in next, getconnections(Client.Idled) do
             if not rawequal(typeof(connection), "table") and connection["Disable"] then
                 connection:Disable()
             end
         end
     end
     
-    LocalPlayer.Idled:Connect(function()
+    Client.Idled:Connect(function()
         VirtualUser:Button2Down(Vector2.new(0, 0), Camera:GetPivot())
         task.wait(1)
         VirtualUser:Button2Up(Vector2.new(0, 0), Camera:GetPivot())
@@ -241,7 +241,7 @@ end
 
 local function isAlive(player)
     if not player then
-        player = LocalPlayer
+        player = Client
     end
 
     return player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
@@ -399,7 +399,7 @@ local function CreateESP(player)
         task.spawn(function()
             while task.wait() do
                 if isAlive() and isAlive(player) then
-                    Distance.Text = "Distance: " .. math.floor((LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
+                    Distance.Text = "Distance: " .. math.floor((Client.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude)
                 end
             end
         end)
@@ -735,7 +735,7 @@ Tabs.Pvp:AddInput("Input", {
     Callback = function(value)
         for i, player in next, Players:GetPlayers() do
             if string.find(string.lower(player.Name), string.lower(value)) then
-                if not rawequal(player, LocalPlayer) then
+                if not rawequal(player, Client) then
                     Target = player.Name
                     break
                 end
@@ -753,7 +753,7 @@ Tabs.Pvp:AddInput("Input", {
 Tabs.Pvp:AddButton({
     Title = "Add To Whitelist",
     Callback = function()
-        if Players:FindFirstChild(Target) and not rawequal(Players:FindFirstChild(Target), LocalPlayer) then
+        if Players:FindFirstChild(Target) and not rawequal(Players:FindFirstChild(Target), Client) then
             if not table.find(Whitelisted, Target) then
                 table.insert(Whitelisted, Target)
             end
@@ -802,7 +802,7 @@ Tabs.Pvp:AddButton({
 Tabs.Pvp:AddButton({
     Title = "Add To Targets",
     Callback = function()
-        if Players:FindFirstChild(Target) and not rawequal(Players:FindFirstChild(Target), LocalPlayer) then
+        if Players:FindFirstChild(Target) and not rawequal(Players:FindFirstChild(Target), Client) then
             if not table.find(Targets, Target) then
                 table.insert(Targets, Target)
             end
@@ -920,7 +920,7 @@ Components.Fist:OnChanged(function()
     while Flags["Fist Strength"].Value and task.wait() do
         if isAlive() then
             if getfspos() then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(getfspos())
+                Client.Character.HumanoidRootPart:PivotTo(getfspos())
             end
             for i = 1, #getfs() do
                 RemoteEvent:FireServer({getfs()[i]})
@@ -933,7 +933,7 @@ Components.Body:OnChanged(function()
     while Flags["Body Toughness"].Value and task.wait() do
         if isAlive() then
             if getbtpos() then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos())
+                Client.Character.HumanoidRootPart:PivotTo(getbtpos())
             else
                 RemoteEvent:FireServer({"+BT1"})
             end
@@ -945,7 +945,7 @@ Components.Psychic:OnChanged(function()
     while Flags["Psychic Power"].Value and task.wait() do
         if isAlive() then
             if getpppos() then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(getpppos())
+                Client.Character.HumanoidRootPart:PivotTo(getpppos())
             end
             for i = 1, #getpp() do
                 RemoteEvent:FireServer({getpp()[i]})
@@ -959,7 +959,7 @@ Components.BodyFist:OnChanged(function()
         if isAlive() then
             if PrivateStats.FistStrength.Value >= 1e9 then
                 if getfspos() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getfspos())
+                    Client.Character.HumanoidRootPart:PivotTo(getfspos())
                 end
                 task.wait(.2)
                 for i = 1, #getfs() do
@@ -967,13 +967,13 @@ Components.BodyFist:OnChanged(function()
                 end
                 if getbtpos() then
                     local lastValue = PrivateStats.BodyToughness.Value
-                    repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+                    repeat Client.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
                 else
                     RemoteEvent:FireServer({"+BT1"})
                 end
             else
                 if getbtpos() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos())
+                    Client.Character.HumanoidRootPart:PivotTo(getbtpos())
                 else
                     RemoteEvent:FireServer({"+BT1"})
                 end
@@ -990,7 +990,7 @@ Components.BodyPsychic:OnChanged(function()
         if isAlive() then
             if PrivateStats.PsychicPower.Value >= 1e6 then
                 if getpppos() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getpppos())
+                    Client.Character.HumanoidRootPart:PivotTo(getpppos())
                 end
                 task.wait(.2)
                 for i = 1, #getpp() do
@@ -998,13 +998,13 @@ Components.BodyPsychic:OnChanged(function()
                 end
                 if getbtpos() then
                     local lastValue = PrivateStats.BodyToughness.Value
-                    repeat LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
+                    repeat Client.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
                 else
                     RemoteEvent:FireServer({"+BT1"})
                 end
             else
                 if getbtpos() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(getbtpos())
+                    Client.Character.HumanoidRootPart:PivotTo(getbtpos())
                 else
                     RemoteEvent:FireServer({"+BT1"})
                 end
@@ -1021,7 +1021,7 @@ Components.JumpSpeed:OnChanged(function()
         while Flags["Jump & Speed"].Value and task.wait(.2) do
             if isAlive() then
                 if PrivateStats.MovementSpeed.Value >= 20 and PrivateStats.JumpForce.Value >= 20 then
-                    if not LocalPlayer.Character:FindFirstChild("LeftWeight4") and not LocalPlayer.Character:FindFirstChild("RightWeight4") then
+                    if not Client.Character:FindFirstChild("LeftWeight4") and not Client.Character:FindFirstChild("RightWeight4") then
                         RemoteEvent:FireServer({"Weight", "Weight4"})
                     end
                     RemoteEvent:FireServer({"+MS5"})
@@ -1046,8 +1046,8 @@ Components.GodMode:OnChanged(function()
         end
     else
         if isAlive() then 
-            if LocalPlayer.Character:FindFirstChild("GodModeShield ") and not Check then
-                LocalPlayer.Character["GodModeShield "].Name = "GodModeShield"
+            if Client.Character:FindFirstChild("GodModeShield ") and not Check then
+                Client.Character["GodModeShield "].Name = "GodModeShield"
             end
             RemoteEvent:FireServer({"QuestTalkEnd", "GhostRider"})
         end
@@ -1898,7 +1898,7 @@ end)
 
 Components.Esp:OnChanged(function()
     for i, player in next, Players:GetPlayers() do
-        if not rawequal(player, LocalPlayer) and isAlive(player) and Esp:FindFirstChild(player.Name) then
+        if not rawequal(player, Client) and isAlive(player) and Esp:FindFirstChild(player.Name) then
             Esp[player.Name].Adornee = Flags["ESP"].Value and player.Character:WaitForChild("Head") or nil
             Esp[player.Name].Enabled = Flags["ESP"].Value
         end
@@ -1907,7 +1907,7 @@ end)
 
 Components.Highlights:OnChanged(function()
     for i, player in next, Players:GetPlayers() do
-        if not rawequal(player, LocalPlayer) and isAlive(player) and Highlights:FindFirstChild(player.Name) then
+        if not rawequal(player, Client) and isAlive(player) and Highlights:FindFirstChild(player.Name) then
             Highlights[player.Name].Adornee = Flags["Highlights"].Value and player.Character or nil
             Highlights[player.Name].Enabled = Flags["Highlights"].Value
         end
@@ -1956,11 +1956,11 @@ Components.Animations:OnChanged(function()
         for i, object in next, Animations[Flags["Animations"].Value] do
             local Action, SubAction, AssetId = unpack(object)
             if isAlive() then
-                LocalPlayer.Character:WaitForChild("Animate", math.huge):WaitForChild(Action, math.huge)[SubAction].AnimationId = AssetId
+                Client.Character:WaitForChild("Animate", math.huge):WaitForChild(Action, math.huge)[SubAction].AnimationId = AssetId
             end
         end
         if isAlive() then
-            LocalPlayer.Character.Humanoid.Jump = true
+            Client.Character.Humanoid.Jump = true
         end
     end
 end)
@@ -1972,8 +1972,8 @@ end)
 Components.CBring:OnChanged(function()
     while Flags["CBring"].Value and task.wait() do
         for i, Target in next, Targets do
-            if not rawequal(Target, LocalPlayer) and isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(0, 0, -1), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+            if not rawequal(Target, Client) and isAlive() and isAlive(Players:FindFirstChild(Target)) then
+                Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(Client.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(0, 0, -1), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
             end
         end
     end
@@ -1992,7 +1992,7 @@ Components.SpamR:OnChanged(function()
         for i, sphere in next, Storage:GetChildren() do
             task.spawn(function()
                 if isAlive() and rawequal(sphere.Name, getball()) and isnetworkowner(sphere) then
-                    sphere:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot())
+                    sphere:PivotTo(Client.Character.HumanoidRootPart:GetPivot())
                 end
             end)
         end
@@ -2005,14 +2005,14 @@ Components.Stack:OnChanged(function()
     end
     task.delay(1.4, function()
         if Workspace:FindFirstChild("Town") and Flags["Stack"].Value then
-            Workspace.Town.Parent = LocalPlayer
-        elseif LocalPlayer:FindFirstChild("Town") and not Flags["Stack"].Value then
-            LocalPlayer.Town.Parent = Workspace
+            Workspace.Town.Parent = Client
+        elseif Client:FindFirstChild("Town") and not Flags["Stack"].Value then
+            Client.Town.Parent = Workspace
         end
         task.spawn(function()
             while Flags["Stack"].Value and task.wait() do
                 if isAlive() then
-                    LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, -1e3, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+                    Client.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, -1e3, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 end
                 RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
                 for i, Target in next, Targets do
@@ -2020,7 +2020,7 @@ Components.Stack:OnChanged(function()
                         if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                             Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, 1e5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                             for i, sphere in next, Storage:GetChildren() do
-                                if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") then
+                                if not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("SafeZoneShield") then
                                     task.spawn(function()
                                         firetouchinterest(Players:FindFirstChild(Target).Character.HumanoidRootPart, sphere, 0)
                                     end)
@@ -2043,7 +2043,7 @@ Components.Spectate:OnChanged(function()
             TCAdded = Players:FindFirstChild(Target).CharacterAdded:Connect(function(character)
                 Camera.CameraSubject = character:WaitForChild("Humanoid", math.huge)
             end)
-            LPCAdded = LocalPlayer.CharacterAdded:Connect(function()
+            LPCAdded = Client.CharacterAdded:Connect(function()
                 if Players:FindFirstChild(Target) and isAlive(Players:FindFirstChild(Target)) then
                     Camera.CameraSubject = Players:FindFirstChild(Target).Character.Humanoid
                 end
@@ -2065,7 +2065,7 @@ Components.Spectate:OnChanged(function()
             CChanged:Disconnect()
         end
         if isAlive() then
-            Camera.CameraSubject = LocalPlayer.Character
+            Camera.CameraSubject = Client.Character
         end
     end
 end)
@@ -2074,7 +2074,7 @@ Components.SoulAttack:OnChanged(function()
     while Flags["Soul Attack"].Value and task.wait() do
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) and not Players:FindFirstChild(Target).Character:FindFirstChild("ForceField") and not Players:FindFirstChild(Target).Character:FindFirstChild("SafeZoneShield") and not Players:FindFirstChild(Target).Character:FindFirstChild("GodModeShield") then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot() + Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot().UpVector * 40)
+                Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot() + Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot().UpVector * 40)
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", Players:FindFirstChild(Target)})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
                 break
@@ -2109,7 +2109,7 @@ Components.LoopTeleport:OnChanged(function()
     while Flags["Loop Teleport"].Value and task.wait() do
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
+                Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
             end
         end
     end
@@ -2119,8 +2119,8 @@ Components.SitOnHead:OnChanged(function()
     while Flags["Sit On Head"].Value and task.wait() do
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                LocalPlayer.Character.Humanoid.Sit = true
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge):GetPivot() * CFrame.fromMatrix(Vector3.new(0, 2.5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+                Client.Character.Humanoid.Sit = true
+                Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge):GetPivot() * CFrame.fromMatrix(Vector3.new(0, 2.5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
             end
         end
     end
@@ -2129,8 +2129,8 @@ end)
 Components.CBringAll:OnChanged(function()
     while Flags["CBring All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
-            if not rawequal(player, LocalPlayer) and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
-                player.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() + LocalPlayer.Character.HumanoidRootPart:GetPivot().LookVector * 1)
+            if not rawequal(player, Client) and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
+                player.Character.HumanoidRootPart:PivotTo(Client.Character.HumanoidRootPart:GetPivot() + Client.Character.HumanoidRootPart:GetPivot().LookVector * 1)
             end
         end
     end
@@ -2141,7 +2141,7 @@ Components.StackAll:OnChanged(function()
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
         for i, player in next, Players:GetPlayers() do
             task.spawn(function()
-                if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
+                if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
                     player.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(15e2, -55e2, -25e2), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                     for i, sphere in next, Storage:GetChildren() do
                         task.spawn(function()
@@ -2159,8 +2159,8 @@ end)
 Components.SoulAttackAll:OnChanged(function()
     while Flags["Soul Attack All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
-            if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+            if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
+                Client.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", player})
                 RemoteEvent:FireServer({"Skill_SoulAttack_End"})
                 break
@@ -2172,8 +2172,8 @@ end)
 Components.HellFireAll:OnChanged(function()
     while Flags["Hell Fire All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
-            if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+            if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
+                Client.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 RemoteEvent:FireServer({"Skill_DevilFlame", player})
                 break
             end
@@ -2184,7 +2184,7 @@ end)
 Components.SoulReapAll:OnChanged(function()
     while Flags["Soul Reap All"].Value and task.wait() do
         for i, player in next, Players:GetPlayers() do
-            if (not rawequal(player, LocalPlayer) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not LocalPlayer.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
+            if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
                 RemoteEvent:FireServer({"Skill_SoulReap", player})
                 break
             end
@@ -2195,7 +2195,7 @@ end)
 Components.LoopTeleportToLocation:OnChanged(function()
     while Flags["Loop Teleport To Location"].Value and task.wait() do
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(teleportposition[Flags["Locations"].Value])
+            Client.Character.HumanoidRootPart:PivotTo(teleportposition[Flags["Locations"].Value])
         end
     end
 end)
@@ -2203,7 +2203,7 @@ end)
 Components.SpamS:OnChanged(function()
     while Flags["Spam Sounds"].Value and task.wait(Flags["Cooldown Of Spam Sounds"].Value) do
         if isAlive() then
-            for i, object in next, LocalPlayer.Character:GetDescendants() do
+            for i, object in next, Client.Character:GetDescendants() do
                 if object:IsA("Sound") then
                     object:Play()
                 end
@@ -2221,7 +2221,7 @@ end)
 Components.Teleport:OnChanged(function()
     while Flags["Teleport To Starter Camera"].Value and task.wait() do
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(705, 942, 846), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+            Client.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(705, 942, 846), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
         end
     end
 end)
@@ -2280,7 +2280,7 @@ Components.RGBAuras:OnChanged(function()
             if isAlive(player) then
                 for i, object in next, player.Character:GetDescendants() do
                     if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
-                        if rawequal(player, LocalPlayer) and not Flags["Auto Super Aura"].Value then
+                        if rawequal(player, Client) and not Flags["Auto Super Aura"].Value then
                             RemoteEvent:FireServer({"ConcealRevealAura", "End"})
                         else
                             object:Destroy()
@@ -2331,7 +2331,7 @@ Components.CustomAuras:OnChanged(function()
             if isAlive(player) then
                 for i, object in next, player.Character:GetDescendants() do
                     if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
-                        if rawequal(player, LocalPlayer) and not Flags["Auto Super Aura"].Value then
+                        if rawequal(player, Client) and not Flags["Auto Super Aura"].Value then
                             RemoteEvent:FireServer({"ConcealRevealAura", "End"})
                         else
                             object:Destroy()
@@ -2366,7 +2366,7 @@ end)
 
 Components.Spin:OnChanged(function()
     if isAlive() then
-        for i, object in next, LocalPlayer.Character.HumanoidRootPart:GetChildren() do
+        for i, object in next, Client.Character.HumanoidRootPart:GetChildren() do
             if rawequal(object.Name, "Spin") then
                 object:Destroy()
             end
@@ -2374,7 +2374,7 @@ Components.Spin:OnChanged(function()
         if Flags["Spin"].Value  then
             local Body = Instance.new("BodyAngularVelocity")
             Body.Name = "Spin"
-            Body.Parent = LocalPlayer.Character.HumanoidRootPart
+            Body.Parent = Client.Character.HumanoidRootPart
             Body.MaxTorque = Vector3.new(0, math.huge, 0)
             Body.AngularVelocity = Vector3.new(0, Flags["Spin Speed"].Value, 0)
         end
@@ -2383,8 +2383,8 @@ end)
 
 Components.SpinSpeed:OnChanged(function()
     if Flags["Spin"].Value and isAlive() then
-        if LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Spin") then
-            LocalPlayer.Character.HumanoidRootPart.Spin.AngularVelocity = Vector3.new(0, Flags["Spin Speed"].Value, 0)
+        if Client.Character.HumanoidRootPart:FindFirstChild("Spin") then
+            Client.Character.HumanoidRootPart.Spin.AngularVelocity = Vector3.new(0, Flags["Spin Speed"].Value, 0)
         end
     end
 end)
@@ -2771,164 +2771,144 @@ Tabs.Visual:AddButton({
         local UIStroke = Instance.new("UIStroke")
         local Corner = Instance.new("UICorner")
 
-        local objects = {
-            "InvBtn",
-            "LootBoxBtn",
-            "BorderFrame1",
-            "LootBoxFrame",
-            "InvFrame",
-            "GangBtn"
+        local specialColors = {
+            FS = Color3.new(1, 0.35, 0.35),
+            BT = Color3.new(0.99, 0.36, 0.24),
+            PP = Color3.new(0.32, 0.62, 0.98)
         }
-        
-        for i, objname in next, objects do
-            local obj = ScreenGui.MenuFrame:FindFirstChild(objname)
-            if obj then
-                obj:Destroy()
+
+        for _, btnName in ipairs({'LootBoxBtn', 'InvBtn'}) do
+            if MenuFrame:FindFirstChild(btnName) then MenuFrame[btnName]:Destroy() end
+        end
+
+        MenuFrame.BackgroundTransparency = 1
+        MenuFrame.InfoFrame.BackgroundTransparency = 0.1
+        MenuFrame.InfoFrame.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+
+        for _, frameName in ipairs({"SkillFrame", "GangFrame", "SpecialFrame", "SettingFrame"}) do
+            if MenuFrame:FindFirstChild(frameName) then MenuFrame[frameName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04) end
+        end
+
+        for _, textName in ipairs({"NameTxt", "RankTxt", "StatusTxt", "KilledTxt", "MSTxt", "JFTxt", "RepTxt"}) do
+            if MenuFrame.InfoFrame:FindFirstChild(textName) then MenuFrame.InfoFrame[textName].TextColor3 = Color3.new(1, 1, 1) end
+        end
+
+        for prefix, color in pairs(specialColors) do
+            if MenuFrame.InfoFrame:FindFirstChild(prefix.."Txt") then MenuFrame.InfoFrame[prefix.."Txt"].TextColor3 = color end
+        end
+
+        local menuButtons = {
+            {name = "InfoBtn", text = "Stats", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0, 0, 0.01, 0)},
+            {name = "SkilBtn", text = "Skills", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.25, 0, 0.01, 0)},
+            {name = "SpecialBtn", text = "Shop", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.50, 0, 0.01, 0)},
+            {name = "SettingBtn", text = "Settings", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.75, 0, 0.01, 0)}
+        }
+
+        for _, btn in ipairs(menuButtons) do
+            if MenuFrame:FindFirstChild(btn.name) then
+                local button = MenuFrame[btn.name]
+                button.Text = btn.text
+                button.Size = btn.size
+                button.Position = btn.pos
             end
         end
 
-        local frames = {
-            ScreenGui.MenuFrame.SkillFrame,
-            ScreenGui.MenuFrame.GangFrame,
-            ScreenGui.MenuFrame.SpecialFrame,
-            ScreenGui.MenuFrame.SettingFrame,
-            ScreenGui.MenuFrame.InfoFrame
-        }
-        
-        for i, frame in next, frames do
-            frame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
+        if MenuFrame:FindFirstChild("CloseBtn") then
+            MenuFrame.CloseBtn.TextScaled = false
+            MenuFrame.CloseBtn.TextColor3 = Color3.new(0.04, 0.04, 0.04)
+            MenuFrame.CloseBtn.TextSize = 33
         end
 
-        local textobj = {
-            "NameTxt",
-            "RankTxt",
-            "StatusTxt",
-            "KilledTxt",
-            "MSTxt",
-            "JFTxt",
-            "RepTxt",
-            "GuideTxt"
+        if MenuFrame.InfoFrame:FindFirstChild("RankImgBtn") then
+            MenuFrame.InfoFrame.RankImgBtn.Image = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+            local corner = Corner:Clone()
+            corner.CornerRadius = UDim.new(1, 0)
+            corner.Parent = MenuFrame.InfoFrame.RankImgBtn
+            local stroke = UIStroke:Clone()
+            stroke.Color = Color3.new(0.39, 0.39, 0.39)
+            stroke.Thickness = 2.5
+            stroke.Parent = MenuFrame.InfoFrame.RankImgBtn
+        end
+
+        local infoPositions = {
+            {"PPMultiplierTxt", UDim2.new(0.75, 0, 0.671774209, 0)},
+            {"MSMultiplierTxt", UDim2.new(0.75, 0, 0.893548429, 0)},
+            {"PPUpgradeImgBtn", UDim2.new(0.93, 0, 0.674758077, 0)},
+            {"MSUpgradeImgBtn", UDim2.new(0.93, 0, 0.898548424, 0)},
+            {"Img5", UDim2.new(0.025, 0, 0.663157105, 0)},
+            {"Img3", UDim2.new(0.025, 0, 0.88, 0)},
+            {"MSTxt", UDim2.new(0.11, 0, 0.89, 0)},
+            {"PPTxt", UDim2.new(0.11, 0, 0.67, 0)}
         }
-        
-        for i, objectName in next, textobj do
-            local obj = ScreenGui.MenuFrame.InfoFrame:FindFirstChild(objectName)
-            if obj then
-                obj.TextColor3 = Color3.new(1, 1, 1)
+
+        for _, item in ipairs(infoPositions) do
+            if MenuFrame.InfoFrame:FindFirstChild(item[1]) then MenuFrame.InfoFrame[item[1]].Position = item[2] end
+        end
+
+        for _, element in ipairs({"GuideImg", "GuideTxt"}) do
+            if MenuFrame.InfoFrame:FindFirstChild(element) then MenuFrame.InfoFrame[element].Visible = false end
+        end
+
+        if MenuFrame:FindFirstChild("GangBtn") then MenuFrame.GangBtn.Visible = false end
+
+        if ScreenGui:FindFirstChild("MenuBtn") then
+            ScreenGui.MenuBtn.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+            ScreenGui.MenuBtn.BorderColor3 = Color3.new(0, 0, 0)
+            ScreenGui.MenuBtn.TextColor3 = Color3.new(0, 0, 0)
+        end
+
+        if ScreenGui:FindFirstChild("CurrentGemImgBtn") then
+            ScreenGui.CurrentGemImgBtn.ImageColor3 = Color3.new(0, 0, 0)
+            if ScreenGui.CurrentGemImgBtn:FindFirstChild("AmountTxtBtn") then
+                ScreenGui.CurrentGemImgBtn.AmountTxtBtn.TextColor3 = Color3.new(0.04, 0.04, 0.04)
+                ScreenGui.CurrentGemImgBtn.AmountTxtBtn.TextStrokeColor3 = Color3.new(0, 0, 0)
             end
         end
-        
-        ScreenGui.MenuFrame.BorderSizePixel = 0
-        ScreenGui.MenuFrame.InfoFrame.FSTxt.TextColor3 = Color3.new(1, .352941, .352941)
-        ScreenGui.MenuFrame.InfoFrame.BTTxt.TextColor3 = Color3.new(.988235, .364706, .239216)
-        ScreenGui.MenuFrame.InfoFrame.PPTxt.TextColor3 = Color3.new(.317647, .623529, .984314)
 
-        local buttons = {
-            {name = "InfoBtn", text = "Stats", position = UDim2.new(0, 0, .01, 0)},
-            {name = "SkilBtn", text = "Skills", position = UDim2.new(.25, 0, .01, 0)},
-            {name = "SpecialBtn", text = "Shop", position = UDim2.new(.50, 0, .01, 0)},
-            {name = "SettingBtn", text = "Settings", position = UDim2.new(.75, 0, .01, 0)}
-        }
-        
-        for i, btnConfig in next, buttons do
-            local btn = ScreenGui.MenuFrame:FindFirstChild(btnConfig.name)
-            if btn then
-                btn.Size = UDim2.new(.25, 0, .07, 0)
-                btn.Position = btnConfig.position
-                btn.Text = btnConfig.text
-            end
+        for i = 1, 19 do
+            local textName = "SkillTxt"..i
+            if MenuFrame.SkillFrame:FindFirstChild(textName) then MenuFrame.SkillFrame[textName].TextColor3 = Color3.new(0.29, 0.76, 0.27) end
         end
 
-        local function setuptextobj(frameName, prefix, count)
-            local frame = ScreenGui.MenuFrame[frameName]
-            for i = 0, count do
-                local obj = frame:FindFirstChild(prefix .. tostring(i))
-                if obj then
-                    obj.TextColor3 = Color3.new(.29,.77,.27)
+        for i = 0, 18 do
+            local textName = "SettingTxt"..i
+            if MenuFrame.SettingFrame:FindFirstChild(textName) then MenuFrame.SettingFrame[textName].TextColor3 = Color3.new(0.29, 0.76, 0.27) end
+        end
+
+        local questFrames = {"MainQuestFrame", "DailyQuestFrame", "SpecialQuestFrame", "WeeklyQuestFrame"}
+
+        for _, frameName in ipairs(questFrames) do
+            if ScreenGui:FindFirstChild(frameName) then
+                local frame = ScreenGui[frameName]
+                frame.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+                frame.BorderColor3 = Color3.new(0, 0, 0)
+                
+                for _, btnName in ipairs({"LeftBtn", "RightBtn"}) do
+                    if frame:FindFirstChild(btnName) then frame[btnName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04) end
                 end
-            end
-        end
-        
-        setuptextobj("SkillFrame", "SkillTxt", 19)
-        setuptextobj("SettingFrame", "SettingTxt", 18)
-
-        local buttons = {
-            ScreenGui.DailyQuestFrame.LeftBtn,
-            ScreenGui.DailyQuestFrame.RightBtn,
-            ScreenGui.MenuBtn,
-            ScreenGui.MainQuestFrame.RightBtn,
-            ScreenGui.SpecialQuestFrame.LeftBtn,
-            ScreenGui.SpecialQuestFrame.RightBtn,
-            ScreenGui.WeeklyQuestFrame.LeftBtn
-        }
-        
-        for i, button in next, buttons do
-            if button then
-                button.BackgroundColor3 = Color3.new(0, 0, 0)
-                button.TextColor3 = Color3.new(1, 1, 1)
-                button.BorderColor3 = Color3.new(0, 0, 0)
-            end
-        end
-
-        local rewardFrames = {
-            ScreenGui.MainQuestFrame,
-            ScreenGui.DailyQuestFrame,
-            ScreenGui.SpecialQuestFrame,
-            ScreenGui.WeeklyQuestFrame
-        }
-        
-        for i, questFrame in next, rewardFrames do
-            for i, direction in next, {"LeftBtn", "RightBtn"} do
-                local btn = questFrame:FindFirstChild(direction .. "Btn")
-                if btn then
-                    btn.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
-                    btn.TextColor3 = Color3.new(1, 1, 1)
+                
+                frame.ScrollBarImageColor3 = Color3.new(0, 0, 0)
+                frame.ScrollBarThickness = 12
+                
+                if frame:FindFirstChild("HeaderTxt1") then
+                    frame.HeaderTxt1.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+                    frame.HeaderTxt1.TextColor3 = Color3.new(0, 0, 0)
                 end
-            end
-
-            questFrame.ScrollBarImageColor3 = Color3.new(0, 0, 0)
-            questFrame.ScrollBarThickness = 12
-            questFrame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
-            questFrame.BorderColor3 = Color3.new(0, 0, 0)
-
-            local header = questFrame:FindFirstChild("HeaderTxt1")
-            if header then
-                header.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
-                header.TextColor3 = Color3.new(1, 1, 1)
-            end
-
-            for i = 1, 5 do
-                local maxFrame = questFrame:FindFirstChild("MaxFrame" .. tostring(i))
-                if maxFrame then
-                    maxFrame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
-                    
-                    local rewardTxt = maxFrame:FindFirstChild("RewardTxt")
-                    if rewardTxt then
-                        local gemBtn = rewardTxt:FindFirstChild("GemImgBtn")
-                        if gemBtn then
-                            gemBtn.ImageColor3 = Color3.new(0, 0, 0)
-                            
-                            local amountTxt = gemBtn:FindFirstChild("AmountTxt")
-                            if amountTxt then
-                                amountTxt.TextColor3 = Color3.new(.039216, .039216, .039216)
-                                amountTxt.TextStrokeColor3 = Color3.new(0, 0, 0)
+                
+                for i = 1, 9 do
+                    local maxFrameName = "MaxFrame"..i
+                    if frame:FindFirstChild(maxFrameName) then
+                        frame[maxFrameName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+                        if frame[maxFrameName]:FindFirstChild("RewardTxt") and frame[maxFrameName].RewardTxt:FindFirstChild("GemImgBtn") then
+                            frame[maxFrameName].RewardTxt.GemImgBtn.ImageColor3 = Color3.new(0, 0, 0)
+                            if frame[maxFrameName].RewardTxt.GemImgBtn:FindFirstChild("AmountTxt") then
+                                frame[maxFrameName].RewardTxt.GemImgBtn.AmountTxt.TextColor3 = Color3.new(0.04, 0.04, 0.04)
+                                frame[maxFrameName].RewardTxt.GemImgBtn.AmountTxt.TextStrokeColor3 = Color3.new(0, 0, 0)
                             end
                         end
                     end
                 end
             end
-        end
-
-        Corner.Parent = ScreenGui.MenuFrame.InfoFrame.RankImgBtn
-        Corner.CornerRadius = UDim.new(1, 0)
-        UIStroke.Parent = ScreenGui.MenuFrame.InfoFrame.RankImgBtn
-        UIStroke.Color = Color3.new(.392157, .392157, .392157)
-        UIStroke.Thickness = 2.5
-
-        local amountTxtBtn = ScreenGui.CurrentGemImgBtn:FindFirstChild("AmountTxtBtn")
-        if amountTxtBtn then
-            amountTxtBtn.TextColor3 = Color3.new(.039216, .039216, .039216)
-            amountTxtBtn.TextStrokeColor3 = Color3.new(0, 0, 0)
-            ScreenGui.CurrentGemImgBtn.ImageColor3 = Color3.new(0, 0, 0)
         end
     end
 })
@@ -2962,16 +2942,16 @@ Tabs.Visual:AddButton({
 Tabs.Usual:AddButton({
     Title = "Fast Teleport",
     Callback = function()
-        LocalPlayer:GetMouse().KeyDown:Connect(function(Key, P)
+        Client:GetMouse().KeyDown:Connect(function(Key, P)
             if P then return end
             if rawequal(Key, "v") then
-                if LocalPlayer:GetMouse().Target and isAlive() then
-                    if CheckGetsenv then
-                        if not getsenv(LocalPlayer.PlayerScripts.MainScript).CanTeleport then
-                            LocalPlayer.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z)))
+                if Client:GetMouse().Target and isAlive() then
+                    if Check then
+                        if not getsenv(Client.PlayerScripts.MainScript).CanTeleport then
+                            Client.Character.HumanoidRootPart:PivotTo(Client.Character.HumanoidRootPart:GetPivot() - (Client.Character.HumanoidRootPart.Position - Vector3.new(Client:GetMouse().Hit.X, Client:GetMouse().Hit.Y + 5, Client:GetMouse().Hit.Z)))
                         end
                     else
-                        LocalPlayer.Character.HumanoidRootPart:PivotTo(LocalPlayer.Character.HumanoidRootPart:GetPivot() - (LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(LocalPlayer:GetMouse().Hit.X, LocalPlayer:GetMouse().Hit.Y + 5, LocalPlayer:GetMouse().Hit.Z)))
+                        Client.Character.HumanoidRootPart:PivotTo(Client.Character.HumanoidRootPart:GetPivot() - (Client.Character.HumanoidRootPart.Position - Vector3.new(Client:GetMouse().Hit.X, Client:GetMouse().Hit.Y + 5, Client:GetMouse().Hit.Z)))
                     end
                 end
             end
@@ -2984,7 +2964,7 @@ Tabs.Pvp:AddButton({
     Callback = function()
         for i, Target in next, Targets do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
-                LocalPlayer.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
+                Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
             end
         end
     end
@@ -2994,7 +2974,7 @@ Tabs.Teleports:AddButton({
     Title = "Teleport To Location",
     Callback = function()
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(teleportposition[Flags["Locations"].Value])
+            Client.Character.HumanoidRootPart:PivotTo(teleportposition[Flags["Locations"].Value])
         end
     end
 })
@@ -3003,19 +2983,19 @@ Tabs.Fun:AddButton({
     Title = "Ball",
     Callback = function()
         if isAlive() then
-            for i, object in next, LocalPlayer.Character:GetDescendants() do
+            for i, object in next, Client.Character:GetDescendants() do
                 if object:IsA("BasePart") then
                     object.CanCollide = false
                 end
             end
 
-            local Ball = LocalPlayer.Character.HumanoidRootPart
+            local Ball = Client.Character.HumanoidRootPart
             Ball.Shape = Enum.PartType.Ball
             Ball.Size = Vector3.new(5, 5, 5)
-            local Humanoid = LocalPlayer.Character.Humanoid
+            local Humanoid = Client.Character.Humanoid
             local Params = RaycastParams.new()
             Params.FilterType = Enum.RaycastFilterType.Blacklist
-            Params.FilterDescendantsInstances = {LocalPlayer.Character}
+            Params.FilterDescendantsInstances = {Client.Character}
             local tc = RunService.PreRender:Connect(function(Delta)
                 Ball.CanCollide = true
                 Humanoid.PlatformStand = true
@@ -3053,7 +3033,7 @@ Tabs.Fun:AddButton({
 Tabs.Settings:AddButton({
     Title = "Re-join",
     Callback = function()
-        TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
+        TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Client)
     end
 })
 
@@ -3134,7 +3114,7 @@ Tabs.Settings:AddKeybind("Keybind", {
     Mode = "Toggle",
     Callback = function()
         if isAlive() then
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(470, 250, 900), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+            Client.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(470, 250, 900), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
         end
     end
 })
@@ -3145,13 +3125,13 @@ Tabs.Settings:AddKeybind("Keybind", {
     Mode = "Toggle",
     Callback = function()
         if isAlive() then
-            SavedPosition = LocalPlayer.Character.HumanoidRootPart:GetPivot()
+            SavedPosition = Client.Character.HumanoidRootPart:GetPivot()
             SavedCameraCFrame = Camera:GetPivot()
             Camera.CameraType = "Fixed"
-            if not LocalPlayer.Character:FindFirstChild("GodModeShield") and not LocalPlayer.Character:FindFirstChild("GodModeShield ") and not LocalPlayer.Character:FindFirstChild("ForceField") and not LocalPlayer.Character:FindFirstChild("SafeZoneShield") and not rawequal(LocalPlayer.Character.Humanoid.Health, 0) then
+            if not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("SafeZoneShield") and not rawequal(Client.Character.Humanoid.Health, 0) then
                 RemoteEvent:FireServer({"QuestTalkStart"})
             end
-            LocalPlayer.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(math.huge, -math.huge, math.huge), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
+            Client.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(math.huge, -math.huge, math.huge), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
         end
         RemoteEvent:FireServer({"Respawn"})
     end
@@ -3174,7 +3154,7 @@ local UpdatingStats = {
 
 for i, player in next, Players:GetPlayers() do
     task.spawn(function()
-        if not rawequal(player, LocalPlayer) then
+        if not rawequal(player, Client) then
             local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
             local LeaderStats = player:WaitForChild("leaderstats", math.huge)
             local Status = LeaderStats:WaitForChild("Status", math.huge)
@@ -3186,7 +3166,8 @@ for i, player in next, Players:GetPlayers() do
 
             if isAlive(player) then
                 player.Character.ChildAdded:Connect(function(object)
-                    task.delay(RunService.PreRender:Wait(), function()
+                    task.spawn(function()
+                        task.wait()
                         if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                             object:Destroy()
                         end
@@ -3312,7 +3293,8 @@ for i, player in next, Players:GetPlayers() do
                 end)
 
                 character.ChildAdded:Connect(function(object)
-                    task.delay(RunService.PreRender:Wait(), function()
+                    task.spawn(function()
+                        task.wait()
                         if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                             object:Destroy()
                         end
@@ -3476,14 +3458,14 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 local function IsAuraEnabled()
-    for i, object in next, LocalPlayer.Character:GetDescendants() do
+    for i, object in next, Client.Character:GetDescendants() do
         if not rawequal(object.Name, "KillingIntentAuraSound") and object.Name:match("Aura") then
             return true
         end
     end
 end
 
-LocalPlayer.CharacterAdded:Connect(function(character)
+Client.CharacterAdded:Connect(function(character)
     local Humanoid = character:WaitForChild("Humanoid", math.huge)
     local HumanoidRootPart = character:WaitForChild("HumanoidRootPart", math.huge)
 
@@ -3497,7 +3479,8 @@ LocalPlayer.CharacterAdded:Connect(function(character)
 
     task.spawn(function()
         character.ChildAdded:Connect(function(object)
-            task.delay(RunService.PreRender:Wait(), function()
+            task.spawn(function()
+                task.wait()
                 if rawequal(object.Name, "KillingIntentPart") and Flags["Anti Killing Intent Aura"].Value then
                     object:Destroy()
                 elseif rawequal(object.Name, "GodModeShield") and Flags["GodMode"].Value and not Check then
@@ -3584,27 +3567,28 @@ LocalPlayer.CharacterAdded:Connect(function(character)
         end)
         if Flags["Logs"].Value["Dead"] then
             if Flags["Type Of Logs"].Value["Chat"] then
-                StarterGui:SetCore("ChatMakeSystemMessage", ({Text = LocalPlayer.DisplayName .. " (@" .. LocalPlayer.Name .. ") Dead", Color = Color3.new(1, 0, 0), Font = "GothamBold", TextSize = 18}))
+                StarterGui:SetCore("ChatMakeSystemMessage", ({Text = Client.DisplayName .. " (@" .. Client.Name .. ") Dead", Color = Color3.new(1, 0, 0), Font = "GothamBold", TextSize = 18}))
             end
             
             if Flags["Type Of Logs"].Value["Notify"] then
                 Fluent:Notify({
                     Title = "Z3XHub",
                     Content = "[LOGS]",
-                    SubContent = LocalPlayer.DisplayName .. " (@" .. LocalPlayer.Name .. ") Dead",
+                    SubContent = Client.DisplayName .. " (@" .. Client.Name .. ") Dead",
                     Duration = 3
                 })
             end
 
             if Flags["Type Of Logs"].Value["Console"] then
-                print("[LOGS]: " .. LocalPlayer.DisplayName .. " (@" .. LocalPlayer.Name .. ") Dead")
+                print("[LOGS]: " .. Client.DisplayName .. " (@" .. Client.Name .. ") Dead")
             end
         end
     end)
 end)
 
 Workspace.ChildAdded:Connect(function(object)
-    task.delay(RunService.PreRender:Wait(), function()
+    task.spawn(function()
+        task.wait()
         if rawequal(object.Name, "Part") then
             if Flags["Custom Lasers"].Value then
                 object.Color = Flags["Custom Color"].Value
@@ -3620,7 +3604,8 @@ Workspace.ChildAdded:Connect(function(object)
 end)
 
 Storage.ChildAdded:Connect(function(object)
-    task.delay(RunService.PreRender:Wait(), function()
+    task.spawn(function()
+        task.wait()
         if object.Name:match("EnergySphere") then
             if Flags["Custom Spheres"].Value then
                 object.Color = Flags["Custom Color"].Value
@@ -3646,7 +3631,7 @@ InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 Fluent:Notify({
     Title = "Z3XHub",
     Content = "Successfully loaded",
-    SubContent = "Welcome, " .. LocalPlayer.Name .. "!",
+    SubContent = "Welcome, " .. Client.Name .. "!",
     Duration = 3
 })
 
