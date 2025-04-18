@@ -2776,7 +2776,7 @@ Tabs.Visual:AddButton({
             PP = Color3.new(0.32, 0.62, 0.98)
         }
 
-        for _, btnName in ipairs({'LootBoxBtn', 'InvBtn'}) do
+        for _, btnName in pairs({'LootBoxBtn', 'InvBtn'}) do
             if MenuFrame:FindFirstChild(btnName) then MenuFrame[btnName]:Destroy() end
         end
 
@@ -2784,11 +2784,11 @@ Tabs.Visual:AddButton({
         MenuFrame.InfoFrame.BackgroundTransparency = 0.1
         MenuFrame.InfoFrame.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
 
-        for _, frameName in ipairs({"SkillFrame", "GangFrame", "SpecialFrame", "SettingFrame"}) do
+        for _, frameName in pairs({"SkillFrame", "GangFrame", "SpecialFrame", "SettingFrame"}) do
             if MenuFrame:FindFirstChild(frameName) then MenuFrame[frameName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04) end
         end
 
-        for _, textName in ipairs({"NameTxt", "RankTxt", "StatusTxt", "KilledTxt", "MSTxt", "JFTxt", "RepTxt"}) do
+        for _, textName in pairs({"NameTxt", "RankTxt", "StatusTxt", "KilledTxt", "MSTxt", "JFTxt", "RepTxt"}) do
             if MenuFrame.InfoFrame:FindFirstChild(textName) then MenuFrame.InfoFrame[textName].TextColor3 = Color3.new(1, 1, 1) end
         end
 
@@ -2803,7 +2803,7 @@ Tabs.Visual:AddButton({
             {name = "SettingBtn", text = "Settings", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.75, 0, 0.01, 0)}
         }
 
-        for _, btn in ipairs(menuButtons) do
+        for _, btn in pairs(menuButtons) do
             if MenuFrame:FindFirstChild(btn.name) then
                 local button = MenuFrame[btn.name]
                 button.Text = btn.text
@@ -2840,11 +2840,11 @@ Tabs.Visual:AddButton({
             {"PPTxt", UDim2.new(0.11, 0, 0.67, 0)}
         }
 
-        for _, item in ipairs(infoPositions) do
+        for _, item in pairs(infoPositions) do
             if MenuFrame.InfoFrame:FindFirstChild(item[1]) then MenuFrame.InfoFrame[item[1]].Position = item[2] end
         end
 
-        for _, element in ipairs({"GuideImg", "GuideTxt"}) do
+        for _, element in pairs({"GuideImg", "GuideTxt"}) do
             if MenuFrame.InfoFrame:FindFirstChild(element) then MenuFrame.InfoFrame[element].Visible = false end
         end
 
@@ -2876,13 +2876,13 @@ Tabs.Visual:AddButton({
 
         local questFrames = {"MainQuestFrame", "DailyQuestFrame", "SpecialQuestFrame", "WeeklyQuestFrame"}
 
-        for _, frameName in ipairs(questFrames) do
+        for _, frameName in pairs(questFrames) do
             if ScreenGui:FindFirstChild(frameName) then
                 local frame = ScreenGui[frameName]
                 frame.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
                 frame.BorderColor3 = Color3.new(0, 0, 0)
                 
-                for _, btnName in ipairs({"LeftBtn", "RightBtn"}) do
+                for _, btnName in pairs({"LeftBtn", "RightBtn"}) do
                     if frame:FindFirstChild(btnName) then frame[btnName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04) end
                 end
                 
