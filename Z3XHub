@@ -38,7 +38,7 @@ local InjectorName = identifyexecutor and identifyexecutor() or "hueta"
 local Check = getsenv and newcclosure and checkcaller and hookmetamethod and hookfunction and not rawequal(InjectorName, "NX")
 local RespawnHealth = .5
 local StockGravity = 196.1999969482422
-local teleportsvalue, teleportposition, oldUtilities = {}, {}, {}
+local teleportsvalue, teleportposition, oldUtilities, lastChatted = {}, {}, {}, {}
 local Targets, Whitelisted, Target = {}, {}, Players:GetPlayers()[math.random(1, #Players:GetPlayers())].Name
 local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
 
@@ -122,7 +122,7 @@ UserInputService.WindowFocusReleased:Connect(function()
     RunService:Set3dRenderingEnabled(false)
 end)
 
-for i, object in next, Workspace:GetChildren() do
+for i, object in pairs(Workspace:GetChildren()) do
     if object.Name:match("SoulAttackBeam") and object:IsA("Beam") then
         object:Destroy()
     elseif rawequal(object.Name, "Town") then
@@ -132,7 +132,7 @@ for i, object in next, Workspace:GetChildren() do
     end
 end
 
-for i, object in next, game:GetDescendants() do
+for i, object in pairs(game:GetDescendants()) do
     if object:IsA("BillboardGui") and rawequal(object.Name, "WarnBBGui") then
         object:Destroy()
     end
@@ -151,7 +151,7 @@ Workspace.FallenPartsDestroyHeight = math.huge - math.huge
 
 if Client.Idled then
     if getconnections then
-        for i, connection in next, getconnections(Client.Idled) do
+        for i, connection in getconnections(Client.Idled) do
             if not rawequal(typeof(connection), "table") and connection["Disable"] then
                 connection:Disable()
             end
@@ -247,7 +247,6 @@ local function isAlive(player)
     return player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
 end
 
-local lastChatted = {}
 local function onChatted(player, msg)
     if Flags["Logs"].Value["ChatSpy"] then
         local newChatted = false
@@ -696,7 +695,7 @@ local teleports = {
     {"BT 10T", CFrame.fromMatrix(Vector3.new(-279, 281, 1007), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0))}
 }
 
-for i, teleport in next, teleports do
+for i, teleport in pairs(teleports) do
     table.insert(teleportsvalue, teleport[1])
     teleportposition[teleport[1]] = teleport[2]
 end
@@ -733,7 +732,7 @@ Tabs.Pvp:AddInput("Input", {
     Numeric = false,
     Finished = true,
     Callback = function(value)
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if string.find(string.lower(player.Name), string.lower(value)) then
                 if not rawequal(player, Client) then
                     Target = player.Name
@@ -771,7 +770,7 @@ Tabs.Pvp:AddButton({
     Title = "Remove From Whitelist",
     Callback = function()
         if table.find(Whitelisted, Target) then
-            for i, rTarget in next, Whitelisted do
+            for i, rTarget in pairs(Whitelisted) do
                 if rawequal(rTarget, Target) then
                     table.remove(Whitelisted, i)
                 end
@@ -820,7 +819,7 @@ Tabs.Pvp:AddButton({
     Title = "Remove From Targets",
     Callback = function()
         if table.find(Targets, Target) then
-            for i, rTarget in next, Targets do
+            for i, rTarget in pairs(Targets) do
                 if rawequal(rTarget, Target) then
                     table.remove(Targets, i)
                 end
@@ -1312,10 +1311,10 @@ local function loadUtility(name)
         }
         
         StatsChecker.PlayerTextBox.FocusLost:Connect(function()
-            for i, player in next, Players:GetPlayers() do
+            for i, player in pairs(Players:GetPlayers()) do
                 if rawequal((string.sub(string.lower(player.Name), 1, string.len(StatsChecker.PlayerTextBox.Text))), string.lower(StatsChecker.PlayerTextBox.Text)) then
                     StatsChecker.PlayerTextBox.Text = player.Name
-                    for i, object in next, UpdatingStats do
+                    for i, object in pairs(UpdatingStats) do
                         local Stat = Players:FindFirstChild(player.Name):WaitForChild("PrivateStats", math.huge)
                         local Statname = object[3]
                         object[1].Text = Statname .. ": " .. ConvertToLetter(Stat[object[2]].Value)
@@ -1845,7 +1844,7 @@ local function loadUtility(name)
         MultiChecker.TokensFrameCorner.Parent = MultiChecker.TokensFrame
 
         MultiChecker.PlayerTextBox.FocusLost:Connect(function()
-            for i, player in next, Players:GetPlayers() do
+            for i, player in pairs(Players:GetPlayers()) do
                 if rawequal((string.sub(string.lower(player.Name), 1, string.len(MultiChecker.PlayerTextBox.Text))), string.lower(MultiChecker.PlayerTextBox.Text)) then
                     MultiChecker.PlayerTextBox.Text = player.Name
                     local Multiplier = HttpService:JSONDecode(Players[MultiChecker.PlayerTextBox.Text].PrivateStats.Inventory.Value)
@@ -1862,7 +1861,7 @@ local function loadUtility(name)
 end
 
 local function destroyUtility(name)
-    for i, object in next, CoreGui:GetChildren() do
+    for i, object in pairs(CoreGui:GetChildren()) do
         if rawequal(name, "Stats Checker") and rawequal(object.Name, "Stats Checker") then
             object:Destroy()
         elseif rawequal(name, "Stats Counter") and rawequal(object.Name, "Stats Counter") then
@@ -1874,8 +1873,8 @@ local function destroyUtility(name)
 end
 
 Components.Utilities:OnChanged(function()
-    local lenUtility = (function() local count = 0 for i, object in next, Flags["Utilities"].Value do count += 1 end return count end)()
-    local lenOldUtility = (function() local count = 0 for i, object in next, oldUtilities do count += 1 end return count end)()
+    local lenUtility = (function() local count = 0 for i, object in pairs(Flags["Utilities"].Value) do count += 1 end return count end)()
+    local lenOldUtility = (function() local count = 0 for i, object in pairs(oldUtilities) do count += 1 end return count end)()
 
     if lenUtility > lenOldUtility then
         for utility in pairs(Flags["Utilities"].Value) do
@@ -1897,7 +1896,7 @@ Components.Utilities:OnChanged(function()
 end)
 
 Components.Esp:OnChanged(function()
-    for i, player in next, Players:GetPlayers() do
+    for i, player in pairs(Players:GetPlayers()) do
         if not rawequal(player, Client) and isAlive(player) and Esp:FindFirstChild(player.Name) then
             Esp[player.Name].Adornee = Flags["ESP"].Value and player.Character:WaitForChild("Head") or nil
             Esp[player.Name].Enabled = Flags["ESP"].Value
@@ -1906,7 +1905,7 @@ Components.Esp:OnChanged(function()
 end)
 
 Components.Highlights:OnChanged(function()
-    for i, player in next, Players:GetPlayers() do
+    for i, player in pairs(Players:GetPlayers()) do
         if not rawequal(player, Client) and isAlive(player) and Highlights:FindFirstChild(player.Name) then
             Highlights[player.Name].Adornee = Flags["Highlights"].Value and player.Character or nil
             Highlights[player.Name].Enabled = Flags["Highlights"].Value
@@ -1924,11 +1923,11 @@ end)
 
 Components.Quests:OnChanged(function()
     while Flags["Auto Claim Quests"].Value and task.wait() do
-        for i, quest in next, {"MS", "PP", "FS", "BT", "JF"} do
+        for i, quest in pairs({"MS", "PP", "FS", "BT", "JF"}) do
             RemoteEvent:FireServer({"DLQ", quest, "Claim"})
             task.wait()
         end
-        for i, quest in next, {"PP", "FS", "BT"} do
+        for i, quest in pairs({"PP", "FS", "BT"}) do
             for i = 1, 3 do
                 RemoteEvent:FireServer({"WLQ", quest .. i, "Claim"})
                 task.wait()
@@ -1939,9 +1938,9 @@ end)
 
 Components.AntiAura:OnChanged(function()
     if Flags["Anti Killing Intent Aura"].Value then
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
-                for i, object in next, player.Character:GetChildren() do
+                for i, object in pairs(player.Character:GetChildren()) do
                     if rawequal(object.Name, "KillingIntentPart") then 
                         object:Destroy()
                     end
@@ -1953,7 +1952,7 @@ end)
 
 Components.Animations:OnChanged(function()
     if not rawequal(Flags["Animations"].Value, "None") then
-        for i, object in next, Animations[Flags["Animations"].Value] do
+        for i, object in pairs(Animations[Flags["Animations"].Value]) do
             local Action, SubAction, AssetId = unpack(object)
             if isAlive() then
                 Client.Character:WaitForChild("Animate", math.huge):WaitForChild(Action, math.huge)[SubAction].AnimationId = AssetId
@@ -1971,7 +1970,7 @@ end)
 
 Components.CBring:OnChanged(function()
     while Flags["CBring"].Value and task.wait() do
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if not rawequal(Target, Client) and isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(Client.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(0, 0, -1), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
             end
@@ -1989,7 +1988,7 @@ end)
 Components.SpamR:OnChanged(function()
     while Flags["Spam R"].Value and task.wait() do
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
-        for i, sphere in next, Storage:GetChildren() do
+        for i, sphere in pairs(Storage:GetChildren()) do
             task.spawn(function()
                 if isAlive() and rawequal(sphere.Name, getball()) and isnetworkowner(sphere) then
                     sphere:PivotTo(Client.Character.HumanoidRootPart:GetPivot())
@@ -2015,11 +2014,11 @@ Components.Stack:OnChanged(function()
                     Client.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, -1e3, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 end
                 RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
-                for i, Target in next, Targets do
+                for i, Target in pairs(Targets) do
                     task.spawn(function()
                         if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                             Players:FindFirstChild(Target).Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(0, 1e5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
-                            for i, sphere in next, Storage:GetChildren() do
+                            for i, sphere in pairs(Storage:GetChildren()) do
                                 if not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("SafeZoneShield") then
                                     task.spawn(function()
                                         firetouchinterest(Players:FindFirstChild(Target).Character.HumanoidRootPart, sphere, 0)
@@ -2036,7 +2035,7 @@ end)
 
 Components.Spectate:OnChanged(function()
     if Flags["Spectate"].Value then
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive(Players:FindFirstChild(Target)) then
                 Camera.CameraSubject = Players:FindFirstChild(Target).Character
             end
@@ -2072,7 +2071,7 @@ end)
 
 Components.SoulAttack:OnChanged(function()
     while Flags["Soul Attack"].Value and task.wait() do
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) and not Players:FindFirstChild(Target).Character:FindFirstChild("ForceField") and not Players:FindFirstChild(Target).Character:FindFirstChild("SafeZoneShield") and not Players:FindFirstChild(Target).Character:FindFirstChild("GodModeShield") then
                 Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot() + Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot().UpVector * 40)
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", Players:FindFirstChild(Target)})
@@ -2085,7 +2084,7 @@ end)
 
 Components.SoulReap:OnChanged(function()
     while Flags["Soul Reap"].Value and task.wait() do
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) and not Players:FindFirstChild(Target).Character:FindFirstChild("ForceField") and not Players:FindFirstChild(Target).Character:FindFirstChild("SafeZoneShield") and not Players:FindFirstChild(Target).Character:FindFirstChild("GodModeShield") then
                 RemoteEvent:FireServer({"Skill_SoulReap", Players:FindFirstChild(Target)})
                 break
@@ -2096,7 +2095,7 @@ end)
 
 Components.HellFire:OnChanged(function()
     while Flags["Hell Fire"].Value and task.wait() do
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 RemoteEvent:FireServer({"Skill_DevilFlame", Players:FindFirstChild(Target)})
                 break
@@ -2107,7 +2106,7 @@ end)
 
 Components.LoopTeleport:OnChanged(function()
     while Flags["Loop Teleport"].Value and task.wait() do
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
             end
@@ -2117,7 +2116,7 @@ end)
 
 Components.SitOnHead:OnChanged(function()
     while Flags["Sit On Head"].Value and task.wait() do
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 Client.Character.Humanoid.Sit = true
                 Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character:WaitForChild("Head", math.huge):GetPivot() * CFrame.fromMatrix(Vector3.new(0, 2.5, 0), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
@@ -2128,7 +2127,7 @@ end)
 
 Components.CBringAll:OnChanged(function()
     while Flags["CBring All"].Value and task.wait() do
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if not rawequal(player, Client) and not table.find(Whitelisted, player.Name) and isAlive() and isAlive(player) then
                 player.Character.HumanoidRootPart:PivotTo(Client.Character.HumanoidRootPart:GetPivot() + Client.Character.HumanoidRootPart:GetPivot().LookVector * 1)
             end
@@ -2139,11 +2138,11 @@ end)
 Components.StackAll:OnChanged(function()
     while Flags["Stack All"].Value and task.wait() do
         RemoteEvent:FireServer({"Skill_SpherePunch", Vector3.new(0, 1e20, 0)})
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             task.spawn(function()
                 if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.BodyToughness.Value <= PrivateStats.FistStrength.Value * 1.5) then
                     player.Character.HumanoidRootPart:PivotTo(CFrame.fromMatrix(Vector3.new(15e2, -55e2, -25e2), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
-                    for i, sphere in next, Storage:GetChildren() do
+                    for i, sphere in pairs(Storage:GetChildren()) do
                         task.spawn(function()
                             if rawequal(sphere.Name, getball()) then
                                 firetouchinterest(player.Character.HumanoidRootPart, sphere, 0)
@@ -2158,7 +2157,7 @@ end)
 
 Components.SoulAttackAll:OnChanged(function()
     while Flags["Soul Attack All"].Value and task.wait() do
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 10 <= PrivateStats.PsychicPower.Value) then
                 Client.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 RemoteEvent:FireServer({"Skill_SoulAttack_Start", player})
@@ -2171,7 +2170,7 @@ end)
 
 Components.HellFireAll:OnChanged(function()
     while Flags["Hell Fire All"].Value and task.wait() do
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField") and not Client.Character:FindFirstChild("GodModeShield") and not Client.Character:FindFirstChild("GodModeShield ")) and (player.PrivateStats.PsychicPower.Value * 100 <= PrivateStats.PsychicPower.Value) then
                 Client.Character.HumanoidRootPart:PivotTo(player.Character.HumanoidRootPart:GetPivot() * CFrame.fromMatrix(Vector3.new(player.Character.HumanoidRootPart.Velocity / 10), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0)))
                 RemoteEvent:FireServer({"Skill_DevilFlame", player})
@@ -2183,7 +2182,7 @@ end)
 
 Components.SoulReapAll:OnChanged(function()
     while Flags["Soul Reap All"].Value and task.wait() do
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if (not rawequal(player, Client) and isAlive() and isAlive(player) and not table.find(Whitelisted, player.Name)) and (not player.Character:FindFirstChild("SafeZoneShield") and not player.Character:FindFirstChild("ForceField") and not player.Character:FindFirstChild("GodModeShield")) and (not Client.Character:FindFirstChild("SafeZoneShield") and not Client.Character:FindFirstChild("ForceField")) and (player.PrivateStats.PsychicPower.Value * 1000 <= PrivateStats.PsychicPower.Value) then
                 RemoteEvent:FireServer({"Skill_SoulReap", player})
                 break
@@ -2203,7 +2202,7 @@ end)
 Components.SpamS:OnChanged(function()
     while Flags["Spam Sounds"].Value and task.wait(Flags["Cooldown Of Spam Sounds"].Value) do
         if isAlive() then
-            for i, object in next, Client.Character:GetDescendants() do
+            for i, object in pairs(Client.Character:GetDescendants()) do
                 if object:IsA("Sound") then
                     object:Play()
                 end
@@ -2265,9 +2264,9 @@ end)
 Components.RGBAuras:OnChanged(function()
     if Flags["Rainbow Auras"].Value then
         while Flags["Rainbow Auras"].Value and task.wait() do
-            for i, player in next, Players:GetPlayers() do
+            for i, player in pairs(Players:GetPlayers()) do
                 if isAlive(player) then
-                    for i, object in next, player.Character:GetDescendants() do
+                    for i, object in pairs(player.Character:GetDescendants()) do
                         if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
                             object.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(.5, Color3.fromHSV(tick() % 5 / 5, 1, 1)),ColorSequenceKeypoint.new(1, Color3.fromHSV(tick() % 5 / 5, 1, 1))})
                         end
@@ -2276,9 +2275,9 @@ Components.RGBAuras:OnChanged(function()
             end
         end
     else
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
-                for i, object in next, player.Character:GetDescendants() do
+                for i, object in pairs(player.Character:GetDescendants()) do
                     if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
                         if rawequal(player, Client) and not Flags["Auto Super Aura"].Value then
                             RemoteEvent:FireServer({"ConcealRevealAura", "End"})
@@ -2295,7 +2294,7 @@ end)
 Components.RGBNames:OnChanged(function()
     if Flags["Rainbow Names"].Value then
         while Flags["Rainbow Names"].Value and task.wait() do
-            for i, player in next, Players:GetPlayers() do
+            for i, player in pairs(Players:GetPlayers()) do
                 if isAlive(player) then
                     player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
                     player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextStrokeColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
@@ -2304,7 +2303,7 @@ Components.RGBNames:OnChanged(function()
         end
     else
         task.wait(.1)
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextStrokeColor3 = updcolorstroke(player:WaitForChild("leaderstats", math.huge).Status.Value)
@@ -2316,9 +2315,9 @@ end)
 Components.CustomAuras:OnChanged(function()
     if Flags["Custom Auras"].Value then
         while Flags["Custom Auras"].Value and task.wait() do
-            for i, player in next, Players:GetPlayers() do
+            for i, player in pairs(Players:GetPlayers()) do
                 if isAlive(player) then
-                    for i, object in next, player.Character:GetDescendants() do
+                    for i, object in pairs(player.Character:GetDescendants()) do
                         if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
                             object.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(.5, Flags["Custom Color"].Value),ColorSequenceKeypoint.new(1, Flags["Custom Color"].Value)})
                         end
@@ -2327,9 +2326,9 @@ Components.CustomAuras:OnChanged(function()
             end
         end
     else
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
-                for i, object in next, player.Character:GetDescendants() do
+                for i, object in pairs(player.Character:GetDescendants()) do
                     if object.Name:match("Aura") and not rawequal(object.Name, "KillingIntentAuraSound") then
                         if rawequal(player, Client) and not Flags["Auto Super Aura"].Value then
                             RemoteEvent:FireServer({"ConcealRevealAura", "End"})
@@ -2346,7 +2345,7 @@ end)
 Components.CustomNames:OnChanged(function()
     if Flags["Custom Names"].Value then
         while Flags["Custom Names"].Value and task.wait() do
-            for i, player in next, Players:GetPlayers() do
+            for i, player in pairs(Players:GetPlayers()) do
                 if isAlive(player) then
                     player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = Flags["Custom Color"].Value
                     player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextStrokeColor3 = Flags["Custom Color"].Value
@@ -2355,7 +2354,7 @@ Components.CustomNames:OnChanged(function()
         end
     else
         task.wait(.1)
-        for i, player in next, Players:GetPlayers() do
+        for i, player in pairs(Players:GetPlayers()) do
             if isAlive(player) then
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextColor3 = updcolor(player:WaitForChild("leaderstats", math.huge).Status.Value)
                 player.Character:WaitForChild("Head", math.huge):WaitForChild("NameBbGui", math.huge):WaitForChild("NameTxt", math.huge).TextStrokeColor3 = updcolorstroke(player:WaitForChild("leaderstats", math.huge).Status.Value)
@@ -2366,12 +2365,12 @@ end)
 
 Components.Spin:OnChanged(function()
     if isAlive() then
-        for i, object in next, Client.Character.HumanoidRootPart:GetChildren() do
+        for i, object in pairs(Client.Character.HumanoidRootPart:GetChildren()) do
             if rawequal(object.Name, "Spin") then
                 object:Destroy()
             end
         end
-        if Flags["Spin"].Value  then
+        if Flags["Spin"].Value then
             local Body = Instance.new("BodyAngularVelocity")
             Body.Name = "Spin"
             Body.Parent = Client.Character.HumanoidRootPart
@@ -2419,7 +2418,7 @@ Tabs.Visual:AddButton({
             SkyboxRt = "http://www.roblox.com/asset/?id=159454300",
             SkyboxUp = "http://www.roblox.com/asset/?id=159454288"
         }
-        for Direction, TextureUrl in next, Textures do
+        for Direction, TextureUrl in pairs(Textures) do
             Skybox[Direction] = TextureUrl
         end
     end
@@ -2449,7 +2448,7 @@ Tabs.Visual:AddButton({
             {Workspace.Town.Core:GetDescendants(), "SpotLight"}
         }
         
-        for i, objects1 in next, objects do
+        for i, objects1 in pairs(objects) do
             local object = objects1[1]
             local property = objects1[2]
         
@@ -2460,22 +2459,22 @@ Tabs.Visual:AddButton({
                 elseif rawequal(property, "Rock") then
                     object.Color = Color3.new(0, 0, 0)
                 elseif rawequal(property, "Crystal") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "Part") then
                             Child.Color = Color3.new(0, 0, 0)
                             Child.Material = Enum.Material.Foil
                         elseif rawequal(Child.Name, "CyanGem") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(0, 0, 0)
                             end
                         elseif rawequal(Child.Name, "cloud") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(0, 0, 0)
                             end
                         end
                     end
                 elseif rawequal(property, "Waterfall") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(0, 0, 0)
                             if rawequal(Child.Name, "Union") then
@@ -2484,12 +2483,12 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "Volcano") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "LavaFloor") then
                             Child.Color = Color3.new(0, 0, 0)
                             Child.UsePartColor = true
                         elseif rawequal(Child.Name, "Lava") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 if rawequal(Child1.Name, "LavaPart") or rawequal(Child1.Name, "TouchPart") then
                                     Child1.Color = Color3.new(0, 0, 0)
                                 elseif rawequal(Child1.Name, "SmokeEmitter") then
@@ -2499,17 +2498,17 @@ Tabs.Visual:AddButton({
                                 end
                             end
                         elseif rawequal(Child.Name, "Parts") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(0, 0, 0)
                             end
                         end
                     end
                 elseif rawequal(property, "IceMountain") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         Child.Color = Color3.new(0, 0, 0)
                     end
                 elseif rawequal(property, "Tornado") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "Dust") then
                             Child.Color = Color3.new(0, 0, 0)
                         else
@@ -2517,10 +2516,10 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "TrainingArea") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if Child.Name:match("StarFSTraining%d") then
                             Child.Color = Color3.new(0, 0, 0)
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
                                     Child1.Color = Color3.new(0, 0, 0)
                                 end
@@ -2536,14 +2535,14 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "Tree") then
-                    for i, Leaf in next, object.Leaf:GetChildren() do
+                    for i, Leaf in pairs(object.Leaf:GetChildren()) do
                         Leaf.Color = Color3.new(0, 0, 0)
                     end
-                    for i, Trunk in next, object.Trunk:GetChildren() do
+                    for i, Trunk in pairs(object.Trunk:GetChildren()) do
                         Trunk.Color = Color3.new(0, 0, 0)
                     end
                 elseif rawequal(property, "Children") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(0, 0, 0)
                             if rawequal(Child.Name, "Union") then
@@ -2552,7 +2551,7 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "SpotLight") then
-                    for i, Light in next, object do
+                    for i, Light in pairs(object) do
                         if Light:IsA("SpotLight") then
                             Light.Color = Color3.new(0, 0, 0)
                             Light:GetPropertyChangedSignal("Color"):Connect(function()
@@ -2561,13 +2560,13 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "object") then 
-                    for i, ObjectToDestroy in next, object:GetChildren() do
+                    for i, ObjectToDestroy in pairs(object:GetChildren()) do
                         if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
                             ObjectToDestroy:Destroy()
                         end
                     end
                 elseif rawequal(property, "Material") then 
-                    for i, Part in next, object:GetChildren() do
+                    for i, Part in pairs(object:GetChildren()) do
                         if Part:IsA("BasePart") and rawequal(Part.Material, Enum.Material.Pebble) then
                             Part.Material = Enum.Material.Cobblestone
                         end
@@ -2602,7 +2601,7 @@ Tabs.Visual:AddButton({
             {Workspace.Town.Core:GetDescendants(), "SpotLight"}
         }
         
-        for i, objects1 in next, objects do
+        for i, objects1 in pairs(objects) do
             local object = objects1[1]
             local property = objects1[2]
         
@@ -2613,22 +2612,22 @@ Tabs.Visual:AddButton({
                 elseif rawequal(property, "Rock") then
                     object.Color = Color3.new(.8, .8, .8)
                 elseif rawequal(property, "Crystal") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "Part") then
                             Child.Color = Color3.new(.624, .953, .914)
                             Child.Material = Enum.Material.Foil
                         elseif rawequal(Child.Name, "CyanGem") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(.016, .687, .926)
                             end
                         elseif rawequal(Child.Name, "cloud") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(.950, .953, .953)
                             end
                         end
                     end
                 elseif rawequal(property, "Waterfall") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(0.471, 0.565, 0.510)
                             if rawequal(Child.Name, "Union") then
@@ -2637,12 +2636,12 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "Volcano") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "LavaFloor") then
                             Child.Color = Color3.new(1, 0, 0)
                             Child.UsePartColor = true
                         elseif rawequal(Child.Name, "Lava") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 if rawequal(Child1.Name, "LavaPart") or rawequal(Child1.Name, "TouchPart") then
                                     Child1.Color = Color3.new(1, 0, 0)
                                 elseif rawequal(Child1.Name, "SmokeEmitter") then
@@ -2652,17 +2651,17 @@ Tabs.Visual:AddButton({
                                 end
                             end
                         elseif rawequal(Child.Name, "Parts") then
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 Child1.Color = Color3.new(.412, .251, .157)
                             end
                         end
                     end
                 elseif rawequal(property, "IceMountain") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         Child.Color = Color3.new(.906, .906, .926)
                     end
                 elseif rawequal(property, "Tornado") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "Dust") then
                             Child.Color = Color3.new(.389, .373, .385)
                         else
@@ -2670,7 +2669,7 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "Children") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
                             Child.Color = Color3.new(.632, .769, .550)
                             if rawequal(Child.Name, "Union") then
@@ -2679,10 +2678,10 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "TrainingArea") then
-                    for i, Child in next, object:GetChildren() do
+                    for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "StarFSTraining1") then
                             Child.Color = Color3.new(0.016, 0.687, 0.926)
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
                                     if rawequal(Child1.Name, "Atmosphere1") then
                                         Child1.Color = Color3.new(1, 1, 1)
@@ -2693,7 +2692,7 @@ Tabs.Visual:AddButton({
                             end
                         elseif rawequal(Child.Name, "StarFSTraining2") then
                             Child.Color = Color3.new(0, 1, 0)
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
                                     if rawequal(Child1.Name, "Atmosphere1") then
                                         Child1.Color = Color3.new(0, 1, 0)
@@ -2704,7 +2703,7 @@ Tabs.Visual:AddButton({
                             end
                         elseif rawequal(Child.Name, "StarFSTraining3") then
                             Child.Color = Color3.new(1, 0, 0)
-                            for i, Child1 in next, Child:GetChildren() do
+                            for i, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
                                     if rawequal(Child1.Name, "Atmosphere1") then
                                         Child1.Color = Color3.new(1, 0.2, 0)
@@ -2726,7 +2725,7 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "Tree") then
-                    for i, Leaf in next, object.Leaf:GetChildren() do
+                    for i, Leaf in pairs(object.Leaf:GetChildren()) do
                         if rawequal(object.Name, "Tree1") then
                             Leaf.Color = Color3.new(0.133333, 0.545098, 0.133333)  
                         elseif rawequal(object.Name, "Tree2") then
@@ -2735,11 +2734,11 @@ Tabs.Visual:AddButton({
                             Leaf.Color = Color3.new(0.180392, 0.545098, 0.341176)   
                         end
                     end
-                    for i, Trunk in next, object.Trunk:GetChildren() do
+                    for i, Trunk in pairs(object.Trunk:GetChildren()) do
                         Trunk.Color = Color3.new(0.487, 0.361, 0.275)
                     end                 
                 elseif rawequal(property, "SpotLight") then
-                    for i, Light in next, object do
+                    for i, Light in pairs(object) do
                         if Light:IsA("SpotLight") then
                             Light.Color = Color3.new(1, .843137, 0)
                             Light:GetPropertyChangedSignal("Color"):Connect(function()
@@ -2748,13 +2747,13 @@ Tabs.Visual:AddButton({
                         end
                     end
                 elseif rawequal(property, "object") then 
-                    for i, ObjectToDestroy in next, object:GetChildren() do
+                    for i, ObjectToDestroy in pairs(object:GetChildren()) do
                         if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
                             ObjectToDestroy:Destroy()
                         end
                     end
                 elseif rawequal(property, "Material") then 
-                    for i, Part in next, object:GetChildren() do
+                    for i, Part in pairs(object:GetChildren()) do
                         if Part:IsA("BasePart") and rawequal(Part.Material, Enum.Material.Pebble) then
                             Part.Material = Enum.Material.Cobblestone
                         end
@@ -2925,7 +2924,7 @@ Tabs.Visual:AddButton({
         }
 
         local Index = 0
-        for i, object in next, Workspace.Main:GetChildren() do
+        for i, object in pairs(Workspace.Main:GetChildren()) do
             if object:IsA("Part") and object.Name:match("LeaderBoardPart") then
                 Index += 1
                 object:PivotTo(Positions[Index])
@@ -2962,7 +2961,7 @@ Tabs.Usual:AddButton({
 Tabs.Pvp:AddButton({
     Title = "Teleport",
     Callback = function()
-        for i, Target in next, Targets do
+        for i, Target in pairs(Targets) do
             if isAlive() and isAlive(Players:FindFirstChild(Target)) then
                 Client.Character.HumanoidRootPart:PivotTo(Players:FindFirstChild(Target).Character.HumanoidRootPart:GetPivot())
             end
@@ -2983,7 +2982,7 @@ Tabs.Fun:AddButton({
     Title = "Ball",
     Callback = function()
         if isAlive() then
-            for i, object in next, Client.Character:GetDescendants() do
+            for i, object in pairs(Client.Character:GetDescendants()) do
                 if object:IsA("BasePart") then
                     object.CanCollide = false
                 end
@@ -3047,7 +3046,7 @@ Tabs.Settings:AddButton({
 Tabs.Settings:AddButton({
     Title = "Fps Booster",
     Callback = function()
-        for i, object in next, game:GetDescendants() do
+        for i, object in pairs(game:GetDescendants()) do
             pcall(function()
                 object.Material = "Plastic"
                 object.Reflectance = 0
@@ -3060,7 +3059,7 @@ Tabs.Settings:AddButton({
             end)
         end
         
-        for i, effect in next, Lighting:GetChildren() do
+        for i, effect in pairs(Lighting:GetChildren()) do
             pcall(function()
                 effect.Enabled = false
             end)
@@ -3152,7 +3151,7 @@ local UpdatingStats = {
     {"PsychicPower", "Psychic"}
 }
 
-for i, player in next, Players:GetPlayers() do
+for i, player in pairs(Players:GetPlayers()) do
     task.spawn(function()
         if not rawequal(player, Client) then
             local PrivateStats = player:WaitForChild("PrivateStats", math.huge)
@@ -3175,7 +3174,7 @@ for i, player in next, Players:GetPlayers() do
                 end)
             end
 
-            for i, object in next, UpdatingStats do
+            for i, object in pairs(UpdatingStats) do
                 PrivateStats:WaitForChild(object[1], math.huge):GetPropertyChangedSignal("Value"):Connect(function()
                     if Esp:FindFirstChild(player.Name) then
                         Esp[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats[object[1]].Value)
@@ -3389,7 +3388,7 @@ Players.PlayerAdded:Connect(function(player)
         end)
     end)
 
-    for i, object in next, UpdatingStats do
+    for i, object in pairs(UpdatingStats) do
         PrivateStats:WaitForChild(object[1], math.huge):GetPropertyChangedSignal("Value"):Connect(function()
             if Esp:FindFirstChild(player.Name) then
                 Esp[player.Name].Frame[object[2]].Text = object[2] .. ": " .. ConvertToLetter(PrivateStats:WaitForChild(object[1], math.huge).Value)
@@ -3441,7 +3440,7 @@ Players.PlayerRemoving:Connect(function(player)
     end
 
     if table.find(Targets, player.Name) then
-        for i, rTarget in next, Targets do
+        for i, rTarget in pairs(Targets) do
             if rawequal(rTarget, player.Name) then
                 table.remove(Targets, i)
             end
@@ -3449,7 +3448,7 @@ Players.PlayerRemoving:Connect(function(player)
     end
 
     if table.find(Whitelisted, player.Name) then
-        for i, rTarget in next, Whitelisted do
+        for i, rTarget in pairs(Whitelisted) do
             if rawequal(rTarget, player.Name) then
                 table.remove(Whitelisted, i)
             end
@@ -3458,7 +3457,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 local function IsAuraEnabled()
-    for i, object in next, Client.Character:GetDescendants() do
+    for i, object in pairs(Client.Character:GetDescendants()) do
         if not rawequal(object.Name, "KillingIntentAuraSound") and object.Name:match("Aura") then
             return true
         end
@@ -3521,7 +3520,7 @@ Client.CharacterAdded:Connect(function(character)
 
     if not rawequal(Flags["Animations"].Value, "None") then
         task.spawn(function()
-            for i, object in next, Animations[Flags["Animations"].Value] do
+            for i, object in pairs(Animations[Flags["Animations"].Value]) do
                 local Action, SubAction, AssetId = unpack(object)
                 character:WaitForChild("Animate", math.huge):WaitForChild(Action, math.huge)[SubAction].AnimationId = AssetId
             end
