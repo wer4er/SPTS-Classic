@@ -2629,7 +2629,7 @@ Tabs.Visual:AddButton({
                 elseif rawequal(property, "Waterfall") then
                     for i, Child in pairs(object:GetChildren()) do
                         if Child:IsA("BasePart") then
-                            Child.Color = Color3.new(0.471, 0.565, 0.510)
+                            Child.Color = Color3.new(.471, .565, .510)
                             if rawequal(Child.Name, "Union") then
                                 Child.UsePartColor = true
                             end
@@ -2680,7 +2680,7 @@ Tabs.Visual:AddButton({
                 elseif rawequal(property, "TrainingArea") then
                     for i, Child in pairs(object:GetChildren()) do
                         if rawequal(Child.Name, "StarFSTraining1") then
-                            Child.Color = Color3.new(0.016, 0.687, 0.926)
+                            Child.Color = Color3.new(.016, .687, .926)
                             for i, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
                                     if rawequal(Child1.Name, "Atmosphere1") then
@@ -2706,18 +2706,18 @@ Tabs.Visual:AddButton({
                             for i, Child1 in pairs(Child:GetChildren()) do
                                 if Child1:IsA("BasePart") then
                                     if rawequal(Child1.Name, "Atmosphere1") then
-                                        Child1.Color = Color3.new(1, 0.2, 0)
+                                        Child1.Color = Color3.new(1, .2, 0)
                                     elseif rawequal(Child1.Name, "Atmosphere2") then
-                                        Child1.Color = Color3.new(1, 0.3, 0)
+                                        Child1.Color = Color3.new(1, .3, 0)
                                     else
-                                        Child1.Color = Color3.new(1, 0.2, 0)
+                                        Child1.Color = Color3.new(1, .2, 0)
                                     end
                                 end
                             end
                         elseif Child.Name:match("PPTrainingPart") then
-                            Child.Color = Color3.new(0.228, 0.491, 0.083)
+                            Child.Color = Color3.new(.228, .491, .083)
                         elseif Child.Name:match("GreenFirePart") then
-                            Child.Color = Color3.new(0.640, 0.636, 0.648)
+                            Child.Color = Color3.new(.640, .636, .648)
                         elseif Child.Name:match("AcidPart") then
                             Child.Color = Color3.new(0, 1, 0)
                         elseif Child.Name:match("LavaPart2") then
@@ -2727,15 +2727,15 @@ Tabs.Visual:AddButton({
                 elseif rawequal(property, "Tree") then
                     for i, Leaf in pairs(object.Leaf:GetChildren()) do
                         if rawequal(object.Name, "Tree1") then
-                            Leaf.Color = Color3.new(0.133333, 0.545098, 0.133333)  
+                            Leaf.Color = Color3.new(.133333, .545098, .133333)  
                         elseif rawequal(object.Name, "Tree2") then
-                            Leaf.Color = Color3.new(0.235294, 0.701961, 0.443137) 
+                            Leaf.Color = Color3.new(.235294, .701961, .443137) 
                         elseif rawequal(object.Name, "Tree3") then
-                            Leaf.Color = Color3.new(0.180392, 0.545098, 0.341176)   
+                            Leaf.Color = Color3.new(.180392, .545098, .341176)   
                         end
                     end
                     for i, Trunk in pairs(object.Trunk:GetChildren()) do
-                        Trunk.Color = Color3.new(0.487, 0.361, 0.275)
+                        Trunk.Color = Color3.new(.487, .361, .275)
                     end                 
                 elseif rawequal(property, "SpotLight") then
                     for i, Light in pairs(object) do
@@ -2771,9 +2771,9 @@ Tabs.Visual:AddButton({
         local Corner = Instance.new("UICorner")
 
         local specialColors = {
-            FS = Color3.new(1, 0.35, 0.35),
-            BT = Color3.new(0.99, 0.36, 0.24),
-            PP = Color3.new(0.32, 0.62, 0.98)
+            FS = Color3.new(1, .35, .35),
+            BT = Color3.new(.99, .36, .24),
+            PP = Color3.new(.32, .62, .98)
         }
 
         for _, btnName in pairs({'LootBoxBtn', 'InvBtn'}) do
@@ -2781,11 +2781,11 @@ Tabs.Visual:AddButton({
         end
 
         MenuFrame.BackgroundTransparency = 1
-        MenuFrame.InfoFrame.BackgroundTransparency = 0.1
-        MenuFrame.InfoFrame.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+        MenuFrame.InfoFrame.BackgroundTransparency = .1
+        MenuFrame.InfoFrame.BackgroundColor3 = Color3.new(.04, .04, .04)
 
         for _, frameName in pairs({"SkillFrame", "GangFrame", "SpecialFrame", "SettingFrame"}) do
-            if MenuFrame:FindFirstChild(frameName) then MenuFrame[frameName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04) end
+            if MenuFrame:FindFirstChild(frameName) then MenuFrame[frameName].BackgroundColor3 = Color3.new(.04, .04, .04) end
         end
 
         for _, textName in pairs({"NameTxt", "RankTxt", "StatusTxt", "KilledTxt", "MSTxt", "JFTxt", "RepTxt"}) do
@@ -2797,10 +2797,10 @@ Tabs.Visual:AddButton({
         end
 
         local menuButtons = {
-            {name = "InfoBtn", text = "Stats", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0, 0, 0.01, 0)},
-            {name = "SkilBtn", text = "Skills", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.25, 0, 0.01, 0)},
-            {name = "SpecialBtn", text = "Shop", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.50, 0, 0.01, 0)},
-            {name = "SettingBtn", text = "Settings", size = UDim2.new(0.25, 0, 0.07, 0), pos = UDim2.new(0.75, 0, 0.01, 0)}
+            {name = "InfoBtn", text = "Stats", size = UDim2.new(.25, 0, .07, 0), pos = UDim2.new(0, 0, .01, 0)},
+            {name = "SkilBtn", text = "Skills", size = UDim2.new(.25, 0, .07, 0), pos = UDim2.new(.25, 0, .01, 0)},
+            {name = "SpecialBtn", text = "Shop", size = UDim2.new(.25, 0, .07, 0), pos = UDim2.new(.50, 0, .01, 0)},
+            {name = "SettingBtn", text = "Settings", size = UDim2.new(.25, 0, .07, 0), pos = UDim2.new(.75, 0, .01, 0)}
         }
 
         for _, btn in pairs(menuButtons) do
@@ -2814,7 +2814,7 @@ Tabs.Visual:AddButton({
 
         if MenuFrame:FindFirstChild("CloseBtn") then
             MenuFrame.CloseBtn.TextScaled = false
-            MenuFrame.CloseBtn.TextColor3 = Color3.new(0.04, 0.04, 0.04)
+            MenuFrame.CloseBtn.TextColor3 = Color3.new(.04, .04, .04)
             MenuFrame.CloseBtn.TextSize = 33
         end
 
@@ -2824,20 +2824,20 @@ Tabs.Visual:AddButton({
             corner.CornerRadius = UDim.new(1, 0)
             corner.Parent = MenuFrame.InfoFrame.RankImgBtn
             local stroke = UIStroke:Clone()
-            stroke.Color = Color3.new(0.39, 0.39, 0.39)
+            stroke.Color = Color3.new(.39, .39, .39)
             stroke.Thickness = 2.5
             stroke.Parent = MenuFrame.InfoFrame.RankImgBtn
         end
 
         local infoPositions = {
-            {"PPMultiplierTxt", UDim2.new(0.75, 0, 0.671774209, 0)},
-            {"MSMultiplierTxt", UDim2.new(0.75, 0, 0.893548429, 0)},
-            {"PPUpgradeImgBtn", UDim2.new(0.93, 0, 0.674758077, 0)},
-            {"MSUpgradeImgBtn", UDim2.new(0.93, 0, 0.898548424, 0)},
-            {"Img5", UDim2.new(0.025, 0, 0.663157105, 0)},
-            {"Img3", UDim2.new(0.025, 0, 0.88, 0)},
-            {"MSTxt", UDim2.new(0.11, 0, 0.89, 0)},
-            {"PPTxt", UDim2.new(0.11, 0, 0.67, 0)}
+            {"PPMultiplierTxt", UDim2.new(.75, 0, .671774209, 0)},
+            {"MSMultiplierTxt", UDim2.new(.75, 0, .893548429, 0)},
+            {"PPUpgradeImgBtn", UDim2.new(.93, 0, .674758077, 0)},
+            {"MSUpgradeImgBtn", UDim2.new(.93, 0, .898548424, 0)},
+            {"Img5", UDim2.new(.025, 0, .663157105, 0)},
+            {"Img3", UDim2.new(.025, 0, .88, 0)},
+            {"MSTxt", UDim2.new(.11, 0, .89, 0)},
+            {"PPTxt", UDim2.new(.11, 0, .67, 0)}
         }
 
         for _, item in pairs(infoPositions) do
@@ -2851,7 +2851,7 @@ Tabs.Visual:AddButton({
         if MenuFrame:FindFirstChild("GangBtn") then MenuFrame.GangBtn.Visible = false end
 
         if ScreenGui:FindFirstChild("MenuBtn") then
-            ScreenGui.MenuBtn.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+            ScreenGui.MenuBtn.BackgroundColor3 = Color3.new(.04, .04, .04)
             ScreenGui.MenuBtn.BorderColor3 = Color3.new(0, 0, 0)
             ScreenGui.MenuBtn.TextColor3 = Color3.new(0, 0, 0)
         end
@@ -2859,19 +2859,19 @@ Tabs.Visual:AddButton({
         if ScreenGui:FindFirstChild("CurrentGemImgBtn") then
             ScreenGui.CurrentGemImgBtn.ImageColor3 = Color3.new(0, 0, 0)
             if ScreenGui.CurrentGemImgBtn:FindFirstChild("AmountTxtBtn") then
-                ScreenGui.CurrentGemImgBtn.AmountTxtBtn.TextColor3 = Color3.new(0.04, 0.04, 0.04)
+                ScreenGui.CurrentGemImgBtn.AmountTxtBtn.TextColor3 = Color3.new(.04, .04, .04)
                 ScreenGui.CurrentGemImgBtn.AmountTxtBtn.TextStrokeColor3 = Color3.new(0, 0, 0)
             end
         end
 
         for i = 1, 19 do
             local textName = "SkillTxt" .. i
-            if MenuFrame.SkillFrame:FindFirstChild(textName) then MenuFrame.SkillFrame[textName].TextColor3 = Color3.new(0.29, 0.76, 0.27) end
+            if MenuFrame.SkillFrame:FindFirstChild(textName) then MenuFrame.SkillFrame[textName].TextColor3 = Color3.new(.29, .76, .27) end
         end
 
         for i = 0, 18 do
             local textName = "SettingTxt" .. i
-            if MenuFrame.SettingFrame:FindFirstChild(textName) then MenuFrame.SettingFrame[textName].TextColor3 = Color3.new(0.29, 0.76, 0.27) end
+            if MenuFrame.SettingFrame:FindFirstChild(textName) then MenuFrame.SettingFrame[textName].TextColor3 = Color3.new(.29, .76, .27) end
         end
 
         local questFrames = {"MainQuestFrame", "DailyQuestFrame", "SpecialQuestFrame", "WeeklyQuestFrame"}
@@ -2879,29 +2879,29 @@ Tabs.Visual:AddButton({
         for _, frameName in pairs(questFrames) do
             if ScreenGui:FindFirstChild(frameName) then
                 local frame = ScreenGui[frameName]
-                frame.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+                frame.BackgroundColor3 = Color3.new(.04, .04, .04)
                 frame.BorderColor3 = Color3.new(0, 0, 0)
                 
                 for _, btnName in pairs({"LeftBtn", "RightBtn"}) do
-                    if frame:FindFirstChild(btnName) then frame[btnName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04) end
+                    if frame:FindFirstChild(btnName) then frame[btnName].BackgroundColor3 = Color3.new(.04, .04, .04) end
                 end
                 
                 frame.ScrollBarImageColor3 = Color3.new(0, 0, 0)
                 frame.ScrollBarThickness = 12
                 
                 if frame:FindFirstChild("HeaderTxt1") then
-                    frame.HeaderTxt1.BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+                    frame.HeaderTxt1.BackgroundColor3 = Color3.new(.04, .04, .04)
                     frame.HeaderTxt1.TextColor3 = Color3.new(0, 0, 0)
                 end
                 
                 for i = 1, 9 do
                     local maxFrameName = "MaxFrame" .. i
                     if frame:FindFirstChild(maxFrameName) then
-                        frame[maxFrameName].BackgroundColor3 = Color3.new(0.04, 0.04, 0.04)
+                        frame[maxFrameName].BackgroundColor3 = Color3.new(.04, .04, .04)
                         if frame[maxFrameName]:FindFirstChild("RewardTxt") and frame[maxFrameName].RewardTxt:FindFirstChild("GemImgBtn") then
                             frame[maxFrameName].RewardTxt.GemImgBtn.ImageColor3 = Color3.new(0, 0, 0)
                             if frame[maxFrameName].RewardTxt.GemImgBtn:FindFirstChild("AmountTxt") then
-                                frame[maxFrameName].RewardTxt.GemImgBtn.AmountTxt.TextColor3 = Color3.new(0.04, 0.04, 0.04)
+                                frame[maxFrameName].RewardTxt.GemImgBtn.AmountTxt.TextColor3 = Color3.new(.04, .04, .04)
                                 frame[maxFrameName].RewardTxt.GemImgBtn.AmountTxt.TextStrokeColor3 = Color3.new(0, 0, 0)
                             end
                         end
