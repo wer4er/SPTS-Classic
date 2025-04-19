@@ -911,8 +911,8 @@ local Components = {
     SpamS = Tabs.Server:AddToggle("Spam Sounds", {Title = "Spam Sounds", Default = false}),
     Cooldown = Tabs.Server:AddSlider("Cooldown Of Spam Sounds", {Title = "Cooldown Of Spam Sounds", Default = 1, Min = .1, Max = 10, Rounding = 1}),
     
-    Logs = Tabs.Settings:AddDropdown("Logs", {Title = "Logs", Values = {"Dead", "Joined/Left", "ChatSpy"}, Default = {"Dead", "Joined/Left", "ChatSpy"}, Multi = true}),
-    TypeOfLogs = Tabs.Settings:AddDropdown("Type Of Logs", {Title = "Type Of Logs", Values = {"Chat", "Notify", "Console"}, Default = {"Chat"}, Multi = true})
+    Logs = Tabs.Settings:AddDropdown("Logs", {Title = "Logs", Values = {"Dead", "Joined/Left", "ChatSpy"}, Default = {1, 2, 3}, Multi = true}),
+    TypeOfLogs = Tabs.Settings:AddDropdown("Type Of Logs", {Title = "Type Of Logs", Values = {"Chat", "Notify", "Console"}, Default = {1}, Multi = true})
 }
 
 Components.Fist:OnChanged(function()
