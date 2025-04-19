@@ -866,7 +866,7 @@ local Components = {
     DisableAura = Tabs.Usual:AddToggle("Auto Disable Aura", {Title = "Auto Disable Aura", Default = false}),
     Quests = Tabs.Usual:AddToggle("Auto Claim Quests", {Title = "Auto Claim Quests", Default = false}),
     AntiAura = Tabs.Usual:AddToggle("Anti Killing Intent Aura", {Title = "Anti Killing Intent Aura", Default = false}),
-    Animations = Tabs.Usual:AddDropdown("Animations", {Title = "Animations", Values = {"None", "Bubbly", "Astronaut", "Cartoony", "Elder", "Knight", "Levitation", "Mage", "Ninja", "Pirate", "Robot", "Stylish", "Superhero", "Toy", "Vampire", "Werewolf", "Zombie", "Ghost"}, Default = {"None"}, Multi = false}),
+    Animations = Tabs.Usual:AddDropdown("Animations", {Title = "Animations", Values = {"None", "Bubbly", "Astronaut", "Cartoony", "Elder", "Knight", "Levitation", "Mage", "Ninja", "Pirate", "Robot", "Stylish", "Superhero", "Toy", "Vampire", "Werewolf", "Zombie", "Ghost"}, Default = 1, Multi = false}),
     Fov = Tabs.Usual:AddSlider("Fov", {Title = "Fov", Default = 70, Min = 1, Max = 120, Rounding = 0}),
     
     CBring = Tabs.Pvp:AddToggle("CBring", {Title = "CBring", Default = false}),
@@ -896,7 +896,7 @@ local Components = {
     RGBLasers = Tabs.Fun:AddToggle("Rainbow Lasers", {Title = "Rainbow Lasers", Default = false}),
     RGBAuras = Tabs.Fun:AddToggle("Rainbow Auras", {Title = "Rainbow Auras", Default = false}),
     RGBNames = Tabs.Fun:AddToggle("Rainbow Names", {Title = "Rainbow Names", Default = false}),
-    CustomColor = Tabs.Fun:CreateColorpicker("Custom Color", {Title = "Custom Color", Default = Color3.new(0,0,0)}),
+    CustomColor = Tabs.Fun:AddColorpicker("Custom Color", {Title = "Custom Color", Default = Color3.new(0,0,0)}),
     CustomSpheres = Tabs.Fun:AddToggle("Custom Spheres", {Title = "Custom Spheres", Default = false}),
     CustomLasers = Tabs.Fun:AddToggle("Custom Lasers", {Title = "Custom Lasers", Default = false}),
     CustomAuras = Tabs.Fun:AddToggle("Custom Auras", {Title = "Custom Auras", Default = false}),
