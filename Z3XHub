@@ -45,7 +45,7 @@ local RespawnHealth = .1
 local StockGravity = 196.1999969482422
 local teleportsvalue, teleportposition, oldUtilities, lastChatted = {}, {}, {}, {}
 local Targets, Whitelisted, Target = {}, {}, PlayerList[math.random(1, #PlayerList)].Name
-local TCAdded, LPCAdded, CChanged, RespawnFunction, Teleported, Changed, SavedCameraCFrame, SavedPosition, GodCheck
+local TCAdded, LPCAdded, CChanged, RespawnFunction, SavedCameraCFrame, SavedPosition, GodCheck
 
 Version = "5.5.4"
 
@@ -430,7 +430,7 @@ local function getfs()
         return {"+FS6"}
     elseif PrivateStats.FistStrength.Value >= 1e11 then
         return {"+FS5"}
-    elseif PrivateStats.FistStrength.Value >= 1e9 then
+    elseif PrivateStats.FistStrength.Value >= 1e9 and rawequal(MenuFrame.SkillFrame.SkillTxt8.Text, "Fly : \"Double Jump\"") then
         return {"+FS4"}
     else
         return {"+FS1"}, {"+FS2"}, {"+FS3"}
@@ -532,7 +532,8 @@ local Animations = {
     Vampire = {{"idle", "Animation1", "rbxassetid://1083445855"}, {"idle", "Animation2", "rbxassetid://1083450166"}, {"walk", "WalkAnim", "rbxassetid://1083473930"}, {"run", "RunAnim", "rbxassetid://1083462077"}, {"jump", "JumpAnim", "rbxassetid://1083455352"}, {"climb", "ClimbAnim", "rbxassetid://1083439238"}, {"fall", "FallAnim", "rbxassetid://1083443587"}},
     Werewolf = {{"idle", "Animation1", "rbxassetid://1083195517"}, {"idle", "Animation2", "rbxassetid://1083214717"}, {"walk", "WalkAnim", "rbxassetid://1083178339"}, {"run", "RunAnim", "rbxassetid://1083216690"}, {"jump", "JumpAnim", "rbxassetid://1083218792"}, {"climb", "ClimbAnim", "rbxassetid://1083182000"}, {"fall", "FallAnim", "rbxassetid://1083189019"}},
     Zombie = {{"idle", "Animation1", "rbxassetid://616158929"}, {"idle", "Animation2", "rbxassetid://616160636"}, {"walk", "WalkAnim", "rbxassetid://616168032"}, {"run", "RunAnim", "rbxassetid://616163682"}, {"jump", "JumpAnim", "rbxassetid://616161997"}, {"climb", "ClimbAnim", "rbxassetid://616156119"}, {"fall", "FallAnim", "rbxassetid://616157476"}},
-    Ghost = {{"idle", "Animation1", "rbxassetid://616006778"}, {"idle", "Animation2", "rbxassetid://616008087"}, {"walk", "WalkAnim", "rbxassetid://616013216"}, {"run", "RunAnim", "rbxassetid://616013216"}, {"jump", "JumpAnim", "rbxassetid://616008936"}, {"fall", "FallAnim", "rbxassetid://616005863"}, {"swimidle", "SwimIdle", "rbxassetid://616012453"}, {"swim", "Swim", "rbxassetid://616011509"}}
+    Ghost = {{"idle", "Animation1", "rbxassetid://616006778"}, {"idle", "Animation2", "rbxassetid://616008087"}, {"walk", "WalkAnim", "rbxassetid://616013216"}, {"run", "RunAnim", "rbxassetid://616013216"}, {"jump", "JumpAnim", "rbxassetid://616008936"}, {"fall", "FallAnim", "rbxassetid://616005863"}, {"swimidle", "SwimIdle", "rbxassetid://616012453"}, {"swim", "Swim", "rbxassetid://616011509"}},
+    Oldschool = {{"idle", "Animation1", "rbxassetid://5319828216"}, {"idle", "Animation2", "rbxassetid://5319831086"}, {"walk", "WalkAnim", "rbxassetid://5319847204"}, {"run", "RunAnim", "rbxassetid://5319844329"}, {"jump", "JumpAnim", "rbxassetid://5319841935"}, {"fall", "FallAnim", "rbxassetid://5319839762"}, {"climb", "ClimbAnim", "rbxassetid://5319816685"}}
 }
 
 local teleports = {
@@ -606,7 +607,7 @@ local Components = {
     DisableAura = Tabs.Usual:AddToggle("Auto Disable Aura", {Title = "Auto Disable Aura", Default = false}),
     Quests = Tabs.Usual:AddToggle("Auto Claim Quests", {Title = "Auto Claim Quests", Default = false}),
     AntiAura = Tabs.Usual:AddToggle("Anti Killing Intent Aura", {Title = "Anti Killing Intent Aura", Default = false}),
-    Animations = Tabs.Usual:AddDropdown("Animations", {Title = "Animations", Values = {"None", "Bubbly", "Astronaut", "Cartoony", "Elder", "Knight", "Levitation", "Mage", "Ninja", "Pirate", "Robot", "Stylish", "Superhero", "Toy", "Vampire", "Werewolf", "Zombie", "Ghost"}, Default = 1, Multi = false}),
+    Animations = Tabs.Usual:AddDropdown("Animations", {Title = "Animations", Values = {"None", "Bubbly", "Astronaut", "Cartoony", "Elder", "Knight", "Levitation", "Mage", "Ninja", "Pirate", "Robot", "Stylish", "Superhero", "Toy", "Vampire", "Werewolf", "Zombie", "Ghost", "Oldschool"}, Default = 1, Multi = false}),
     Fov = Tabs.Usual:AddSlider("Fov", {Title = "Fov", Default = 70, Min = 1, Max = 120, Rounding = 0}),
 
     Targets = Tabs.Pvp:AddInput("Targets", {Title = "Targets", Default = "", Placeholder = "Nickname", Numeric = false, Finished = true}),
