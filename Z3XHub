@@ -427,33 +427,33 @@ end
 
 local function getfs()
     if PrivateStats.FistStrength.Value >= 1e13 then
-        return {"+FS6"}
+        return "+FS6"
     elseif PrivateStats.FistStrength.Value >= 1e11 then
-        return {"+FS5"}
+        return "+FS5"
     elseif PrivateStats.FistStrength.Value >= 1e9 then
-        return {"+FS4"}
+        return "+FS4"
     elseif rawequal(MenuFrame.SkillFrame.SkillTxt8.Text, "Fly : \"Double Jump\"") then
-        return {"+FS3"}
+        return "+FS3"
     elseif rawequal(MenuFrame.SkillFrame.SkillTxt3.Text, "Invisibility : \"T\"")  then
-        return {"+FS2"}
+        return "+FS2"
     else
-        return {"+FS1"}
+        return "+FS1"
     end
 end
 
 local function getpp()
     if PrivateStats.PsychicPower.Value >= 1e15 then
-        return {"+PP6"}
+        return "+PP6"
     elseif PrivateStats.PsychicPower.Value >= 1e12 then
-        return {"+PP5"}
+        return "+PP5"
     elseif PrivateStats.PsychicPower.Value >= 1e9 then
-        return {"+PP4"}
+        return "+PP4"
     elseif PrivateStats.PsychicPower.Value >= 1e6 then
-        return {"+PP3"}
+        return "+PP3"
     elseif rawequal(MenuFrame.SkillFrame.SkillTxt8.Text, "Fly : \"Double Jump\"") then
-        return {"+PP2"}
+        return "+PP2"
     else
-        return {"+PP1"}
+        return "+PP1"
     end
 end
 
@@ -676,9 +676,7 @@ Components.Fist:OnChanged(function()
             if getfspos() then
                 Client.Character.HumanoidRootPart:PivotTo(getfspos())
             end
-            for i = 1, #getfs() do
-                RemoteEvent:FireServer({getfs()[i]})
-            end
+            RemoteEvent:FireServer({getfs()})
         end
     end
 end)
@@ -701,9 +699,7 @@ Components.Psychic:OnChanged(function()
             if getpppos() then
                 Client.Character.HumanoidRootPart:PivotTo(getpppos())
             end
-            for i = 1, #getpp() do
-                RemoteEvent:FireServer({getpp()[i]})
-            end
+            RemoteEvent:FireServer({getpp()})
         end
     end
 end)
@@ -716,9 +712,7 @@ Components.BodyFist:OnChanged(function()
                     Client.Character.HumanoidRootPart:PivotTo(getfspos())
                 end
                 task.wait(.2)
-                for i = 1, #getfs() do
-                    RemoteEvent:FireServer({getfs()[i]})
-                end
+                RemoteEvent:FireServer({getfs()})
                 if getbtpos() then
                     local lastValue = PrivateStats.BodyToughness.Value
                     repeat Client.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
@@ -731,9 +725,7 @@ Components.BodyFist:OnChanged(function()
                 else
                     RemoteEvent:FireServer({"+BT1"})
                 end
-                for i = 1, #getfs() do
-                    RemoteEvent:FireServer({getfs()[i]})
-                end
+                RemoteEvent:FireServer({getfs()})
             end
         end
     end
@@ -747,9 +739,7 @@ Components.BodyPsychic:OnChanged(function()
                     Client.Character.HumanoidRootPart:PivotTo(getpppos())
                 end
                 task.wait(.2)
-                for i = 1, #getpp() do
-                    RemoteEvent:FireServer({getpp()[i]})
-                end
+                RemoteEvent:FireServer({getpp()})
                 if getbtpos() then
                     local lastValue = PrivateStats.BodyToughness.Value
                     repeat Client.Character.HumanoidRootPart:PivotTo(getbtpos()) task.wait() until not rawequal(PrivateStats.BodyToughness.Value, lastValue)
@@ -762,9 +752,7 @@ Components.BodyPsychic:OnChanged(function()
                 else
                     RemoteEvent:FireServer({"+BT1"})
                 end
-                for i = 1, #getpp() do
-                    RemoteEvent:FireServer({getpp()[i]})
-                end
+                RemoteEvent:FireServer({getpp()})
             end
         end
     end
