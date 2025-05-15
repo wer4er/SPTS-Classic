@@ -430,10 +430,14 @@ local function getfs()
         return {"+FS6"}
     elseif PrivateStats.FistStrength.Value >= 1e11 then
         return {"+FS5"}
-    elseif PrivateStats.FistStrength.Value >= 1e9 and rawequal(MenuFrame.SkillFrame.SkillTxt8.Text, "Fly : \"Double Jump\"") then
+    elseif PrivateStats.FistStrength.Value >= 1e9 then
         return {"+FS4"}
+    elseif rawequal(MenuFrame.SkillFrame.SkillTxt8.Text, "Fly : \"Double Jump\"") then
+        return {"+FS3"}
+    elseif rawequal(MenuFrame.SkillFrame.SkillTxt3.Text, "Invisibility : \"T\"")  then
+        return {"+FS2"}
     else
-        return {"+FS1"}, {"+FS2"}, {"+FS3"}
+        return {"+FS1"}
     end
 end
 
@@ -3356,7 +3360,7 @@ Client.CharacterAdded:Connect(function(character)
     end
 
     RespawnFunction = Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-        if Humanoid.MaxHealth * RespawnHealth >= Humanoid.Health then
+        if PrivateStats.BodyToughness.Value > 0 and Humanoid.MaxHealth * RespawnHealth >= Humanoid.Health then
             if not Flags["Stack"].Value then
                 RespawnFunction:Disconnect()
                 SavedPosition = HumanoidRootPart:GetPivot()
