@@ -450,8 +450,10 @@ local function getpp()
         return {"+PP4"}
     elseif PrivateStats.PsychicPower.Value >= 1e6 then
         return {"+PP3"}
+    elseif rawequal(MenuFrame.SkillFrame.SkillTxt8.Text, "Fly : \"Double Jump\"") then
+        return {"+PP2"}
     else
-        return {"+PP1"}, {"+PP2"}
+        return {"+PP1"}
     end
 end
 
