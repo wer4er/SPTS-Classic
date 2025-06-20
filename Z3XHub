@@ -43,7 +43,7 @@ local Check = getsenv and newcclosure and checkcaller and hookmetamethod and hoo
 
 local RespawnHealth = .1
 local StockGravity = 196.1999969482422
-local teleportsvalue, teleportposition, oldUtilities, lastChatted = {}, {}, {}, {}
+local teleportsvalue, teleportposition, oldUtilities, lastchatted = {}, {}, {}, {}
 local Targets, Whitelisted, Target = {}, {}, PlayerList[math.random(1, #PlayerList)].Name
 local TCAdded, LPCAdded, CChanged, RespawnFunction, SavedCameraCFrame, SavedPosition, GodCheck
 
@@ -250,59 +250,72 @@ end
 
 local function onChatted(player, msg)
     if Flags["Logs"].Value["ChatSpy"] then
-        local newChatted, Hidden, Text = false, true, ""
-        local Command = rawequal(msg:sub(1, 1), "/") and "w" or nil
-        local Target = Command and msg:sub(3):match("^(%S+)")
+        local private = false
+        local hidden = true
+        local tname = nil
+        local mmessage = msg
+        local logt = ""
 
-        if rawequal(Command, "w") and Target then
-            local targetPlayer = Players:FindFirstChild(Target)
-            if targetPlayer then
-                newChatted = true
-                lastChatted[player.Name] = Target
+        if msg:sub(1, 1) == "/" then
+            local command = msg:sub(1, 2):lower()
+            if command == "/w" then
+                tname = msg:match("^/[w]%s+(%S+)")
+                if tname then
+                    local TargetPlayer = Players:FindFirstChild(tname)
+                    if TargetPlayer then
+                        private = true
+                        lastchatted[player.Name] = tname
+                        
+                        mmessage = msg:sub(3 + tname:len() + 1)
+                    end
+                end
             end
         end
 
-        local con = ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(packet, channel)
-            if rawequal(packet.SpeakerUserId, player.UserId) and rawequal(channel, "All") then
-                if rawequal(msg:sub(-packet.Message:len()), packet.Message) then
-                    Hidden = false
-                    lastChatted[player.Name] = nil
+        local connection = ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(packet, channel)
+            if packet.SpeakerUserId == player.UserId and channel == "All" then
+                if msg:sub(-packet.Message:len()) == packet.Message then
+                    hidden = false
+                    lastchatted[player.Name] = nil
                 end
             end
         end)
 
-        task.wait(1)
-        con:Disconnect()
-        
-        if Hidden then
-            if lastChatted[player.Name] then
-                Text = "[" .. player.Name .. " → " .. (lastChatted[player.Name]) .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
-            else
-                Text = "[" .. player.Name .. "]: " .. (newChatted and msg:sub(msg:find(Target) + #Target + 1) or msg)
+        task.delay(1, function()
+            if connection then
+                connection:Disconnect()
             end
-            
-            if Flags["Type Of Logs"].Value["Chat"] then
-                StarterGui:SetCore("ChatMakeSystemMessage", {
-                    Text = Text,
-                    Color = Color3.new(.988235, 1, .329412),
-                    Font = "GothamBold",
-                    TextSize = 18
-                })
+
+            if hidden then
+                if lastchatted[player.Name] then
+                    logt = string.format("[%s → %s]: %s", player.Name, lastchatted[player.Name], mmessage)
+                else
+                    logt = string.format("[%s]: %s", player.Name, mmessage)
+                end
+
+                if Flags["Type Of Logs"].Value["Chat"] then
+                    StarterGui:SetCore("ChatMakeSystemMessage", {
+                        Text = logt,
+                        Color = Color3.new(0.988235, 1, 0.329412),
+                        Font = Enum.Font.GothamBold,
+                        TextSize = 18
+                    })
+                end
+
+                if Flags["Type Of Logs"].Value["Notify"] then
+                    Fluent:Notify({
+                        Title = "Z3XHub",
+                        Content = "LOGS",
+                        SubContent = logt,
+                        Duration = 3
+                    })
+                end
+
+                if Flags["Type Of Logs"].Value["Console"] then
+                    print("[LOGS]: " .. logt)
+                end
             end
-            
-            if Flags["Type Of Logs"].Value["Notify"] then
-                Fluent:Notify({
-                    Title = "Z3XHub",
-                    Content = "[LOGS]",
-                    SubContent = Text,
-                    Duration = 3
-                })
-            end
-            
-            if Flags["Type Of Logs"].Value["Console"] then
-                print("[LOGS]: " .. Text)
-            end
-        end
+        end)
     end
 end
 
@@ -3222,7 +3235,7 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 Players.PlayerRemoving:Connect(function(player)
-    lastChatted[player.Name] = nil
+    lastchatted[player.Name] = nil
 
     PlayerList = Players:GetPlayers()
     
