@@ -256,9 +256,9 @@ local function onChatted(player, msg)
         local mmessage = msg
         local logt = ""
 
-        if msg:sub(1, 1) == "/" then
+        if rawequal(msg:sub(1, 1), "/") then
             local command = msg:sub(1, 2):lower()
-            if command == "/w" then
+            if rawequal(command, "/w") then
                 tname = msg:match("^/[w]%s+(%S+)")
                 if tname then
                     local TargetPlayer = Players:FindFirstChild(tname)
@@ -273,8 +273,8 @@ local function onChatted(player, msg)
         end
 
         local connection = ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(packet, channel)
-            if packet.SpeakerUserId == player.UserId and channel == "All" then
-                if msg:sub(-packet.Message:len()) == packet.Message then
+            if rawequal(packet.SpeakerUserId, player.UserId) and rawequal(channel, "All") then
+                if rawequal(msg:sub(-packet.Message:len()), packet.Message) then
                     hidden = false
                     lastchatted[player.Name] = nil
                 end
