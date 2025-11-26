@@ -1831,7 +1831,8 @@ function MacLib:Window(Settings)
 
 						if Flag then
 							MacLib.Flags[Flag] = State
-
+						end
+						
 						ToggleFunctions.State = State
 						togglebool = State
 						
@@ -5752,4 +5753,5 @@ function MacLib:Window(Settings)
 
 	return WindowFunctions
 end
+
 return MacLib
