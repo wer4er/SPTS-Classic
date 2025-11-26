@@ -1812,7 +1812,9 @@ function MacLib:Window(Settings)
 
 					local togglebool = ToggleFunctions.Settings.Default
 
-					local function NewState(State, callback, Changed)
+					local function NewState(State, callback, Changed, isInternalCall)
+						if not isInternalCall and ToggleFunctions.State == State then return end
+						
 						local transparencyValues = State and {toggle1Transparency.Enabled, togglerHeadTransparency.Enabled}
 							or {toggle1Transparency.Disabled, togglerHeadTransparency.Disabled}
 						local position = State and TweenSettings.EnabledPosition or TweenSettings.DisabledPosition
@@ -1829,19 +1831,21 @@ function MacLib:Window(Settings)
 							Position = position
 						}):Play()
 
+						togglebool = State
+						
+						if not isInternalCall then
+							ToggleFunctions.State = State
+						end
+						
 						if Flag then
 							MacLib.Flags[Flag] = State
 						end
-						
-						ToggleFunctions.State = State
-						togglebool = State
-						
+
 						if callback then
-							callback(State)
+							task.spawn(callback, State)
 						elseif Changed then
-							Changed(State)
+							task.spawn(Changed, State)
 						end
-						warn(debug.traceback())
 					end
 
                     function ToggleFunctions:OnChanged(func)
@@ -1860,11 +1864,12 @@ function MacLib:Window(Settings)
 					function ToggleFunctions:Toggle()
 						Toggle()
 					end
+
 					function ToggleFunctions:UpdateState(State)
 						togglebool = State
-						NewState(togglebool, ToggleFunctions.Settings.Callback, ToggleFunctions.Settings.Changed)
-						warn(debug.traceback())
+						NewState(togglebool, ToggleFunctions.Settings.Callback, ToggleFunctions.Settings.Changed, true)
 					end
+
 					function ToggleFunctions:GetState()
 						return togglebool
 					end
