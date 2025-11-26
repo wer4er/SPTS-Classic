@@ -1806,45 +1806,39 @@ function MacLib:Window(Settings)
 
 					local TweenSettings = {
 						Info = TweenInfo.new(0.15, Enum.EasingStyle.Quad),
+
 						EnabledPosition = UDim2.new(1, 0, 0.5, 0),
 						DisabledPosition = UDim2.new(0.5, 0, 0.5, 0),
 					}
 
 					local togglebool = ToggleFunctions.Settings.Default
 
-					local function NewState(State, callback, Changed, isInternalCall)
-						if not isInternalCall and ToggleFunctions.State == State then return end
-						
+					local function NewState(State, callback, Changed)
 						local transparencyValues = State and {toggle1Transparency.Enabled, togglerHeadTransparency.Enabled}
 							or {toggle1Transparency.Disabled, togglerHeadTransparency.Disabled}
 						local position = State and TweenSettings.EnabledPosition or TweenSettings.DisabledPosition
 
-						TweenService:Create(toggle1, TweenSettings.Info, {
+						Tween(toggle1, TweenSettings.Info, {
 							ImageTransparency = transparencyValues[1]
 						}):Play()
 
-						TweenService:Create(togglerHead, TweenSettings.Info, {
+						Tween(togglerHead, TweenSettings.Info, {
 							ImageTransparency = transparencyValues[2]
 						}):Play()
 
-						TweenService:Create(togglerHead, TweenSettings.Info, {
+						Tween(togglerHead, TweenSettings.Info, {
 							Position = position
 						}):Play()
 
-						togglebool = State
-						
-						if not isInternalCall then
-							ToggleFunctions.State = State
-						end
-						
-						if Flag then
-							MacLib.Flags[Flag] = State
-						end
+                        if Flag then
+                            MacLib.Flags[Flag] = togglebool
+                        end
 
+						ToggleFunctions.State = State
 						if callback then
-							task.spawn(callback, State)
-						elseif Changed then
-							task.spawn(Changed, State)
+							callback(togglebool)
+                        elseif Changed then
+                            Changed(togglebool)
 						end
 					end
 
@@ -1864,12 +1858,10 @@ function MacLib:Window(Settings)
 					function ToggleFunctions:Toggle()
 						Toggle()
 					end
-
 					function ToggleFunctions:UpdateState(State)
 						togglebool = State
-						NewState(togglebool, ToggleFunctions.Settings.Callback, ToggleFunctions.Settings.Changed, true)
+						NewState(togglebool, ToggleFunctions.Settings.Callback, ToggleFunctions.Settings.Changed)
 					end
-
 					function ToggleFunctions:GetState()
 						return togglebool
 					end
