@@ -1841,6 +1841,7 @@ function MacLib:Window(Settings)
 						elseif Changed then
 							Changed(State)
 						end
+						warn(debug.traceback())
 					end
 
                     function ToggleFunctions:OnChanged(func)
@@ -1860,7 +1861,9 @@ function MacLib:Window(Settings)
 						Toggle()
 					end
 					function ToggleFunctions:UpdateState(State)
-						NewState(State, ToggleFunctions.Settings.Callback, ToggleFunctions.Settings.Changed)
+						togglebool = State
+						NewState(togglebool, ToggleFunctions.Settings.Callback, ToggleFunctions.Settings.Changed)
+						warn(debug.traceback())
 					end
 					function ToggleFunctions:GetState()
 						return togglebool
