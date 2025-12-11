@@ -1814,6 +1814,7 @@ function MacLib:Window(Settings)
 					local togglebool = ToggleFunctions.Settings.Default
 
 					local function NewState(State, callback, Changed)
+						print('new state')
 						local transparencyValues = State and {toggle1Transparency.Enabled, togglerHeadTransparency.Enabled}
 							or {toggle1Transparency.Disabled, togglerHeadTransparency.Disabled}
 						local position = State and TweenSettings.EnabledPosition or TweenSettings.DisabledPosition
@@ -1835,9 +1836,12 @@ function MacLib:Window(Settings)
                         end
 
 						ToggleFunctions.State = State
+						print('ToggleFunctions.State = state')
 						if callback then
+							print('callback')
 							callback(togglebool)
                         elseif Changed then
+							print('changed')
                             Changed(togglebool)
 						end
 					end
@@ -2985,7 +2989,7 @@ function MacLib:Window(Settings)
 										MacLib.Flags[Flag] = Selected[1] or nil
 									end
 
-									if newSelected and callback then
+									if callback then
 										callback(Selected[1] or nil)
 									end
 								end
