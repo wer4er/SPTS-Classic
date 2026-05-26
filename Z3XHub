@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://gitverse.ru/api/repos/wer4y/Z3X/raw/branch/master/SPTS-Classic"))()
+print(1)
